@@ -398,111 +398,149 @@ function DialGame({ accent, onSolved }: { accent: string; onSolved: () => void }
 }
 
 /* ============================================================
- * 3. SÉQUENCE DE DÉCODAGE — répéter une combinaison lumineuse
+ * 3. FOUILLE DE LA PIÈCE — retrouver l'objet recherché
  * ============================================================ */
 
 function DecodeGame({ accent, onSolved }: { accent: string; onSolved: () => void }) {
-  const PADS = [
-    { id: 0, color: "oklch(0.78 0.18 200)" }, // cyan
-    { id: 1, color: "oklch(0.78 0.20 320)" }, // magenta
-    { id: 2, color: "oklch(0.82 0.17 90)"  }, // amber
-    { id: 3, color: "oklch(0.78 0.18 150)" }, // green
+function DecodeGame({ accent, onSolved }: { accent: string; onSolved: () => void }) {
+  // Pool d'objets — emoji + nom (sans accent pour rester FBI/uppercase).
+  const POOL = [
+    { e: "🔑", n: "CLE" },
+    { e: "🗝️", n: "VIEILLE CLE" },
+    { e: "📎", n: "TROMBONE" },
+    { e: "📌", n: "PUNAISE" },
+    { e: "🔒", n: "CADENAS" },
+    { e: "💼", n: "MALLETTE" },
+    { e: "📕", n: "CARNET ROUGE" },
+    { e: "📘", n: "CARNET BLEU" },
+    { e: "📷", n: "APPAREIL PHOTO" },
+    { e: "📻", n: "RADIO" },
+    { e: "🖊️", n: "STYLO" },
+    { e: "🔦", n: "LAMPE TORCHE" },
+    { e: "🕯️", n: "BOUGIE" },
+    { e: "📞", n: "TELEPHONE" },
+    { e: "💾", n: "DISQUETTE" },
+    { e: "💿", n: "CD" },
+    { e: "🔍", n: "LOUPE" },
+    { e: "🗂️", n: "DOSSIER" },
+    { e: "📂", n: "CHEMISE" },
+    { e: "✉️", n: "ENVELOPPE" },
+    { e: "🧷", n: "EPINGLE" },
+    { e: "⌚", n: "MONTRE" },
   ];
-  const sequence = useMemo(
-    () => Array.from({ length: 4 }, () => Math.floor(Math.random() * 4)),
-    [],
-  );
 
-  const [phase, setPhase] = useState<"show" | "input" | "ok" | "ko">("show");
-  const [showIdx, setShowIdx] = useState(-1);
-  const [userIdx, setUserIdx] = useState(0);
-
-  // Playback de la séquence
-  useEffect(() => {
-    if (phase !== "show") return;
-    let i = 0;
-    setShowIdx(-1);
-    const tick = () => {
-      if (i >= sequence.length) {
-        setShowIdx(-1);
-        setPhase("input");
-        return;
+  // Sélection: 1 cible + ~15 distracteurs, placés sans chevauchement.
+  const { target, items } = useMemo(() => {
+    const picked = shuffle(POOL).slice(0, 16);
+    const target = picked[0];
+    const placed: Array<{ e: string; n: string; x: number; y: number; rot: number; isTarget: boolean }> = [];
+    const W = 100, H = 100, R = 10; // % units
+    let attempts = 0;
+    for (let i = 0; i < picked.length && attempts < 600; i++) {
+      let x = 0, y = 0, ok = false;
+      for (let a = 0; a < 50 && !ok; a++) {
+        attempts++;
+        x = R + Math.random() * (W - 2 * R);
+        y = R + Math.random() * (H - 2 * R);
+        ok = placed.every((p) => Math.hypot(p.x - x, p.y - y) > 13);
       }
-      setShowIdx(sequence[i]);
-      setTimeout(() => {
-        setShowIdx(-1);
-        i++;
-        setTimeout(tick, 180);
-      }, 420);
-    };
-    const t = setTimeout(tick, 400);
-    return () => clearTimeout(t);
-  }, [phase, sequence]);
+      placed.push({
+        ...picked[i],
+        x, y,
+        rot: (Math.random() - 0.5) * 30,
+        isTarget: picked[i].n === target.n,
+      });
+    }
+    return { target, items: placed };
+  }, []);
 
-  const press = (id: number) => {
-    if (phase !== "input") return;
-    setShowIdx(id);
-    setTimeout(() => setShowIdx(-1), 180);
-    if (id === sequence[userIdx]) {
-      const next = userIdx + 1;
-      setUserIdx(next);
-      if (next === sequence.length) {
-        setPhase("ok");
-        setTimeout(onSolved, 500);
-      }
+  const [shake, setShake] = useState(false);
+  const [found, setFound] = useState(false);
+
+  const click = (isTarget: boolean) => {
+    if (found) return;
+    if (isTarget) {
+      setFound(true);
+      setTimeout(onSolved, 450);
     } else {
-      setPhase("ko");
-      setTimeout(() => { setUserIdx(0); setPhase("show"); }, 600);
+      setShake(true);
+      setTimeout(() => setShake(false), 350);
     }
   };
 
   return (
     <div>
       <Hint>
-        {phase === "show" && "Mémorisez la séquence lumineuse…"}
-        {phase === "input" && "Reproduisez la séquence en touchant les pads."}
-        {phase === "ok" && "Séquence correcte."}
-        {phase === "ko" && "Erreur — la séquence recommence."}
+        Fouillez la pièce et retrouvez l'objet recherché.
       </Hint>
 
-      <div className="flex flex-col items-center gap-5">
-        <div className="grid grid-cols-2 gap-3">
-          {PADS.map((p) => {
-            const active = showIdx === p.id;
-            return (
-              <button
-                key={p.id}
-                onClick={() => press(p.id)}
-                disabled={phase !== "input"}
-                className="w-24 h-24 md:w-28 md:h-28 rounded-2xl border border-white/10 transition-all duration-150"
-                style={{
-                  background: active
-                    ? p.color
-                    : `${p.color.replace(")", " / 0.18)")}`,
-                  boxShadow: active
-                    ? `0 0 28px ${p.color}, inset 0 0 20px rgba(255,255,255,0.25)`
-                    : "inset 0 0 14px rgba(0,0,0,0.5)",
-                  transform: active ? "scale(0.96)" : "scale(1)",
-                  cursor: phase === "input" ? "pointer" : "default",
-                }}
-              />
-            );
-          })}
-        </div>
+      <div className="flex items-center justify-between mb-3 px-1">
+        <span className="font-stamp text-[10px] tracking-[0.25em] text-white/50">
+          OBJET RECHERCHÉ
+        </span>
+        <span
+          className="inline-flex items-center gap-2 px-3 py-1.5 border font-stamp text-[11px] tracking-[0.25em]"
+          style={{
+            borderColor: accent,
+            color: accent,
+            background: `${accent.replace(")", " / 0.1)")}`,
+            boxShadow: `0 0 14px ${accent.replace(")", " / 0.4)")}`,
+          }}
+        >
+          <span className="text-base leading-none">{target.e}</span>
+          {target.n}
+        </span>
+      </div>
 
-        <div className="flex items-center gap-2">
-          {sequence.map((_, i) => (
-            <span
-              key={i}
-              className="w-6 h-1 rounded-full transition-all"
-              style={{
-                background:
-                  i < userIdx ? accent : "rgba(255,255,255,0.15)",
-                boxShadow: i < userIdx ? `0 0 8px ${accent}` : "none",
-              }}
-            />
-          ))}
-        </div>
+      <div
+        className={`relative w-full aspect-[16/10] overflow-hidden border border-white/10 ${shake ? "animate-pulse" : ""}`}
+        style={{
+          background:
+            "radial-gradient(ellipse at 30% 20%, oklch(0.22 0.03 270), oklch(0.1 0.02 260) 70%)",
+          boxShadow: "inset 0 0 60px rgba(0,0,0,0.7)",
+        }}
+      >
+        {/* texture papier/grille discrète */}
+        <div
+          className="absolute inset-0 opacity-[0.07] pointer-events-none"
+          style={{
+            backgroundImage:
+              "linear-gradient(rgba(255,255,255,0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.4) 1px, transparent 1px)",
+            backgroundSize: "24px 24px",
+          }}
+        />
+        {/* vignette */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.55) 100%)",
+          }}
+        />
+
+        {items.map((it, i) => (
+          <button
+            key={i}
+            onClick={() => click(it.isTarget)}
+            className="absolute -translate-x-1/2 -translate-y-1/2 text-2xl md:text-3xl transition-transform hover:scale-125 hover:drop-shadow-[0_0_8px_white] focus:outline-none"
+            style={{
+              left: `${it.x}%`,
+              top: `${it.y}%`,
+              transform: `translate(-50%, -50%) rotate(${it.rot}deg)`,
+              filter: found && it.isTarget ? `drop-shadow(0 0 12px ${accent})` : "none",
+            }}
+            aria-label={it.n}
+          >
+            {it.e}
+          </button>
+        ))}
+
+        {found && (
+          <div
+            className="absolute inset-0 pointer-events-none animate-fade-in"
+            style={{ background: `radial-gradient(circle, ${accent.replace(")", " / 0.18)")} 0%, transparent 60%)` }}
+          />
+        )}
       </div>
     </div>
   );
@@ -612,12 +650,20 @@ function NetworkGame({ accent, onSolved }: { accent: string; onSolved: () => voi
   const NEON = accent;
   const W = 420, H = 240;
   const nodes = useMemo(() => {
-    const layout = [
-      { x: 60, y: 60 }, { x: 360, y: 50 }, { x: 350, y: 200 },
-      { x: 80, y: 190 }, { x: 220, y: 120 },
-    ];
-    const shuffled = shuffle(layout.map((_, i) => i)).slice(0, 4);
-    return shuffled.map((idx, order) => ({ ...layout[idx], order: order + 1, id: idx }));
+    // ~12 nœuds répartis sans chevauchement sur le radar.
+    const pts: Array<{ x: number; y: number }> = [];
+    const PAD = 36, MIN_D = 58;
+    let attempts = 0;
+    while (pts.length < 12 && attempts < 600) {
+      attempts++;
+      const x = PAD + Math.random() * (W - 2 * PAD);
+      const y = PAD + Math.random() * (H - 2 * PAD);
+      if (pts.every((p) => Math.hypot(p.x - x, p.y - y) > MIN_D)) {
+        pts.push({ x, y });
+      }
+    }
+    const order = shuffle(pts.map((_, i) => i));
+    return pts.map((p, i) => ({ ...p, id: i, order: order.indexOf(i) + 1 }));
   }, []);
 
   const [step, setStep] = useState(0); // prochain nœud à cliquer (order = step+1)
