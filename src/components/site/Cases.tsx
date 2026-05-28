@@ -18,6 +18,7 @@ type CaseT = {
   num: string;
   title: string;
   subtitle: string;
+  teaser: string;
   question: string;
   mystery?: string;
   built: string[];
