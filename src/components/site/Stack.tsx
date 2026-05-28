@@ -48,8 +48,8 @@ export function Stack() {
     active === id || (active != null && links.some(([a, b]) => (a === active && b === id) || (b === active && a === id)));
 
   return (
-    <section id="stack" className="relative py-32 px-6">
-      <div className="max-w-5xl mx-auto">
+    <section id="stack" className="relative py-12 md:py-16 px-4">
+      <div className="max-w-[1500px] mx-auto">
         <SectionHeader number="01" title="Tableau d'investigation" subtitle="Arsenal · Compétences reliées" />
 
         <div className="relative mt-10 paper-shadow rounded-sm border border-evidence/20 bg-[radial-gradient(circle_at_20%_10%,oklch(0.22_0.03_25/0.6),transparent_60%),radial-gradient(circle_at_80%_90%,oklch(0.2_0.04_20/0.7),transparent_55%)] bg-card overflow-hidden">
@@ -65,7 +65,7 @@ export function Stack() {
           />
           <CornerStamps />
 
-          <div className="relative aspect-[1000/820] w-full">
+          <div className="relative aspect-[1600/680] w-full">
             {/* Threads */}
             <svg
               viewBox="0 0 1000 820"
