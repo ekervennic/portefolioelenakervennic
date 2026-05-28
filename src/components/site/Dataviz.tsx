@@ -1,4 +1,21 @@
 import { SectionHeader } from "./About";
+import { useEffect } from "react";
+
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      "tableau-viz": React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> & {
+        id?: string;
+        src?: string;
+        width?: string;
+        height?: string;
+        "hide-tabs"?: boolean;
+        toolbar?: string;
+        device?: string;
+      };
+    }
+  }
+}
 
 const questions = [
   {
@@ -22,6 +39,16 @@ const questions = [
 ];
 
 export function Dataviz() {
+  useEffect(() => {
+    const id = "tableau-embedding-api";
+    if (document.getElementById(id)) return;
+    const s = document.createElement("script");
+    s.id = id;
+    s.type = "module";
+    s.src = "https://public.tableau.com/javascripts/api/tableau.embedding.3.latest.min.js";
+    document.head.appendChild(s);
+  }, []);
+
   return (
     <section id="dataviz" className="relative py-32 px-6">
       <div className="max-w-6xl mx-auto">
@@ -81,13 +108,14 @@ export function Dataviz() {
               ↗ VOIR EN PLEIN ÉCRAN
             </a>
           </div>
-          <div className="relative w-full overflow-hidden border border-paper-foreground/15 bg-white" style={{ aspectRatio: "16 / 10" }}>
-            <iframe
-              title="Dashboard Tableau — Brésil analyse e-commerce"
-              src="https://public.tableau.com/views/Brsilanalysee-commerce/Tableaudebord1?:embed=y&:showVizHome=no&:tabs=no&:toolbar=yes&:display_count=no&:language=fr-FR"
-              className="absolute inset-0 w-full h-full"
-              frameBorder={0}
-              allowFullScreen
+          <div className="relative w-full overflow-hidden border border-paper-foreground/15 bg-white">
+            {/* @ts-expect-error - tableau web component */}
+            <tableau-viz
+              id="tableauViz"
+              src="https://public.tableau.com/views/Brsilanalysee-commerce/Tableaudebord1"
+              toolbar="bottom"
+              hide-tabs
+              style={{ width: "100%", display: "block" }}
             />
           </div>
         </div>
