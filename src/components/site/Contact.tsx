@@ -11,7 +11,7 @@ export function Contact() {
     const name = encodeURIComponent(String(data.get("name") || ""));
     const email = encodeURIComponent(String(data.get("email") || ""));
     const desc = encodeURIComponent(String(data.get("desc") || ""));
-    window.location.href = `mailto:elena.kervennic@example.com?subject=Nouveau%20dossier%20—%20${name}&body=De%20:%20${name}%20(${email})%0A%0A${desc}`;
+    window.location.href = `mailto:ekervennic@eugeniaschool.com?subject=Nouveau%20dossier%20—%20${name}&body=De%20:%20${name}%20(${email})%0A%0A${desc}`;
     setSent(true);
   };
 
@@ -37,7 +37,7 @@ export function Contact() {
 
           <div className="grid sm:grid-cols-2 gap-4">
             <a
-              href="mailto:elena.kervennic@example.com"
+              href="mailto:ekervennic@eugeniaschool.com"
               className="group flex items-center gap-4 p-5 border-2 border-paper-foreground/20 hover:border-evidence transition-colors"
             >
               <div className="w-12 h-12 bg-evidence text-evidence-foreground flex items-center justify-center text-xl">
@@ -45,11 +45,11 @@ export function Contact() {
               </div>
               <div>
                 <div className="font-stamp text-[10px] tracking-[0.25em] text-paper-foreground/60">EMAIL</div>
-                <div className="font-serif-display text-lg text-paper-foreground">Écrire un message</div>
+                <div className="font-serif-display text-lg text-paper-foreground">ekervennic@eugeniaschool.com</div>
               </div>
             </a>
             <a
-              href="https://www.linkedin.com"
+              href="https://www.linkedin.com/in/elena-k-60b559223"
               target="_blank"
               rel="noreferrer"
               className="group flex items-center gap-4 p-5 border-2 border-paper-foreground/20 hover:border-evidence transition-colors"
@@ -59,7 +59,35 @@ export function Contact() {
               </div>
               <div>
                 <div className="font-stamp text-[10px] tracking-[0.25em] text-paper-foreground/60">LINKEDIN</div>
-                <div className="font-serif-display text-lg text-paper-foreground">Voir le profil</div>
+                <div className="font-serif-display text-lg text-paper-foreground">elena-k-60b559223</div>
+              </div>
+            </a>
+            <a
+              href="https://github.com/ekervennic"
+              target="_blank"
+              rel="noreferrer"
+              className="group flex items-center gap-4 p-5 border-2 border-paper-foreground/20 hover:border-evidence transition-colors"
+            >
+              <div className="w-12 h-12 bg-paper-foreground text-paper flex items-center justify-center text-xl font-bold">
+                ⌥
+              </div>
+              <div>
+                <div className="font-stamp text-[10px] tracking-[0.25em] text-paper-foreground/60">GITHUB</div>
+                <div className="font-serif-display text-lg text-paper-foreground">ekervennic</div>
+              </div>
+            </a>
+            <a
+              href="https://public.tableau.com/app/profile/elena.kervennic"
+              target="_blank"
+              rel="noreferrer"
+              className="group flex items-center gap-4 p-5 border-2 border-paper-foreground/20 hover:border-evidence transition-colors"
+            >
+              <div className="w-12 h-12 bg-evidence text-evidence-foreground flex items-center justify-center text-xl">
+                📊
+              </div>
+              <div>
+                <div className="font-stamp text-[10px] tracking-[0.25em] text-paper-foreground/60">TABLEAU PUBLIC</div>
+                <div className="font-serif-display text-lg text-paper-foreground">Voir mes dashboards</div>
               </div>
             </a>
           </div>
