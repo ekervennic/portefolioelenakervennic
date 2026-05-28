@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { SectionHeader } from "./About";
 import together1 from "@/assets/cases/together-1.png";
 import together2 from "@/assets/cases/together-2.png";
