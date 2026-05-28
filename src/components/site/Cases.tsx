@@ -1,0 +1,222 @@
+import { useState } from "react";
+import { SectionHeader } from "./About";
+
+type CaseT = {
+  id: string;
+  num: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  stack: string[];
+  won?: boolean;
+  link?: { label: string; url: string };
+  accent: string;
+};
+
+const cases: CaseT[] = [
+  {
+    id: "together",
+    num: "01",
+    title: "Together",
+    subtitle: "Application sociale de sorties entre amis",
+    description: "Together réinvente l'organisation de sorties. Une plateforme sociale qui aide les groupes d'amis à proposer, planifier et confirmer leurs prochaines aventures — avec une IA qui suggère les meilleures options en fonction des envies du groupe.",
+    stack: ["Next.js", "Supabase", "OpenAI", "TypeScript", "Cursor"],
+    accent: "oklch(0.6 0.18 25)",
+  },
+  {
+    id: "mood",
+    num: "02",
+    title: "Mood Film Finder",
+    subtitle: "Plus de 6 500 films et séries scrapés, recommandation par l'humeur",
+    description: "Un moteur de recommandation basé sur ce que vous ressentez. Pipeline de scraping massif, base vectorielle et architecture RAG pour suggérer le film parfait à partir d'une simple phrase d'humeur.",
+    stack: ["Python", "Scraping", "RAG", "IA"],
+    link: { label: "🎬 Tester l'expérience Mood Match", url: "https://vibe-select-recs.lovable.app/match" },
+    accent: "oklch(0.55 0.2 320)",
+  },
+  {
+    id: "lyrics",
+    num: "03",
+    title: "Chatbot Paroles",
+    subtitle: "Retrouver une chanson à partir de paroles approximatives",
+    description: "Architecture RAG permettant à un utilisateur de retrouver le titre d'une chanson à partir d'un fragment de paroles, même imprécis. Embeddings, recherche vectorielle et reformulation par LLM.",
+    stack: ["Python", "FAISS", "Embeddings", "OpenAI"],
+    accent: "oklch(0.55 0.15 280)",
+  },
+  {
+    id: "ecole",
+    num: "04",
+    title: "Plateforme Scolaire",
+    subtitle: "Centraliser cours, agenda, quiz, événements et messagerie",
+    description: "Une plateforme conçue pour répondre à un problème concret rencontré par les étudiants : éparpillement des outils. Tout réunir dans une seule interface fluide, lisible et utile au quotidien.",
+    stack: ["Next.js", "Supabase", "TypeScript"],
+    accent: "oklch(0.55 0.18 200)",
+  },
+  {
+    id: "mirakl",
+    num: "05",
+    title: "Hackathon Mirakl",
+    subtitle: "Projet gagnant — pipeline IA de bout en bout",
+    description: "Hackathon Mirakl remporté avec une solution combinant scraping, traitement IA et automatisation no-code pour répondre à un cas d'usage métier en moins de 48 heures.",
+    stack: ["Python", "Scraping", "IA", "Dust", "n8n"],
+    won: true,
+    accent: "oklch(0.62 0.22 18)",
+  },
+];
+
+export function Cases() {
+  const [open, setOpen] = useState<CaseT | null>(null);
+
+  return (
+    <section id="enquetes" className="relative py-32 px-6">
+      <div className="max-w-7xl mx-auto">
+        <SectionHeader number="02" title="Dossiers d'enquête" subtitle="Investigations · Cas résolus" />
+
+        <p className="mt-8 max-w-2xl text-muted-foreground font-serif-display italic text-lg">
+          Cinq dossiers. Cinq enquêtes. Chacune commence par un problème — et se termine par une solution mesurable.
+        </p>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10 mt-16">
+          {cases.map((c, i) => (
+            <CaseFolder key={c.id} c={c} index={i} onOpen={() => setOpen(c)} />
+          ))}
+        </div>
+      </div>
+
+      {open && <CaseModal c={open} onClose={() => setOpen(null)} />}
+    </section>
+  );
+}
+
+function CaseFolder({ c, index, onOpen }: { c: CaseT; index: number; onOpen: () => void }) {
+  const rotate = ((index % 3) - 1) * 1.5;
+  return (
+    <button
+      onClick={onOpen}
+      className="group relative text-left"
+      style={{ transform: `rotate(${rotate}deg)` }}
+    >
+      {/* Papers peeking */}
+      <div className="absolute -top-2 left-4 right-4 h-4 bg-paper paper-shadow rotate-[1deg]" />
+      <div className="absolute -top-1 left-6 right-6 h-4 bg-[oklch(0.88_0.03_80)] paper-shadow rotate-[-1.5deg]" />
+
+      {/* Folder body */}
+      <div className="relative kraft-bg paper-shadow p-6 pt-10 min-h-[280px] transition-all duration-500 group-hover:-translate-y-3 group-hover:rotate-[-1deg]">
+        {/* Tab */}
+        <div className="absolute -top-4 left-6 px-6 py-2 kraft-bg font-stamp text-[10px] tracking-[0.3em] text-paper-foreground/80">
+          CASE FILE
+        </div>
+
+        {/* Red string */}
+        <div className="absolute top-0 right-8 bottom-0 w-[2px] bg-evidence/70 opacity-60" />
+        <div className="absolute top-3 right-6 w-6 h-6 rounded-full border-2 border-evidence/70 opacity-70" />
+
+        <div className="font-stamp text-[11px] tracking-[0.3em] text-evidence mb-2">
+          CASE #{c.num}
+        </div>
+        <h3 className="font-serif-display text-3xl text-paper-foreground leading-tight mb-3">
+          {c.title}
+        </h3>
+        <p className="text-sm text-paper-foreground/75 mb-5 leading-relaxed">
+          {c.subtitle}
+        </p>
+
+        <div className="flex flex-wrap gap-1.5">
+          {c.stack.slice(0, 4).map((s) => (
+            <span key={s} className="px-2 py-0.5 bg-paper-foreground/10 border border-paper-foreground/20 text-paper-foreground text-[10px] font-stamp tracking-wider">
+              {s}
+            </span>
+          ))}
+        </div>
+
+        {/* Stamps */}
+        <div className="absolute bottom-4 right-4 stamp text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">
+          Ouvrir →
+        </div>
+        {c.won && (
+          <div className="absolute -top-3 -right-3 stamp text-xs font-stamp" style={{ transform: "rotate(10deg)" }}>
+            🏆 RÉSOLUE
+          </div>
+        )}
+      </div>
+    </button>
+  );
+}
+
+function CaseModal({ c, onClose }: { c: CaseT; onClose: () => void }) {
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8 bg-background/85 backdrop-blur-md animate-fade-in"
+      onClick={onClose}
+    >
+      <div
+        className="relative max-w-3xl w-full max-h-[90vh] overflow-y-auto paper-bg paper-shadow p-8 md:p-12 animate-scale-in"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center bg-paper-foreground/10 hover:bg-evidence hover:text-evidence-foreground text-paper-foreground text-xl transition-colors"
+          aria-label="Fermer"
+        >
+          ✕
+        </button>
+
+        <div className="font-stamp text-[11px] tracking-[0.3em] text-evidence mb-3">
+          CASE #{c.num} — DOSSIER COMPLET
+        </div>
+        <h2 className="font-serif-display text-5xl text-paper-foreground leading-tight mb-2">
+          {c.title}
+        </h2>
+        <p className="text-paper-foreground/70 italic font-serif-display text-lg mb-8">
+          {c.subtitle}
+        </p>
+
+        <div className="grid md:grid-cols-3 gap-8">
+          <div className="md:col-span-2">
+            <div className="font-stamp text-[10px] tracking-[0.3em] text-paper-foreground/60 mb-3">
+              RAPPORT
+            </div>
+            <p className="text-paper-foreground/90 leading-relaxed mb-6">{c.description}</p>
+
+            {c.link && (
+              <a
+                href={c.link.url}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-block px-6 py-3 bg-evidence text-evidence-foreground font-stamp text-sm tracking-[0.2em] noir-shadow hover:translate-y-[-2px] transition-transform"
+              >
+                {c.link.label}
+              </a>
+            )}
+
+            {c.won && (
+              <div className="mt-6 p-4 border-2 border-evidence/40 bg-evidence/5">
+                <div className="stamp text-xs mb-2 inline-block">🏆 ENQUÊTE RÉSOLUE</div>
+                <p className="text-paper-foreground/80 text-sm">
+                  Projet récompensé lors du Hackathon Mirakl. Photo de l'équipe gagnante archivée au dossier.
+                </p>
+              </div>
+            )}
+          </div>
+
+          <aside>
+            <div className="font-stamp text-[10px] tracking-[0.3em] text-paper-foreground/60 mb-3">
+              ARSENAL
+            </div>
+            <ul className="space-y-2">
+              {c.stack.map((s) => (
+                <li key={s} className="flex items-baseline gap-2 text-paper-foreground text-sm">
+                  <span className="text-evidence">▸</span>
+                  <span className="font-stamp tracking-wider">{s}</span>
+                </li>
+              ))}
+            </ul>
+          </aside>
+        </div>
+
+        <div className="absolute bottom-6 right-12 stamp text-sm">
+          Confidentiel
+        </div>
+      </div>
+    </div>
+  );
+}
