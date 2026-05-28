@@ -7,23 +7,51 @@ export function About() {
         <SectionHeader number="00" title="L'enquêtrice" subtitle="Profil du sujet" />
 
         <div className="grid md:grid-cols-[auto_1fr] gap-12 items-start mt-16">
-          {/* Polaroid */}
-          <div className="relative animate-float mx-auto md:mx-0">
-            <div className="pin relative bg-paper p-3 pb-12 paper-shadow rotate-[-3deg] w-[260px]">
-              <img
-                src={elena}
-                alt="Elena Kervennic"
-                width={768}
-                height={768}
-                loading="lazy"
-                className="w-full aspect-square object-cover"
-              />
-              <div className="absolute bottom-3 left-0 right-0 text-center font-stamp text-paper-foreground text-xs tracking-[0.2em]">
-                SUJET — E.K.
+          {/* Polaroid + Fiche d'identité */}
+          <div className="flex flex-col gap-8 mx-auto md:mx-0">
+            <div className="relative animate-float">
+              <div className="pin relative bg-paper p-3 pb-12 paper-shadow rotate-[-3deg] w-[260px]">
+                <img
+                  src={elena}
+                  alt="Elena Kervennic"
+                  width={768}
+                  height={768}
+                  loading="lazy"
+                  className="w-full aspect-square object-cover"
+                />
+                <div className="absolute bottom-3 left-0 right-0 text-center font-stamp text-paper-foreground text-xs tracking-[0.2em]">
+                  SUJET — E.K.
+                </div>
+              </div>
+              <div className="absolute -top-4 -right-8 stamp text-xs">
+                VÉRIFIÉ
               </div>
             </div>
-            <div className="absolute -top-4 -right-8 stamp text-xs">
-              VÉRIFIÉ
+
+            {/* Fiche d'identité */}
+            <div className="relative paper-bg paper-shadow p-5 w-[300px] rotate-[1.5deg]">
+              <div className="h-1.5 bg-evidence -mx-5 -mt-5 mb-4" />
+              <div className="font-stamp text-[10px] tracking-[0.3em] text-paper-foreground/60 mb-3">
+                FICHE D'IDENTITÉ
+              </div>
+              <dl className="text-paper-foreground text-sm font-serif-display">
+                {[
+                  ["Nom", "Kervennic"],
+                  ["Prénom", "Elena"],
+                  ["Spécialité", "Data & IA"],
+                  ["Alternance", "FDJ — Service Data"],
+                  ["Statut", "En enquête active"],
+                ].map(([k, v]) => (
+                  <div key={k} className="flex justify-between gap-3 py-1.5 border-b border-dashed border-paper-foreground/25 last:border-0">
+                    <dt className="font-stamp text-[10px] tracking-[0.25em] uppercase text-paper-foreground/60">{k}</dt>
+                    <dd className="text-right">{v}</dd>
+                  </div>
+                ))}
+              </dl>
+              <div className="mt-4 pt-2 font-stamp text-[9px] tracking-[0.3em] text-paper-foreground/50">
+                RÉFÉRENCE #EK-2025
+              </div>
+              <div className="absolute -top-3 -right-3 stamp text-[10px]">VÉRIFIÉ</div>
             </div>
           </div>
 
