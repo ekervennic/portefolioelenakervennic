@@ -402,7 +402,6 @@ function DialGame({ accent, onSolved }: { accent: string; onSolved: () => void }
  * ============================================================ */
 
 function DecodeGame({ accent, onSolved }: { accent: string; onSolved: () => void }) {
-function DecodeGame({ accent, onSolved }: { accent: string; onSolved: () => void }) {
   // Pool d'objets — emoji + nom (sans accent pour rester FBI/uppercase).
   const POOL = [
     { e: "🔑", n: "CLE" },
