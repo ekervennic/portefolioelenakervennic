@@ -81,26 +81,81 @@ const cases: CaseT[] = [
     images: [mood1, mood2],
   },
   {
-    id: "mood",
-    num: "02",
-    title: "Mood Film Finder",
-    subtitle: "🎬 Data IA · RAG · 6 500+ titres",
+    id: "lyrics",
+    num: "03",
+    title: "Chatbot Paroles",
+    subtitle: "🎵 NLP · RAG LLM · FAISS · 1 872 chansons",
+    teaser: "Trouver une chanson depuis un extrait flou → Recherche sémantique",
     question:
-      "Peut-on recommander un film en fonction de l'humeur d'un utilisateur plutôt que d'un simple genre ?",
+      "Un agent peut-il identifier une musique depuis un extrait approximatif, partiel ou mal orthographié de paroles ?",
     mystery:
-      "Les plateformes de streaming recommandent par genre ou popularité. Mais l'humeur du moment — envie de frissons, de rires, de réflexion — transcende ces catégories. Comment créer un moteur qui pense comme un humain ?",
+      "Musixmatch · Démo RAG. Exemples : « j'ai demandé à la lune, elle n'a rien voulu savoir » → Indochine — J'ai demandé à la lune (similarité 97%). « les chamz elyse » → Joe Dassin — Les Champs-Élysées (similarité 94%, tolérance orthographique).",
     built: [
-      "Scraping de 6 500+ films depuis JustWatch (Python, ~15h de run)",
-      "Vectorisation complète des données et architecture RAG from scratch",
-      "Pipeline : humeur → vecteur → similarité cosinus → recommandation",
-      "Interface interactive pour tester en live (démo intégrée)",
+      "Vectorisation de 1 872 chansons françaises avec OpenAI Embeddings (text-embedding-3-large)",
+      "Architecture RAG : extrait flou → K voisins FAISS → réponse LLM contextuelle",
+      "Interface chatbot Flask avec gestion des paroles imprécises, mal orthographiées ou partielles",
+      "Recherche vectorielle via FAISS — bien plus robuste que le mot-clé classique",
     ],
     verdict:
-      "Recommandation émotionnelle fonctionnelle — bien au-delà du filtre par genre classique. La démo est disponible dans le portfolio.",
-    stack: ["Python", "Scraping", "RAG", "IA"],
-    link: { label: "🎬 Tester l'expérience Mood Match", url: "https://vibe-select-recs.lovable.app/match" },
-    accent: "oklch(0.55 0.2 320)",
-    proofs: ["Dataset (6 500+ titres)", "Démo", "Capture écran", "Résultat obtenu"],
+      "La recherche sémantique surpasse le mot-clé classique. Identification réussie même avec des paroles très approximatives ou incomplètes.",
+    stack: ["Python", "FAISS", "Embeddings", "OpenAI"],
+    accent: "oklch(0.55 0.15 280)",
+    proofs: ["Dataset", "Démo", "GitHub", "Résultat obtenu"],
+    images: [lyrics1],
+  },
+  {
+    id: "ecole",
+    num: "04",
+    title: "Plateforme Scolaire",
+    subtitle: "Interface · UX",
+    teaser: "Tout l'outillage étudiant éparpillé → Plateforme centralisée",
+    question:
+      "Comment centraliser tous les outils utiles aux étudiants dans une seule plateforme cohérente ?",
+    mystery:
+      "Les étudiants jonglent entre plusieurs outils : un agenda ici, un espace cours là, les événements de l'école ailleurs. Comment concevoir une interface unique, fluide, qui centralise tout ?",
+    built: [
+      "Messagerie intégrée entre élèves et professeurs",
+      "Emploi du temps interactif et agenda glisser-déposer",
+      "Quiz d'entraînement avec suivi des scores",
+      "Événements proposés par l'école avec inscription en ligne",
+      "Espace cours : PDF par matière, ressources téléchargeables",
+    ],
+    verdict:
+      "Une plateforme unique pensée pour le quotidien étudiant, qui remplace une dizaine d'outils dispersés par un seul espace cohérent.",
+    stack: ["Next.js", "Supabase", "TypeScript"],
+    accent: "oklch(0.55 0.18 200)",
+    proofs: ["Dashboard", "Capture écran", "Démo"],
+    images: [ecole1, ecole2, ecole3, ecole4],
+  },
+  {
+    id: "mirakl",
+    num: "05",
+    title: "Hackathon Mirakl",
+    subtitle: "🏆 Winner · Data · Scraping IA",
+    teaser: "Sourcing RH manuel et chronophage → Pipeline IA automatisé",
+    question:
+      "Comment automatiser la recherche de futurs candidats à partir d'une offre d'emploi ?",
+    mystery:
+      "Le sourcing RH est un casse-tête : parcourir LinkedIn à la main, fouiller GitHub, croiser les profils des concurrents… des heures perdues pour chaque poste. Comment transformer ce travail manuel en un pipeline data + IA capable de sortir une shortlist de candidats pertinents en quelques minutes ?",
+    built: [
+      "Scraping LinkedIn & GitHub pour identifier les profils pertinents selon le poste",
+      "Scoring IA des candidats en fonction des compétences clés de l'offre",
+      "Scraping des concurrents pour détecter les talents à recruter",
+      "Interface centralisée avec profils filtrables, scorés et triés",
+    ],
+    results: [
+      "Automatisation complète du sourcing — gain de temps majeur",
+      "Visualisation claire des candidats potentiels en un coup d'œil",
+    ],
+    verdict:
+      "🏆 Projet vainqueur du Hackathon Mirakl. Parmi toutes les équipes en lice, notre solution a été élue par le jury comme la réponse la plus pertinente et la plus aboutie au problème posé — saluée pour la qualité du pipeline data, la pertinence du scoring IA et l'exécution produit de bout en bout en moins d'une semaine.",
+    stack: ["Python", "Scraping", "IA", "Dust", "n8n"],
+    won: true,
+    accent: "oklch(0.62 0.22 18)",
+    proofs: ["🏆 1er prix", "Démo", "Dashboard", "Capture écran", "Résultat obtenu"],
+    images: [mirakl1],
+  },
+];
     images: [mood1, mood2],
   },
   {
