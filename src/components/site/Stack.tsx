@@ -65,7 +65,7 @@ export function Stack() {
           />
           <CornerStamps />
 
-          <div className="relative aspect-[1000/720] w-full">
+          <div className="relative aspect-[1000/820] w-full">
             {/* Threads */}
             <svg
               viewBox="0 0 1000 820"

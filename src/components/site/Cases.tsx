@@ -112,10 +112,6 @@ function CaseFolder({ c, index, onOpen }: { c: CaseT; index: number; onOpen: () 
           CASE FILE
         </div>
 
-        {/* Red string */}
-        <div className="absolute top-0 right-8 bottom-0 w-[2px] bg-evidence/70 opacity-60" />
-        <div className="absolute top-3 right-6 w-6 h-6 rounded-full border-2 border-evidence/70 opacity-70" />
-
         <div className="font-stamp text-[11px] tracking-[0.3em] text-evidence mb-2">
           CASE #{c.num}
         </div>
@@ -138,11 +134,6 @@ function CaseFolder({ c, index, onOpen }: { c: CaseT; index: number; onOpen: () 
         <div className="absolute bottom-4 right-4 stamp text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">
           Ouvrir →
         </div>
-        {c.won && (
-          <div className="absolute -top-3 -right-3 stamp text-xs font-stamp" style={{ transform: "rotate(10deg)" }}>
-            🏆 RÉSOLUE
-          </div>
-        )}
       </div>
     </button>
   );

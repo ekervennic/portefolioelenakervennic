@@ -23,9 +23,6 @@ export function About() {
                   SUJET — E.K.
                 </div>
               </div>
-              <div className="absolute -top-4 -right-8 stamp text-xs">
-                VÉRIFIÉ
-              </div>
             </div>
 
             {/* Fiche d'identité */}
@@ -51,7 +48,6 @@ export function About() {
               <div className="mt-4 pt-2 font-stamp text-[9px] tracking-[0.3em] text-paper-foreground/50">
                 RÉFÉRENCE #EK-2025
               </div>
-              <div className="absolute -top-3 -right-3 stamp text-[10px]">VÉRIFIÉ</div>
             </div>
           </div>
 
