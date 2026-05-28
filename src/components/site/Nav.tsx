@@ -28,7 +28,7 @@ export function Nav() {
   }, []);
 
   return (
-    <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-40 hidden md:flex gap-5 lg:gap-7">
+    <nav className="absolute top-6 left-1/2 -translate-x-1/2 z-40 hidden md:flex gap-5 lg:gap-7">
       {items.map((it, idx) => {
         const rot = (idx % 2 ? 1 : -1) * 2.2;
         return (
