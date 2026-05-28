@@ -217,12 +217,10 @@ function CaseFolder({ c, index, onOpen }: { c: CaseT; index: number; onOpen: () 
     >
       {/* Papers peeking */}
       <div className="absolute -top-2 left-4 right-4 h-4 bg-paper paper-shadow rotate-[1deg]" />
-            <div className="font-stamp text-[10px] tracking-[0.3em] text-paper-foreground/60 mb-3">
-              RAPPORT
-            </div>
-            <div className="space-y-4 text-paper-foreground/90 leading-relaxed mb-6">
-              {c.description}
-            </div>
+      <div className="absolute -top-1 left-6 right-6 h-4 bg-[oklch(0.88_0.03_80)] paper-shadow rotate-[-1.5deg]" />
+
+      {/* Folder body */}
+      <div className="relative kraft-bg paper-shadow p-6 pt-10 min-h-[280px] transition-all duration-500 group-hover:-translate-y-3 group-hover:rotate-[-1deg]">
         {/* Tab */}
         <div className="absolute -top-4 left-6 px-6 py-2 kraft-bg font-stamp text-[10px] tracking-[0.3em] text-paper-foreground/80">
           CASE FILE
