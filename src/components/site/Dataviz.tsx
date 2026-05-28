@@ -61,6 +61,37 @@ export function Dataviz() {
           ))}
         </div>
 
+        {/* Tableau Public embed */}
+        <div className="mt-20 relative paper-bg paper-shadow border-2 border-evidence/40 p-5 md:p-7 max-w-6xl mx-auto">
+          <div className="flex items-start justify-between flex-wrap gap-4 mb-5">
+            <div>
+              <div className="font-stamp text-[10px] tracking-[0.3em] text-evidence mb-2">
+                PREUVE VISUELLE — DASHBOARD TABLEAU
+              </div>
+              <h4 className="font-serif-display text-2xl text-paper-foreground leading-snug">
+                Brésil analyse e-commerce
+              </h4>
+            </div>
+            <a
+              href="https://public.tableau.com/app/profile/elena.kervennic/viz/Brsilanalysee-commerce/Tableaudebord1"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-stamp text-[11px] tracking-[0.2em] text-evidence border border-evidence/60 px-4 py-2 hover:bg-evidence hover:text-white transition-colors"
+            >
+              ↗ VOIR EN PLEIN ÉCRAN
+            </a>
+          </div>
+          <div className="relative w-full overflow-hidden border border-paper-foreground/15 bg-white" style={{ aspectRatio: "16 / 10" }}>
+            <iframe
+              title="Dashboard Tableau — Brésil analyse e-commerce"
+              src="https://public.tableau.com/views/Brsilanalysee-commerce/Tableaudebord1?:embed=y&:showVizHome=no&:tabs=no&:toolbar=yes&:display_count=no&:language=fr-FR"
+              className="absolute inset-0 w-full h-full"
+              frameBorder={0}
+              allowFullScreen
+            />
+          </div>
+        </div>
+
         {/* Conclusion */}
         <div className="mt-16 relative kraft-bg paper-shadow p-8 md:p-12 max-w-4xl mx-auto -rotate-[0.4deg]">
           <div className="font-stamp text-[11px] tracking-[0.3em] text-evidence mb-3">
