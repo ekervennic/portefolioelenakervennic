@@ -67,7 +67,7 @@ const cases: CaseT[] = [
     num: "04",
     title: "Plateforme Scolaire",
     subtitle: "Centraliser cours, agenda, quiz, événements et messagerie",
-    description: "Une plateforme conçue pour répondre à un problème concret rencontré par les étudiants : éparpillement des outils. Tout réunir dans une seule interface fluide, lisible et utile au quotidien.",
+    description: "Les étudiants utilisent aujourd'hui une multitude d'outils différents pour accéder à leurs cours, consulter leur emploi du temps, échanger avec leurs enseignants ou suivre leurs évaluations. Cette dispersion nuit souvent à la lisibilité et à l'expérience utilisateur. J'ai donc imaginé une plateforme capable de centraliser l'ensemble de ces fonctionnalités au sein d'un espace unique, cohérent et simple à utiliser. Ce projet m'a permis de travailler sur la réflexion produit et l'expérience utilisateur, en cherchant à répondre à un besoin réel observé dans le quotidien étudiant plutôt qu'à un simple exercice technique.",
     stack: ["Next.js", "Supabase", "TypeScript"],
     accent: "oklch(0.55 0.18 200)",
     proofs: ["Dashboard", "Capture écran", "Démo"],
