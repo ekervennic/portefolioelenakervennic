@@ -159,7 +159,6 @@ const cases: CaseT[] = [
 
 export function Cases() {
   const [open, setOpen] = useState<CaseT | null>(null);
-  const [open, setOpen] = useState<CaseT | null>(null);
 
   return (
     <section id="enquetes" className="relative py-32 px-6">
