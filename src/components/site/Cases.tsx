@@ -158,8 +158,7 @@ const cases: CaseT[] = [
 ];
 
 export function Cases() {
-
-export function Cases() {
+  const [open, setOpen] = useState<CaseT | null>(null);
   const [open, setOpen] = useState<CaseT | null>(null);
 
   return (
