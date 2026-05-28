@@ -315,10 +315,12 @@ function CaseModal({ c, onClose }: { c: CaseT; onClose: () => void }) {
           <div className="md:col-span-2">
             <div className="font-stamp text-[10px] tracking-[0.3em] text-paper-foreground/60 mb-3">
               RAPPORT
+            <div className="font-stamp text-[10px] tracking-[0.3em] text-paper-foreground/60 mb-3">
+              RAPPORT
             </div>
-            <p className="text-paper-foreground/90 leading-relaxed mb-6">{c.description}</p>
-
-            {c.link && (
+            <div className="space-y-4 text-paper-foreground/90 leading-relaxed mb-6">
+              {c.description}
+            </div>
               <a
                 href={c.link.url}
                 target="_blank"
