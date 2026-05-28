@@ -5,31 +5,37 @@ type Node = { id: string; name: string; cat: string; x: number; y: number };
 
 // Coordinates are in a 1000x620 viewBox — we scale the cards to match.
 const nodes: Node[] = [
-  { id: "python",   name: "Python",     cat: "Langage",        x: 220, y: 130 },
-  { id: "scraping", name: "Scraping",   cat: "Collecte",       x:  70, y: 280 },
-  { id: "rag",      name: "RAG",        cat: "IA",             x: 240, y: 410 },
-  { id: "dataiku",  name: "Dataiku",    cat: "Plateforme",     x: 410, y: 250 },
-
-  { id: "openai",   name: "OpenAI",     cat: "IA",             x: 600, y: 110 },
-  { id: "dust",     name: "Dust",       cat: "Agents",         x: 790, y: 200 },
-  { id: "n8n",      name: "n8n",        cat: "Automatisation", x: 900, y: 360 },
-  { id: "agents",   name: "Agents LLM", cat: "IA",             x: 700, y: 420 },
-
-  { id: "tableau",  name: "Tableau",    cat: "BI",             x: 130, y: 540 },
-  { id: "powerbi",  name: "Power BI",   cat: "BI",             x: 330, y: 560 },
-  { id: "dataviz",  name: "DataViz",    cat: "Analyse",        x: 520, y: 540 },
-
-  { id: "next",     name: "Next.js",    cat: "Web",            x: 470, y: 60  },
-  { id: "supa",     name: "Supabase",   cat: "Backend",        x: 870, y: 60  },
-  { id: "ts",       name: "TypeScript", cat: "Langage",        x: 920, y: 510 },
+  { id: "python",   name: "Python",          cat: "Langage",        x: 200, y: 150 },
+  { id: "js",       name: "JavaScript",      cat: "Langage",        x:  90, y: 360 },
+  { id: "ts",       name: "TypeScript",      cat: "Langage",        x: 920, y: 200 },
+  { id: "scraping", name: "Scraping",        cat: "Collecte",       x: 360, y:  90 },
+  { id: "rag",      name: "RAG",             cat: "IA",             x: 260, y: 520 },
+  { id: "dataiku",  name: "Dataiku",         cat: "Plateforme",     x: 460, y: 300 },
+  { id: "openai",   name: "OpenAI",          cat: "IA",             x: 620, y: 150 },
+  { id: "dust",     name: "Dust",            cat: "Agents",         x: 820, y: 320 },
+  { id: "n8n",      name: "n8n",             cat: "Automatisation", x: 900, y: 520 },
+  { id: "agents",   name: "Agents LLM",      cat: "IA",             x: 700, y: 460 },
+  { id: "make",     name: "Make",            cat: "Automatisation", x: 540, y: 620 },
+  { id: "tableau",  name: "Tableau",         cat: "BI",             x: 120, y: 620 },
+  { id: "powerbi",  name: "Power BI",        cat: "BI",             x: 740, y:  80 },
+  { id: "dataviz",  name: "DataViz",         cat: "Analyse",        x: 380, y: 720 },
+  { id: "piano",    name: "Piano Analytics", cat: "Analytics",      x: 880, y: 660 },
+  { id: "tagco",    name: "Tag Commander",   cat: "Tracking",       x: 600, y: 760 },
+  { id: "sql",      name: "SQL",             cat: "Données",        x: 160, y: 760 },
+  { id: "next",     name: "Next.js",         cat: "Web",            x: 500, y: 440 },
+  { id: "supa",     name: "Supabase",        cat: "Backend",        x: 820, y: 760 },
+  { id: "html",     name: "HTML / CSS",      cat: "Web",            x: 340, y: 220 },
 ];
 
 const links: [string, string][] = [
-  ["python", "scraping"], ["python", "rag"], ["python", "dataiku"],
+  ["python", "scraping"], ["python", "rag"], ["python", "dataiku"], ["python", "sql"],
+  ["js", "html"], ["js", "ts"], ["js", "next"],
   ["openai", "dust"], ["openai", "n8n"], ["openai", "agents"], ["openai", "rag"],
   ["tableau", "powerbi"], ["tableau", "dataviz"], ["powerbi", "dataviz"],
-  ["next", "supa"], ["next", "ts"],
-  ["dataiku", "dataviz"], ["agents", "n8n"],
+  ["next", "supa"], ["next", "ts"], ["html", "next"],
+  ["dataiku", "dataviz"], ["agents", "n8n"], ["make", "n8n"], ["make", "agents"],
+  ["piano", "tagco"], ["piano", "dataviz"], ["tagco", "html"], ["piano", "powerbi"],
+  ["sql", "dataiku"], ["sql", "powerbi"],
 ];
 
 export function Stack() {
@@ -43,14 +49,10 @@ export function Stack() {
 
   return (
     <section id="stack" className="relative py-32 px-6">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-[1400px] mx-auto">
         <SectionHeader number="01" title="Tableau d'investigation" subtitle="Arsenal · Compétences reliées" />
 
-        <p className="mt-8 max-w-2xl text-muted-foreground font-serif-display italic text-lg">
-          Chaque compétence est une pièce à conviction. Survolez une fiche pour révéler ses connexions.
-        </p>
-
-        <div className="relative mt-16 paper-shadow rounded-sm border border-evidence/20 bg-[radial-gradient(circle_at_20%_10%,oklch(0.22_0.03_25/0.6),transparent_60%),radial-gradient(circle_at_80%_90%,oklch(0.2_0.04_20/0.7),transparent_55%)] bg-card overflow-hidden">
+        <div className="relative mt-12 paper-shadow rounded-sm border border-evidence/20 bg-[radial-gradient(circle_at_20%_10%,oklch(0.22_0.03_25/0.6),transparent_60%),radial-gradient(circle_at_80%_90%,oklch(0.2_0.04_20/0.7),transparent_55%)] bg-card overflow-hidden">
           {/* Cork-like texture */}
           <div
             className="absolute inset-0 opacity-[0.08] pointer-events-none"
@@ -63,10 +65,10 @@ export function Stack() {
           />
           <CornerStamps />
 
-          <div className="relative aspect-[1000/620] w-full">
+          <div className="relative aspect-[1000/820] w-full">
             {/* Threads */}
             <svg
-              viewBox="0 0 1000 620"
+              viewBox="0 0 1000 820"
               className="absolute inset-0 w-full h-full pointer-events-none"
               preserveAspectRatio="none"
             >
@@ -110,7 +112,7 @@ export function Stack() {
                   } ${lit ? "scale-110 z-20 ring-2 ring-evidence" : "z-10 hover:-translate-y-0.5"}`}
                   style={{
                     left: `${(n.x / 1000) * 100}%`,
-                    top: `${(n.y / 620) * 100}%`,
+                    top: `${(n.y / 820) * 100}%`,
                     transform: `translate(-50%, -50%) rotate(${rot}deg)`,
                     minWidth: 96,
                   }}
@@ -127,11 +129,6 @@ export function Stack() {
           </div>
         </div>
 
-        <div className="mt-6 flex flex-wrap gap-4 font-stamp text-[10px] tracking-[0.25em] text-muted-foreground">
-          <span>● {nodes.length} pièces à conviction</span>
-          <span>● {links.length} connexions tracées</span>
-          <span className="text-evidence">● fils rouges = synergies maîtrisées</span>
-        </div>
       </div>
     </section>
   );
