@@ -97,10 +97,12 @@ function GameRouter({ game, onSolved }: { game: GameKey; onSolved: () => void })
     case "threads": return <ThreadsGame onSolved={onSolved} />;
     case "lock": return <LockGame onSolved={onSolved} />;
     case "shred": return <ShredGame onSolved={onSolved} />;
-    case "scan": return <ScanGame onSolved={onSolved} />;
+    case "hidden": return <HiddenGame onSolved={onSolved} />;
     case "biometric": return <BiometricGame onSolved={onSolved} />;
     case "stamp": return <StampGame onSolved={onSolved} />;
     case "maze": return <MazeGame onSolved={onSolved} />;
+    case "polygraph": return <PolygraphGame onSolved={onSolved} />;
+    case "code": return <CodeGame onSolved={onSolved} />;
   }
 }
 
@@ -291,15 +293,36 @@ function ShredGame({ onSolved }: { onSolved: () => void }) {
   );
 }
 
-/* ---------- 4. Scanner les preuves — loupe ---------- */
+/* ---------- 4. Cherchez les indices — loupe sur scène ---------- */
 
-function ScanGame({ onSolved }: { onSolved: () => void }) {
-  const docs = useMemo(() => {
-    const target = Math.floor(Math.random() * 6);
-    return Array.from({ length: 6 }, (_, i) => ({ id: i, hidden: i === target }));
+function HiddenGame({ onSolved }: { onSolved: () => void }) {
+  // Scène : icônes dispersées comme décor. 3 cibles à trouver parmi les décors.
+  const POOL = ["🔑", "📎", "✉️", "🕯", "📷", "🎩", "📞", "🔍", "🗝", "🎲", "📰", "🧷", "🖋", "💼", "📌"];
+  const TARGETS_POOL = ["🔫", "💊", "💎", "🗡", "🩸"];
+  const { decor, targets } = useMemo(() => {
+    const targets = shuffle(TARGETS_POOL).slice(0, 3);
+    const decorCount = 22;
+    const decor: { icon: string; x: number; y: number; r: number }[] = [];
+    for (let i = 0; i < decorCount; i++) {
+      decor.push({
+        icon: POOL[Math.floor(Math.random() * POOL.length)],
+        x: 6 + Math.random() * 88,
+        y: 8 + Math.random() * 84,
+        r: (Math.random() - 0.5) * 30,
+      });
+    }
+    // Place les 3 cibles à des positions distinctes
+    const placed = targets.map((icon) => ({
+      icon,
+      x: 10 + Math.random() * 80,
+      y: 15 + Math.random() * 70,
+      r: (Math.random() - 0.5) * 24,
+    }));
+    return { decor, targets: placed };
   }, []);
+
   const [pos, setPos] = useState({ x: 50, y: 50 });
-  const [found, setFound] = useState(false);
+  const [found, setFound] = useState<string[]>([]);
   const ref = useRef<HTMLDivElement>(null);
 
   const onMove = (e: React.MouseEvent) => {
@@ -308,47 +331,72 @@ function ScanGame({ onSolved }: { onSolved: () => void }) {
     setPos({ x: ((e.clientX - r.left) / r.width) * 100, y: ((e.clientY - r.top) / r.height) * 100 });
   };
 
-  const onClick = (id: number) => {
-    if (docs[id].hidden) {
-      setFound(true);
-      setTimeout(onSolved, 500);
-    }
+  const clickTarget = (icon: string) => {
+    if (found.includes(icon)) return;
+    const next = [...found, icon];
+    setFound(next);
+    if (next.length === targets.length) setTimeout(onSolved, 500);
   };
 
   return (
     <div>
-      <Hint>Déplacez la loupe et cliquez sur le document qui dissimule une preuve.</Hint>
+      <Hint>Trouvez les 3 indices cachés dans la scène — déplacez la loupe.</Hint>
+      <div className="mb-2 flex items-center justify-center gap-3">
+        {targets.map((t) => {
+          const got = found.includes(t.icon);
+          return (
+            <div
+              key={t.icon}
+              className={`w-10 h-10 flex items-center justify-center text-xl border-2 transition-all
+                ${got ? "border-evidence bg-evidence/15" : "border-paper-foreground/30 bg-paper-foreground/5 text-paper-foreground/40 grayscale"}`}
+              title={got ? "trouvé" : "à trouver"}
+            >
+              {got ? t.icon : "?"}
+            </div>
+          );
+        })}
+      </div>
       <div
         ref={ref}
         onMouseMove={onMove}
-        className="relative h-[240px] bg-paper-foreground/5 border border-paper-foreground/15 grid grid-cols-3 grid-rows-2 gap-2 p-2 cursor-none overflow-hidden"
+        className="relative h-[240px] bg-[oklch(0.92_0.04_80)] border border-paper-foreground/15 cursor-none overflow-hidden select-none"
       >
-        {docs.map((d) => {
-          const cx = (d.id % 3) * (100 / 3) + 100 / 6;
-          const cy = Math.floor(d.id / 3) * 50 + 25;
-          const dist = Math.hypot(pos.x - cx, pos.y - cy);
-          const revealed = d.hidden && dist < 22;
+        {/* décor */}
+        {decor.map((d, i) => (
+          <span
+            key={i}
+            className="absolute text-xl opacity-60 pointer-events-none"
+            style={{ left: `${d.x}%`, top: `${d.y}%`, transform: `translate(-50%,-50%) rotate(${d.r}deg)` }}
+          >
+            {d.icon}
+          </span>
+        ))}
+        {/* cibles */}
+        {targets.map((t) => {
+          const got = found.includes(t.icon);
           return (
             <button
-              key={d.id}
-              onClick={() => onClick(d.id)}
-              className={`relative border border-paper-foreground/20 bg-paper paper-shadow flex items-center justify-center font-stamp text-[10px] tracking-[0.2em] transition-colors
-                ${revealed ? "border-evidence text-evidence" : "text-paper-foreground/50"}`}
+              key={t.icon}
+              onClick={() => clickTarget(t.icon)}
+              className={`absolute text-xl transition-all ${got ? "scale-150 text-evidence" : "opacity-90 hover:scale-110"}`}
+              style={{ left: `${t.x}%`, top: `${t.y}%`, transform: `translate(-50%,-50%) rotate(${t.r}deg)` }}
             >
-              {revealed ? "★ PREUVE" : "DOC"}
+              {t.icon}
             </button>
           );
         })}
-        {!found && (
-          <div
-            className="pointer-events-none absolute w-24 h-24 rounded-full border-4 border-evidence/80 -translate-x-1/2 -translate-y-1/2"
-            style={{
-              left: `${pos.x}%`, top: `${pos.y}%`,
-              boxShadow: "0 0 0 9999px rgba(0,0,0,0.35), inset 0 0 12px rgba(0,0,0,0.3)",
-            }}
-          />
-        )}
+        {/* loupe */}
+        <div
+          className="pointer-events-none absolute w-28 h-28 rounded-full border-[3px] border-paper-foreground/80 -translate-x-1/2 -translate-y-1/2"
+          style={{
+            left: `${pos.x}%`, top: `${pos.y}%`,
+            boxShadow: "0 0 0 9999px rgba(20,15,10,0.55), inset 0 0 14px rgba(0,0,0,0.35)",
+          }}
+        />
       </div>
+      <p className="font-stamp text-[10px] tracking-[0.25em] text-paper-foreground/50 mt-2 text-center">
+        {found.length}/{targets.length} indices
+      </p>
     </div>
   );
 }
@@ -459,77 +507,254 @@ function StampGame({ onSolved }: { onSolved: () => void }) {
   );
 }
 
-/* ---------- 7. Mini-labyrinthe ---------- */
+/* ---------- 7. Labyrinthe d'archives — tracer le chemin ---------- */
 
 function MazeGame({ onSolved }: { onSolved: () => void }) {
-  // 5x5 grid, 0 = libre, 1 = mur, S start, E exit
-  const grid = [
-    [0, 1, 0, 0, 0],
-    [0, 1, 0, 1, 0],
-    [0, 0, 0, 1, 0],
-    [1, 1, 0, 0, 0],
-    [0, 0, 0, 1, 0],
-  ];
+  // Labyrinthe 7x7 avec murs entre cellules. b/r/d/l = murs.
+  // Chemin garanti via la diagonale en escalier.
+  const W = 7, H = 7;
+  type Cell = { r: boolean; d: boolean }; // mur droite / bas
+  const maze = useMemo<Cell[][]>(() => {
+    const g: Cell[][] = Array.from({ length: H }, () =>
+      Array.from({ length: W }, () => ({ r: true, d: true })),
+    );
+    // chemin solution : escalier (0,0) → (6,6)
+    let x = 0, y = 0;
+    const path: Array<[number, number]> = [[0, 0]];
+    while (x < W - 1 || y < H - 1) {
+      const goRight =
+        y === H - 1 ? true :
+        x === W - 1 ? false :
+        Math.random() < 0.5;
+      if (goRight) { g[y][x].r = false; x++; }
+      else { g[y][x].d = false; y++; }
+      path.push([x, y]);
+    }
+    // ouvre quelques passages aléatoires pour faire des couloirs/leurres
+    for (let i = 0; i < 14; i++) {
+      const rx = Math.floor(Math.random() * W);
+      const ry = Math.floor(Math.random() * H);
+      if (Math.random() < 0.5 && rx < W - 1) g[ry][rx].r = false;
+      else if (ry < H - 1) g[ry][rx].d = false;
+    }
+    return g;
+  }, []);
+
   const start = { x: 0, y: 0 };
-  const exit = { x: 4, y: 4 };
-  const [pos, setPos] = useState(start);
+  const exit = { x: W - 1, y: H - 1 };
   const [trail, setTrail] = useState<Array<{ x: number; y: number }>>([start]);
+  const [dragging, setDragging] = useState(false);
+  const head = trail[trail.length - 1];
 
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      const dx = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
-      const dy = e.key === "ArrowDown" ? 1 : e.key === "ArrowUp" ? -1 : 0;
-      if (!dx && !dy) return;
-      e.preventDefault();
-      move(dx, dy);
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  });
-
-  const move = (dx: number, dy: number) => {
-    const nx = pos.x + dx, ny = pos.y + dy;
-    if (nx < 0 || ny < 0 || nx > 4 || ny > 4) return;
-    if (grid[ny][nx] === 1) return;
-    const np = { x: nx, y: ny };
-    setPos(np);
-    setTrail((t) => [...t, np]);
-    if (nx === exit.x && ny === exit.y) setTimeout(onSolved, 400);
+  const canMove = (a: { x: number; y: number }, b: { x: number; y: number }) => {
+    const dx = b.x - a.x, dy = b.y - a.y;
+    if (Math.abs(dx) + Math.abs(dy) !== 1) return false;
+    if (dx === 1) return !maze[a.y][a.x].r;
+    if (dx === -1) return !maze[a.y][b.x].r;
+    if (dy === 1) return !maze[a.y][a.x].d;
+    if (dy === -1) return !maze[b.y][a.x].d;
+    return false;
   };
+
+  const enter = (x: number, y: number) => {
+    if (!dragging) return;
+    // si on revient en arrière sur l'avant-dernière case, on annule la dernière
+    if (trail.length >= 2) {
+      const prev = trail[trail.length - 2];
+      if (prev.x === x && prev.y === y) {
+        setTrail((t) => t.slice(0, -1));
+        return;
+      }
+    }
+    if (trail.some((t) => t.x === x && t.y === y)) return;
+    if (!canMove(head, { x, y })) return;
+    const np = { x, y };
+    const next = [...trail, np];
+    setTrail(next);
+    if (x === exit.x && y === exit.y) {
+      setDragging(false);
+      setTimeout(onSolved, 400);
+    }
+  };
+
+  const cellSize = 30;
 
   return (
     <div>
-      <Hint>Atteignez la sortie — flèches du clavier ou boutons directionnels.</Hint>
-      <div className="flex flex-col md:flex-row items-center justify-center gap-6 my-2">
-        <div className="grid grid-cols-5 gap-1 bg-paper-foreground/10 p-2">
-          {grid.map((row, y) =>
-            row.map((cell, x) => {
-              const here = pos.x === x && pos.y === y;
-              const onTrail = trail.some((t) => t.x === x && t.y === y);
-              const isExit = exit.x === x && exit.y === y;
+      <Hint>Tracez le chemin de l'entrée à la sortie — maintenez le clic et survolez les cases.</Hint>
+      <div className="flex justify-center">
+        <div
+          onMouseDown={() => setDragging(true)}
+          onMouseUp={() => setDragging(false)}
+          onMouseLeave={() => setDragging(false)}
+          className="relative bg-[oklch(0.94_0.04_80)] border-2 border-paper-foreground/40 paper-shadow select-none"
+          style={{ width: W * cellSize, height: H * cellSize }}
+        >
+          {/* fil rouge tracé */}
+          <svg className="absolute inset-0 pointer-events-none" width={W * cellSize} height={H * cellSize}>
+            <polyline
+              fill="none"
+              stroke="oklch(0.62 0.22 18)"
+              strokeWidth={4}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              points={trail.map((t) => `${t.x * cellSize + cellSize / 2},${t.y * cellSize + cellSize / 2}`).join(" ")}
+              style={{ filter: "drop-shadow(0 0 4px oklch(0.62 0.22 18 / 0.6))" }}
+            />
+          </svg>
+          {/* cellules + murs */}
+          {maze.map((row, y) =>
+            row.map((c, x) => {
+              const isStart = x === 0 && y === 0;
+              const isExit = x === exit.x && y === exit.y;
               return (
                 <div
                   key={`${x}-${y}`}
-                  className={`w-8 h-8 flex items-center justify-center text-xs font-stamp
-                    ${cell === 1 ? "bg-paper-foreground/80" :
-                      here ? "bg-evidence text-evidence-foreground" :
-                      isExit ? "border-2 border-evidence text-evidence" :
-                      onTrail ? "bg-evidence/15" : "bg-paper"}`}
+                  onMouseEnter={() => enter(x, y)}
+                  onMouseDown={(e) => { e.preventDefault(); setDragging(true); enter(x, y); }}
+                  className="absolute"
+                  style={{
+                    left: x * cellSize, top: y * cellSize,
+                    width: cellSize, height: cellSize,
+                    borderRight: c.r ? "2px solid oklch(0.3 0.04 60)" : "none",
+                    borderBottom: c.d ? "2px solid oklch(0.3 0.04 60)" : "none",
+                  }}
                 >
-                  {here ? "●" : isExit ? "★" : ""}
+                  {isStart && (
+                    <span className="absolute inset-0 flex items-center justify-center font-stamp text-[9px] tracking-wider text-paper-foreground/70">
+                      ▶
+                    </span>
+                  )}
+                  {isExit && (
+                    <span className="absolute inset-0 flex items-center justify-center text-evidence text-base">★</span>
+                  )}
                 </div>
               );
             }),
           )}
         </div>
-        <div className="grid grid-cols-3 gap-1 w-32">
-          <div />
-          <button onClick={() => move(0, -1)} className="py-2 bg-paper border border-paper-foreground/30 font-stamp">↑</button>
-          <div />
-          <button onClick={() => move(-1, 0)} className="py-2 bg-paper border border-paper-foreground/30 font-stamp">←</button>
-          <button onClick={() => move(0, 1)} className="py-2 bg-paper border border-paper-foreground/30 font-stamp">↓</button>
-          <button onClick={() => move(1, 0)} className="py-2 bg-paper border border-paper-foreground/30 font-stamp">→</button>
-        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ---------- 8. Polygraphe — stopper l'aiguille dans la zone verte ---------- */
+
+function PolygraphGame({ onSolved }: { onSolved: () => void }) {
+  const [pos, setPos] = useState(0);
+  const [stopped, setStopped] = useState<number | null>(null);
+  const zoneStart = useMemo(() => 30 + Math.random() * 40, []);
+  const zoneEnd = zoneStart + 15;
+
+  useEffect(() => {
+    if (stopped !== null) return;
+    let raf: number;
+    let dir = 1;
+    const tick = () => {
+      setPos((p) => {
+        let n = p + dir * 1.5;
+        if (n >= 100) { n = 100; dir = -1; }
+        if (n <= 0) { n = 0; dir = 1; }
+        return n;
+      });
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [stopped]);
+
+  const stop = () => {
+    setStopped(pos);
+    if (pos >= zoneStart && pos <= zoneEnd) {
+      setTimeout(onSolved, 600);
+    } else {
+      // relance après court délai
+      setTimeout(() => { setStopped(null); }, 700);
+    }
+  };
+
+  const inZone = stopped !== null && stopped >= zoneStart && stopped <= zoneEnd;
+
+  return (
+    <div>
+      <Hint>Stoppez l'aiguille dans la zone verte pour valider le polygraphe.</Hint>
+      <div className="relative h-12 bg-paper-foreground/10 border border-paper-foreground/30 my-6 overflow-hidden">
+        <div
+          className="absolute top-0 bottom-0 bg-evidence/30 border-x-2 border-evidence"
+          style={{ left: `${zoneStart}%`, width: `${zoneEnd - zoneStart}%` }}
+        />
+        <div
+          className={`absolute top-0 bottom-0 w-1 ${stopped === null ? "bg-paper-foreground" : inZone ? "bg-evidence" : "bg-destructive"}`}
+          style={{ left: `${pos}%`, transition: stopped !== null ? "none" : undefined }}
+        />
+      </div>
+      <div className="flex justify-center">
+        <button
+          onClick={stop}
+          disabled={stopped !== null}
+          className="px-8 py-3 bg-paper-foreground text-paper font-stamp text-xs tracking-[0.3em] noir-shadow hover:-translate-y-0.5 transition-transform disabled:opacity-60"
+        >
+          {stopped === null ? "STOP" : inZone ? "VALIDÉ" : "RAYÉ — RECOMMENCEZ"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/* ---------- 9. Code à 4 chiffres ---------- */
+
+function CodeGame({ onSolved }: { onSolved: () => void }) {
+  const target = useMemo(
+    () => Array.from({ length: 4 }, () => Math.floor(Math.random() * 10)),
+    [],
+  );
+  const [guess, setGuess] = useState<number[]>([0, 0, 0, 0]);
+  const [active, setActive] = useState(0);
+
+  const adjust = (d: number) => {
+    setGuess((g) => {
+      const next = [...g];
+      next[active] = (next[active] + d + 10) % 10;
+      return next;
+    });
+  };
+
+  useEffect(() => {
+    if (guess.every((d, i) => d === target[i])) {
+      const t = setTimeout(onSolved, 500);
+      return () => clearTimeout(t);
+    }
+  }, [guess, target, onSolved]);
+
+  return (
+    <div>
+      <Hint>Composez la combinaison — ▲ trop bas · ▼ trop haut · ● correct.</Hint>
+      <div className="flex items-center justify-center gap-3 my-6">
+        {guess.map((d, i) => {
+          const hint =
+            d === target[i] ? "ok" :
+            d < target[i] ? "low" :
+            "high";
+          return (
+            <button
+              key={i}
+              onClick={() => setActive(i)}
+              className={`relative w-14 h-20 border-2 font-mono text-3xl flex items-center justify-center transition-all
+                ${active === i ? "border-evidence bg-evidence/10" : "border-paper-foreground/40 bg-paper"}
+                text-paper-foreground`}
+            >
+              {d}
+              <span className={`absolute -bottom-5 text-xs font-stamp tracking-wider
+                ${hint === "ok" ? "text-evidence" : "text-paper-foreground/50"}`}>
+                {hint === "ok" ? "●" : hint === "low" ? "▲" : "▼"}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+      <div className="flex justify-center gap-3 mt-8">
+        <button onClick={() => adjust(-1)} className="w-12 h-10 bg-paper border-2 border-paper-foreground/40 font-stamp">−</button>
+        <button onClick={() => adjust(+1)} className="w-12 h-10 bg-paper border-2 border-paper-foreground/40 font-stamp">+</button>
       </div>
     </div>
   );
