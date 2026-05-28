@@ -73,16 +73,6 @@ export function Hero() {
         ↓ Descendre dans le dossier
       </div>
 
-      {/* Bottom right: GPS / live feed */}
-      <div className="absolute bottom-6 right-6 md:right-10 text-right font-stamp text-[10px] tracking-[0.25em] text-muted-foreground z-10 space-y-0.5">
-        <div>LATITUDE 48.85° N</div>
-        <div>LONGITUDE 2.35° E</div>
-        <div className="text-evidence flex items-center justify-end gap-1.5 mt-1">
-          <span className="w-1.5 h-1.5 rounded-full bg-evidence animate-blink" />
-          LIVE FEED
-        </div>
-      </div>
-
       <div id="moi" className="absolute bottom-0" />
     </section>
   );
