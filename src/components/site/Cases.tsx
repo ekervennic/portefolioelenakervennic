@@ -158,6 +158,7 @@ function CaseFolder({ c, index, onOpen }: { c: CaseT; index: number; onOpen: () 
 }
 
 function CaseModal({ c, onClose }: { c: CaseT; onClose: () => void }) {
+  const [zoom, setZoom] = useState<string | null>(null);
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8 bg-background/85 backdrop-blur-md animate-fade-in"
@@ -192,9 +193,11 @@ function CaseModal({ c, onClose }: { c: CaseT; onClose: () => void }) {
             </div>
             <div className={`grid gap-3 ${c.images.length === 1 ? "grid-cols-1" : "grid-cols-2"}`}>
               {c.images.map((src, i) => (
-                <div
+                <button
                   key={i}
-                  className="relative bg-paper-foreground/5 border border-paper-foreground/20 p-2 paper-shadow"
+                  type="button"
+                  onClick={() => setZoom(src)}
+                  className="group relative bg-paper-foreground/5 border border-paper-foreground/20 p-2 paper-shadow hover:border-evidence transition-colors cursor-zoom-in"
                   style={{ transform: `rotate(${((i % 2) - 0.5) * 0.6}deg)` }}
                 >
                   <img
@@ -203,7 +206,10 @@ function CaseModal({ c, onClose }: { c: CaseT; onClose: () => void }) {
                     loading="lazy"
                     className="w-full h-48 object-cover"
                   />
-                </div>
+                  <span className="absolute bottom-3 right-3 font-stamp text-[9px] tracking-[0.25em] bg-paper-foreground/80 text-paper px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    ↗ AGRANDIR
+                  </span>
+                </button>
               ))}
             </div>
           </div>
@@ -279,6 +285,34 @@ function CaseModal({ c, onClose }: { c: CaseT; onClose: () => void }) {
           Confidentiel
         </div>
       </div>
+
+      {zoom && (
+        <div
+          className="fixed inset-0 z-[60] flex items-center justify-center p-4 md:p-8 bg-background/95 backdrop-blur-md animate-fade-in"
+          onClick={(e) => {
+            e.stopPropagation();
+            setZoom(null);
+          }}
+        >
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setZoom(null);
+            }}
+            className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center bg-paper-foreground/10 hover:bg-evidence hover:text-evidence-foreground text-paper text-xl transition-colors z-10"
+            aria-label="Fermer"
+          >
+            ✕
+          </button>
+          <img
+            src={zoom}
+            alt="Pièce agrandie"
+            className="max-w-full max-h-full object-contain paper-shadow animate-scale-in"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
     </div>
   );
 }
