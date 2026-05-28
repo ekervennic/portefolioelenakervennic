@@ -7,6 +7,11 @@ import together4 from "@/assets/cases/together-4.png";
 import mood1 from "@/assets/cases/mood-1.png";
 import mood2 from "@/assets/cases/mood-2.png";
 import lyrics1 from "@/assets/cases/lyrics-1.png";
+import ecole1 from "@/assets/cases/ecole-1.png";
+import ecole2 from "@/assets/cases/ecole-2.png";
+import ecole3 from "@/assets/cases/ecole-3.png";
+import ecole4 from "@/assets/cases/ecole-4.png";
+import mirakl1 from "@/assets/cases/mirakl-1.png";
 
 type CaseT = {
   id: string;
@@ -66,6 +71,7 @@ const cases: CaseT[] = [
     stack: ["Next.js", "Supabase", "TypeScript"],
     accent: "oklch(0.55 0.18 200)",
     proofs: ["Dashboard", "Capture écran", "Démo"],
+    images: [ecole1, ecole2, ecole3, ecole4],
   },
   {
     id: "mirakl",
@@ -77,6 +83,7 @@ const cases: CaseT[] = [
     won: true,
     accent: "oklch(0.62 0.22 18)",
     proofs: ["🏆 1er prix", "Démo", "Dashboard", "Capture écran", "Résultat obtenu"],
+    images: [mirakl1],
   },
 ];
 
