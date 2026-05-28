@@ -63,7 +63,7 @@ const intents: Intent[] = [
   {
     keywords: /(défi|challenge|difficile|plus dur|obstacle)/,
     answer:
-      "Mon plus gros défi a sans doute été le hackathon Mirakl : 48h pour livrer une solution complète, dans une équipe qu'on découvre, avec une vraie pression de résultat. Il a fallu arbitrer vite, déléguer, et accepter de ne pas tout faire parfaitement. Au final, c'est cette intensité qui rend l'apprentissage si fort.",
+      "Mon plus gros défi a sans doute été le hackathon Mirakl : moins d'une semaine pour livrer une solution complète, dans une équipe qu'on découvre, avec une vraie pression de résultat. Il a fallu arbitrer vite, déléguer, et accepter de ne pas tout faire parfaitement. Au final, c'est cette intensité qui rend l'apprentissage si fort.",
   },
   {
     keywords: /(opportunité|recherche|cherche|stage|alternance future|poste|cdi|emploi|job)/,
@@ -76,7 +76,7 @@ const intents: Intent[] = [
       "Mon objectif est de devenir une professionnelle capable de relier la data, l'IA et le produit. Je veux pouvoir analyser un sujet, concevoir une solution intelligente et la transformer en outil utilisable. À terme, j'aimerais piloter des projets qui ont un vrai impact, à la croisée de la technique et du métier.",
   },
   {
-    keywords: /(hackathon|mirakl|48h|gagné|gagnée|première place)/,
+    keywords: /(hackathon|mirakl|semaine|gagné|gagnée|première place)/,
     answer:
       "J'ai participé au hackathon Mirakl parce que j'aime les formats intenses où l'on doit transformer une idée en solution concrète en très peu de temps. Avec mon équipe, on a livré une plateforme de sourcing de candidats mêlant scraping, IA et automatisation no-code — ce qui nous a valu la première place. C'est l'expérience qui m'a le plus appris sur le travail d'équipe sous contrainte.",
     weight: 2,
