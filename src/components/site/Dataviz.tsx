@@ -108,14 +108,14 @@ export function Dataviz() {
               ↗ VOIR EN PLEIN ÉCRAN
             </a>
           </div>
-          <div className="relative w-full overflow-hidden border border-paper-foreground/15 bg-white">
+          <div className="relative w-full overflow-hidden border border-paper-foreground/15 bg-white max-h-[420px]">
             {/* @ts-expect-error - tableau web component */}
             <tableau-viz
               id="tableauViz"
               src="https://public.tableau.com/views/Brsilanalysee-commerce/Tableaudebord1"
               toolbar="bottom"
               hide-tabs
-              style={{ width: "100%", display: "block" }}
+              style={{ width: "100%", height: "420px", display: "block" }}
             />
           </div>
         </div>

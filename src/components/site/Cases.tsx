@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { SectionHeader } from "./About";
 import together1 from "@/assets/cases/together-1.png";
 import together2 from "@/assets/cases/together-2.png";
@@ -18,7 +18,7 @@ type CaseT = {
   num: string;
   title: string;
   subtitle: string;
-  description: string;
+  description: ReactNode;
   stack: string[];
   won?: boolean;
   link?: { label: string; url: string };
@@ -33,7 +33,26 @@ const cases: CaseT[] = [
     num: "01",
     title: "Together",
     subtitle: "Application sociale de sorties entre amis",
-    description: "Organiser une sortie entre amis paraît simple, mais la réalité est souvent différente : discussions dispersées sur plusieurs applications, sondages improvisés, lieux partagés dans différents groupes et décisions qui prennent du temps à être validées. Together est né de cette problématique. L'objectif était de concevoir une plateforme unique permettant de centraliser toute l'organisation d'une sortie : proposition d'activités, votes, confirmation des participants, discussions et recommandations de lieux. Au-delà de l'aspect technique, ce projet m'a permis de travailler sur la conception d'un véritable produit, en réfléchissant autant à l'expérience utilisateur qu'aux fonctionnalités proposées. Il représente aujourd'hui l'un de mes projets les plus complets.",
+    description: (
+      <>
+        <p>
+          Organiser une sortie entre amis paraît simple, mais la réalité est souvent différente :
+          discussions dispersées sur plusieurs applications, sondages improvisés, lieux partagés dans
+          différents groupes et décisions qui prennent du temps à être validées.
+        </p>
+        <p>
+          <strong>Together</strong> est né de cette problématique. L'objectif était de concevoir
+          une plateforme unique permettant de centraliser toute l'organisation d'une sortie :
+          proposition d'activités, votes, confirmation des participants, discussions et
+          recommandations de lieux.
+        </p>
+        <p>
+          Au-delà de l'aspect technique, ce projet m'a permis de travailler sur la conception
+          d'un véritable produit, en réfléchissant autant à l'expérience utilisateur qu'aux
+          fonctionnalités proposées. Il représente aujourd'hui l'un de mes projets les plus complets.
+        </p>
+      </>
+    ),
     stack: ["Next.js", "Supabase", "OpenAI", "TypeScript", "Cursor"],
     accent: "oklch(0.6 0.18 25)",
     proofs: ["Démo", "Dashboard", "Capture écran", "Résultat obtenu"],
@@ -44,7 +63,27 @@ const cases: CaseT[] = [
     num: "02",
     title: "Mood Film Finder",
     subtitle: "Plus de 6 500 films et séries scrapés, recommandation par l'humeur",
-    description: "La plupart des plateformes recommandent des films selon un genre ou des habitudes de visionnage. Pourtant, lorsque l'on cherche quelque chose à regarder, on recherche souvent avant tout une émotion : rire, réfléchir, être surpris ou simplement se détendre. C'est cette idée qui a donné naissance à Mood Film Finder. Pour construire cet outil, j'ai collecté plus de 6500 films et séries via un important travail de scraping, puis mis en place une logique de recommandation reposant sur une architecture RAG et une base vectorielle. L'objectif n'était pas simplement de proposer des films, mais de créer une expérience capable de comprendre une intention ou un ressenti exprimé naturellement par un utilisateur et de transformer cette émotion en recommandation pertinente.",
+    description: (
+      <>
+        <p>
+          La plupart des plateformes recommandent des films selon un genre ou des habitudes de
+          visionnage. Pourtant, lorsque l'on cherche quelque chose à regarder, on recherche souvent
+          avant tout une <strong>émotion</strong> : rire, réfléchir, être surpris ou simplement
+          se détendre.
+        </p>
+        <p>
+          C'est cette idée qui a donné naissance à <strong>Mood Film Finder</strong>. Pour construire
+          cet outil, j'ai collecté plus de 6 500 films et séries via un important travail de scraping,
+          puis mis en place une logique de recommandation reposant sur une architecture RAG et une
+          base vectorielle.
+        </p>
+        <p>
+          L'objectif n'était pas simplement de proposer des films, mais de créer une expérience capable
+          de comprendre une intention ou un ressenti exprimé naturellement par un utilisateur et de
+          transformer cette émotion en recommandation pertinente.
+        </p>
+      </>
+    ),
     stack: ["Python", "Scraping", "RAG", "IA"],
     link: { label: "🎬 Tester l'expérience Mood Match", url: "https://vibe-select-recs.lovable.app/match" },
     accent: "oklch(0.55 0.2 320)",
@@ -56,7 +95,26 @@ const cases: CaseT[] = [
     num: "03",
     title: "Chatbot Paroles",
     subtitle: "Retrouver une chanson à partir de paroles approximatives",
-    description: "Il nous est tous déjà arrivé de nous souvenir d'une chanson sans parvenir à retrouver son titre. Souvent, seules quelques paroles approximatives restent en mémoire, parfois avec des erreurs ou des oublis. Ce projet répond à cette problématique grâce à une architecture RAG combinant embeddings, recherche vectorielle et génération assistée par LLM. L'utilisateur peut saisir un fragment de paroles, même imprécis, et le système identifie la chanson la plus probable. L'enjeu principal était de dépasser la simple recherche par mots-clés pour permettre une véritable compréhension sémantique des requêtes et améliorer considérablement la qualité des résultats.",
+    description: (
+      <>
+        <p>
+          Il nous est tous déjà arrivé de nous souvenir d'une chanson sans parvenir à retrouver
+          son titre. Souvent, seules quelques paroles approximatives restent en mémoire, parfois
+          avec des erreurs ou des oublis.
+        </p>
+        <p>
+          Ce projet répond à cette problématique grâce à une architecture <strong>RAG</strong>{" "}
+          combinant embeddings, recherche vectorielle et génération assistée par LLM. L'utilisateur
+          peut saisir un fragment de paroles, même imprécis, et le système identifie la chanson
+          la plus probable.
+        </p>
+        <p>
+          L'enjeu principal était de dépasser la simple recherche par mots-clés pour permettre
+          une véritable <strong>compréhension sémantique</strong> des requêtes et améliorer
+          considérablement la qualité des résultats.
+        </p>
+      </>
+    ),
     stack: ["Python", "FAISS", "Embeddings", "OpenAI"],
     accent: "oklch(0.55 0.15 280)",
     proofs: ["Dataset", "Démo", "GitHub", "Résultat obtenu"],
@@ -67,7 +125,25 @@ const cases: CaseT[] = [
     num: "04",
     title: "Plateforme Scolaire",
     subtitle: "Centraliser cours, agenda, quiz, événements et messagerie",
-    description: "Les étudiants utilisent aujourd'hui une multitude d'outils différents pour accéder à leurs cours, consulter leur emploi du temps, échanger avec leurs enseignants ou suivre leurs évaluations. Cette dispersion nuit souvent à la lisibilité et à l'expérience utilisateur. J'ai donc imaginé une plateforme capable de centraliser l'ensemble de ces fonctionnalités au sein d'un espace unique, cohérent et simple à utiliser. Ce projet m'a permis de travailler sur la réflexion produit et l'expérience utilisateur, en cherchant à répondre à un besoin réel observé dans le quotidien étudiant plutôt qu'à un simple exercice technique.",
+    description: (
+      <>
+        <p>
+          Les étudiants utilisent aujourd'hui une multitude d'outils différents pour accéder à
+          leurs cours, consulter leur emploi du temps, échanger avec leurs enseignants ou suivre
+          leurs évaluations.
+        </p>
+        <p>
+          Cette dispersion nuit souvent à la lisibilité et à l'expérience utilisateur. J'ai donc
+          imaginé une <strong>plateforme</strong> capable de centraliser l'ensemble de ces
+          fonctionnalités au sein d'un espace unique, cohérent et simple à utiliser.
+        </p>
+        <p>
+          Ce projet m'a permis de travailler sur la réflexion produit et l'expérience utilisateur,
+          en cherchant à répondre à un <strong>besoin réel</strong> observé dans le quotidien
+          étudiant plutôt qu'à un simple exercice technique.
+        </p>
+      </>
+    ),
     stack: ["Next.js", "Supabase", "TypeScript"],
     accent: "oklch(0.55 0.18 200)",
     proofs: ["Dashboard", "Capture écran", "Démo"],
@@ -78,7 +154,27 @@ const cases: CaseT[] = [
     num: "05",
     title: "Hackathon Mirakl",
     subtitle: "Projet gagnant — pipeline IA de bout en bout",
-    description: "Dans le cadre du Hackathon Mirakl, notre équipe disposait de moins de 48 heures pour analyser une problématique métier, imaginer une solution et développer un prototype fonctionnel. Nous avons choisi de travailler sur l'automatisation du sourcing de candidats en combinant scraping, intelligence artificielle et automatisation no-code. L'objectif était de réduire le temps nécessaire à l'identification de profils pertinents tout en améliorant la qualité des résultats proposés. Ce projet m'a particulièrement marqué car il a demandé de prendre des décisions rapidement, de collaborer efficacement en équipe et de transformer une idée en solution concrète sous une forte contrainte de temps. Notre approche a finalement été récompensée par la première place du hackathon.",
+    description: (
+      <>
+        <p>
+          Dans le cadre du Hackathon Mirakl, notre équipe disposait de <strong>moins de 48 heures</strong>{" "}
+          pour analyser une problématique métier, imaginer une solution et développer un prototype
+          fonctionnel.
+        </p>
+        <p>
+          Nous avons choisi de travailler sur l'<strong>automatisation du sourcing de candidats</strong>{" "}
+          en combinant scraping, intelligence artificielle et automatisation no-code. L'objectif était
+          de réduire le temps nécessaire à l'identification de profils pertinents tout en améliorant
+          la qualité des résultats proposés.
+        </p>
+        <p>
+          Ce projet m'a particulièrement marqué car il a demandé de prendre des décisions rapidement,
+          de collaborer efficacement en équipe et de transformer une idée en solution concrète sous
+          une forte contrainte de temps. Notre approche a finalement été récompensée par la{" "}
+          <strong>première place</strong> du hackathon.
+        </p>
+      </>
+    ),
     stack: ["Python", "Scraping", "IA", "Dust", "n8n"],
     won: true,
     accent: "oklch(0.62 0.22 18)",
@@ -220,7 +316,9 @@ function CaseModal({ c, onClose }: { c: CaseT; onClose: () => void }) {
             <div className="font-stamp text-[10px] tracking-[0.3em] text-paper-foreground/60 mb-3">
               RAPPORT
             </div>
-            <p className="text-paper-foreground/90 leading-relaxed mb-6">{c.description}</p>
+            <div className="space-y-4 text-paper-foreground/90 leading-relaxed mb-6">
+              {c.description}
+            </div>
 
             {c.link && (
               <a
