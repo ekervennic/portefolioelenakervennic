@@ -156,81 +156,8 @@ const cases: CaseT[] = [
     images: [mirakl1],
   },
 ];
-    images: [mood1, mood2],
-  },
-  {
-    id: "lyrics",
-    num: "03",
-    title: "Chatbot Paroles",
-    subtitle: "🎵 NLP · RAG LLM · FAISS · 1 872 chansons",
-    question:
-      "Un agent peut-il identifier une musique depuis un extrait approximatif, partiel ou mal orthographié de paroles ?",
-    mystery:
-      "Musixmatch · Démo RAG. Exemples : « j'ai demandé à la lune, elle n'a rien voulu savoir » → Indochine — J'ai demandé à la lune (similarité 97%). « les chamz elyse » → Joe Dassin — Les Champs-Élysées (similarité 94%, tolérance orthographique).",
-    built: [
-      "Vectorisation de 1 872 chansons françaises avec OpenAI Embeddings (text-embedding-3-large)",
-      "Architecture RAG : extrait flou → K voisins FAISS → réponse LLM contextuelle",
-      "Interface chatbot Flask avec gestion des paroles imprécises, mal orthographiées ou partielles",
-      "Recherche vectorielle via FAISS — bien plus robuste que le mot-clé classique",
-    ],
-    verdict:
-      "La recherche sémantique surpasse le mot-clé classique. Identification réussie même avec des paroles très approximatives ou incomplètes.",
-    stack: ["Python", "FAISS", "Embeddings", "OpenAI"],
-    accent: "oklch(0.55 0.15 280)",
-    proofs: ["Dataset", "Démo", "GitHub", "Résultat obtenu"],
-    images: [lyrics1],
-  },
-  {
-    id: "ecole",
-    num: "04",
-    title: "Plateforme Scolaire",
-    subtitle: "Interface · UX",
-    question:
-      "Comment centraliser tous les outils utiles aux étudiants dans une seule plateforme cohérente ?",
-    mystery:
-      "Les étudiants jonglent entre plusieurs outils : un agenda ici, un espace cours là, les événements de l'école ailleurs. Comment concevoir une interface unique, fluide, qui centralise tout ?",
-    built: [
-      "Messagerie intégrée entre élèves et professeurs",
-      "Emploi du temps interactif et agenda glisser-déposer",
-      "Quiz d'entraînement avec suivi des scores",
-      "Événements proposés par l'école avec inscription en ligne",
-      "Espace cours : PDF par matière, ressources téléchargeables",
-    ],
-    verdict:
-      "Une plateforme unique pensée pour le quotidien étudiant, qui remplace une dizaine d'outils dispersés par un seul espace cohérent.",
-    stack: ["Next.js", "Supabase", "TypeScript"],
-    accent: "oklch(0.55 0.18 200)",
-    proofs: ["Dashboard", "Capture écran", "Démo"],
-    images: [ecole1, ecole2, ecole3, ecole4],
-  },
-  {
-    id: "mirakl",
-    num: "05",
-    title: "Hackathon Mirakl",
-    subtitle: "🏆 Winner · Data · Scraping IA",
-    question:
-      "Comment automatiser la recherche de futurs candidats à partir d'une offre d'emploi ?",
-    mystery:
-      "Le sourcing RH est un casse-tête : parcourir LinkedIn à la main, fouiller GitHub, croiser les profils des concurrents… des heures perdues pour chaque poste. Comment transformer ce travail manuel en un pipeline data + IA capable de sortir une shortlist de candidats pertinents en quelques minutes ?",
-    built: [
-      "Scraping LinkedIn & GitHub pour identifier les profils pertinents selon le poste",
-      "Scoring IA des candidats en fonction des compétences clés de l'offre",
-      "Scraping des concurrents pour détecter les talents à recruter",
-      "Interface centralisée avec profils filtrables, scorés et triés",
-    ],
-    results: [
-      "Automatisation complète du sourcing — gain de temps majeur",
-      "Visualisation claire des candidats potentiels en un coup d'œil",
-    ],
-    verdict:
-      "🏆 Projet vainqueur du Hackathon Mirakl. Parmi toutes les équipes en lice, notre solution a été élue par le jury comme la réponse la plus pertinente et la plus aboutie au problème posé — saluée pour la qualité du pipeline data, la pertinence du scoring IA et l'exécution produit de bout en bout en moins d'une semaine.",
-    stack: ["Python", "Scraping", "IA", "Dust", "n8n"],
-    won: true,
-    accent: "oklch(0.62 0.22 18)",
-    proofs: ["🏆 1er prix", "Démo", "Dashboard", "Capture écran", "Résultat obtenu"],
-    images: [mirakl1],
-  },
-];
+
+export function Cases() {
 
 export function Cases() {
   const [open, setOpen] = useState<CaseT | null>(null);
