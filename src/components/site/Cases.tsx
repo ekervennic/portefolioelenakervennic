@@ -11,6 +11,7 @@ type CaseT = {
   won?: boolean;
   link?: { label: string; url: string };
   accent: string;
+  proofs: string[];
 };
 
 const cases: CaseT[] = [
@@ -22,6 +23,7 @@ const cases: CaseT[] = [
     description: "Together réinvente l'organisation de sorties. Une plateforme sociale qui aide les groupes d'amis à proposer, planifier et confirmer leurs prochaines aventures — avec une IA qui suggère les meilleures options en fonction des envies du groupe.",
     stack: ["Next.js", "Supabase", "OpenAI", "TypeScript", "Cursor"],
     accent: "oklch(0.6 0.18 25)",
+    proofs: ["Démo", "Dashboard", "Capture écran", "Résultat obtenu"],
   },
   {
     id: "mood",
@@ -32,6 +34,7 @@ const cases: CaseT[] = [
     stack: ["Python", "Scraping", "RAG", "IA"],
     link: { label: "🎬 Tester l'expérience Mood Match", url: "https://vibe-select-recs.lovable.app/match" },
     accent: "oklch(0.55 0.2 320)",
+    proofs: ["Dataset (6 500+ titres)", "Démo", "Capture écran", "Résultat obtenu"],
   },
   {
     id: "lyrics",
@@ -41,6 +44,7 @@ const cases: CaseT[] = [
     description: "Architecture RAG permettant à un utilisateur de retrouver le titre d'une chanson à partir d'un fragment de paroles, même imprécis. Embeddings, recherche vectorielle et reformulation par LLM.",
     stack: ["Python", "FAISS", "Embeddings", "OpenAI"],
     accent: "oklch(0.55 0.15 280)",
+    proofs: ["Dataset", "Démo", "GitHub", "Résultat obtenu"],
   },
   {
     id: "ecole",
@@ -50,6 +54,7 @@ const cases: CaseT[] = [
     description: "Une plateforme conçue pour répondre à un problème concret rencontré par les étudiants : éparpillement des outils. Tout réunir dans une seule interface fluide, lisible et utile au quotidien.",
     stack: ["Next.js", "Supabase", "TypeScript"],
     accent: "oklch(0.55 0.18 200)",
+    proofs: ["Dashboard", "Capture écran", "Démo"],
   },
   {
     id: "mirakl",
@@ -60,6 +65,7 @@ const cases: CaseT[] = [
     stack: ["Python", "Scraping", "IA", "Dust", "n8n"],
     won: true,
     accent: "oklch(0.62 0.22 18)",
+    proofs: ["🏆 1er prix", "Démo", "Dashboard", "Capture écran", "Résultat obtenu"],
   },
 ];
 
@@ -196,6 +202,29 @@ function CaseModal({ c, onClose }: { c: CaseT; onClose: () => void }) {
                 </p>
               </div>
             )}
+
+            {/* Preuves collectées */}
+            <div className="mt-8 pt-6 border-t border-dashed border-paper-foreground/25">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="stamp text-[10px]">PREUVES COLLECTÉES</div>
+                <div className="flex-1 h-px bg-paper-foreground/15" />
+                <span className="font-stamp text-[9px] tracking-[0.25em] text-paper-foreground/50">
+                  {c.proofs.length} pièces
+                </span>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {c.proofs.map((p, i) => (
+                  <span
+                    key={p}
+                    className="relative inline-flex items-center gap-1.5 px-3 py-1.5 bg-paper-foreground/5 border border-evidence/40 text-paper-foreground text-xs font-stamp tracking-[0.1em]"
+                    style={{ transform: `rotate(${((i % 3) - 1) * 0.8}deg)` }}
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-evidence" />
+                    {p}
+                  </span>
+                ))}
+              </div>
+            </div>
           </div>
 
           <aside>
