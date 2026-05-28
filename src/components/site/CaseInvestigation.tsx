@@ -292,7 +292,8 @@ function MazeGame({ accent, onSolved }: { accent: string; onSolved: () => void }
  * 2. CADRAN DU COFFRE — rotation à la souris
  * ============================================================ */
 
-function DialGame({ onSolved }: { onSolved: () => void }) {
+function DialGame({ accent, onSolved }: { accent: string; onSolved: () => void }) {
+  const NEON = accent;
   const target = useMemo(() => Math.floor(Math.random() * 360), []);
   const [angle, setAngle] = useState(0);
   const [locked, setLocked] = useState(false);
@@ -382,9 +383,12 @@ function DialGame({ onSolved }: { onSolved: () => void }) {
         <button
           onClick={lock}
           disabled={!near || locked}
-          className={`mt-5 px-6 py-2.5 font-stamp text-xs tracking-[0.3em] border transition-all
-            ${near ? "border-evidence text-evidence bg-evidence/10 hover:bg-evidence hover:text-evidence-foreground" :
-              "border-white/15 text-white/30"}`}
+          className="mt-5 px-6 py-2.5 font-stamp text-xs tracking-[0.3em] border transition-all"
+          style={
+            near
+              ? { borderColor: NEON, color: NEON, background: `${NEON.replace(")", " / 0.12)")}`, boxShadow: `0 0 16px ${NEON}` }
+              : { borderColor: "rgba(255,255,255,0.15)", color: "rgba(255,255,255,0.3)" }
+          }
         >
           {locked ? "VERROUILLÉ" : "VERROUILLER"}
         </button>
