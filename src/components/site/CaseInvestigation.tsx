@@ -7,21 +7,22 @@ type Props = {
   onClose: () => void;
 };
 
-type GameKey = "maze" | "dial" | "trace" | "signal" | "network";
+type GameKey = "maze" | "dial" | "decode" | "signal" | "network";
 
-const META: Record<GameKey, { label: string; success: string }> = {
-  maze:    { label: "Labyrinthe sécurisé",      success: "Sortie atteinte — dossier ouvert." },
-  dial:    { label: "Cadran du coffre",         success: "Combinaison verrouillée — accès accordé." },
-  trace:   { label: "Tracé d'empreinte",        success: "Empreinte validée — dossier ouvert." },
-  signal:  { label: "Stabilisation du signal",  success: "Signal stabilisé — accès accordé." },
-  network: { label: "Réseau d'interception",    success: "Réseau activé — dossier déverrouillé." },
+// Chaque mini-jeu a son propre accent couleur (style app d'enquête moderne).
+const META: Record<GameKey, { label: string; success: string; accent: string; accentSoft: string }> = {
+  maze:    { label: "Labyrinthe sécurisé",     success: "Sortie atteinte — dossier ouvert.",        accent: "oklch(0.78 0.18 200)", accentSoft: "oklch(0.78 0.18 200 / 0.15)" }, // cyan
+  dial:    { label: "Cadran du coffre",        success: "Combinaison verrouillée — accès accordé.", accent: "oklch(0.82 0.16 80)",  accentSoft: "oklch(0.82 0.16 80 / 0.15)"  }, // amber
+  decode:  { label: "Séquence de décodage",    success: "Séquence validée — dossier ouvert.",       accent: "oklch(0.78 0.20 320)", accentSoft: "oklch(0.78 0.20 320 / 0.15)" }, // magenta
+  signal:  { label: "Stabilisation du signal", success: "Signal stabilisé — accès accordé.",        accent: "oklch(0.78 0.18 150)", accentSoft: "oklch(0.78 0.18 150 / 0.15)" }, // green
+  network: { label: "Réseau d'interception",   success: "Réseau activé — dossier déverrouillé.",    accent: "oklch(0.72 0.20 18)",  accentSoft: "oklch(0.72 0.20 18 / 0.15)"  }, // red
 };
 
-// Un mini-jeu unique par dossier (les jeux n'ont aucun lien avec le contenu du projet).
+// Un mini-jeu unique et stable par dossier.
 const GAME_BY_CASE: Record<string, GameKey> = {
   together: "maze",
   mood:     "dial",
-  lyrics:   "trace",
+  lyrics:   "decode",
   ecole:    "signal",
   mirakl:   "network",
 };
@@ -47,7 +48,7 @@ export function CaseInvestigation({ caseId, caseTitle, onSolved, onClose }: Prop
         onClick={(e) => e.stopPropagation()}
         style={{
           backgroundImage:
-            "radial-gradient(circle at 20% 0%, rgba(255,80,60,0.08), transparent 60%), radial-gradient(circle at 100% 100%, rgba(120,140,255,0.06), transparent 50%)",
+            `radial-gradient(circle at 20% 0%, ${meta.accentSoft}, transparent 60%), radial-gradient(circle at 100% 100%, rgba(120,140,255,0.06), transparent 50%)`,
         }}
       >
         <button
@@ -58,8 +59,14 @@ export function CaseInvestigation({ caseId, caseTitle, onSolved, onClose }: Prop
           ✕
         </button>
 
-        <div className="font-stamp text-[10px] tracking-[0.3em] text-evidence mb-2 flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-evidence animate-pulse" />
+        <div
+          className="font-stamp text-[10px] tracking-[0.3em] mb-2 flex items-center gap-2"
+          style={{ color: meta.accent }}
+        >
+          <span
+            className="w-2 h-2 rounded-full animate-pulse"
+            style={{ background: meta.accent, boxShadow: `0 0 10px ${meta.accent}` }}
+          />
           ACCÈS CLASSIFIÉ · {meta.label.toUpperCase()}
         </div>
         <h3 className="font-serif-display text-2xl md:text-3xl leading-tight mb-6">
@@ -67,11 +74,18 @@ export function CaseInvestigation({ caseId, caseTitle, onSolved, onClose }: Prop
         </h3>
 
         <div className="relative min-h-[280px]">
-          {!solved && <Router game={key} onSolved={() => setSolved(true)} />}
+          {!solved && <Router game={key} accent={meta.accent} onSolved={() => setSolved(true)} />}
 
           {solved && (
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center animate-fade-in">
-              <div className="px-6 py-3 border-2 border-evidence text-evidence font-stamp text-base tracking-[0.3em] rotate-[-3deg] mb-4 shadow-[0_0_24px_oklch(0.62_0.22_18_/_0.5)]">
+              <div
+                className="px-6 py-3 border-2 font-stamp text-base tracking-[0.3em] rotate-[-3deg] mb-4"
+                style={{
+                  borderColor: meta.accent,
+                  color: meta.accent,
+                  boxShadow: `0 0 24px ${meta.accent}`,
+                }}
+              >
                 ✓ DOSSIER OUVERT
               </div>
               <p className="font-serif-display italic text-white/80">{meta.success}</p>
@@ -86,7 +100,10 @@ export function CaseInvestigation({ caseId, caseTitle, onSolved, onClose }: Prop
             </span>
             <button
               onClick={onSolved}
-              className="font-stamp text-[10px] tracking-[0.25em] text-white/50 hover:text-evidence underline-offset-4 hover:underline transition-colors"
+              className="font-stamp text-[10px] tracking-[0.25em] text-white/50 underline-offset-4 hover:underline transition-colors"
+              style={{ ['--hover' as any]: meta.accent }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = meta.accent)}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "")}
             >
               Passer l'enquête →
             </button>
@@ -97,13 +114,13 @@ export function CaseInvestigation({ caseId, caseTitle, onSolved, onClose }: Prop
   );
 }
 
-function Router({ game, onSolved }: { game: GameKey; onSolved: () => void }) {
+function Router({ game, accent, onSolved }: { game: GameKey; accent: string; onSolved: () => void }) {
   switch (game) {
-    case "maze":    return <MazeGame onSolved={onSolved} />;
-    case "dial":    return <DialGame onSolved={onSolved} />;
-    case "trace":   return <TraceGame onSolved={onSolved} />;
-    case "signal":  return <SignalGame onSolved={onSolved} />;
-    case "network": return <NetworkGame onSolved={onSolved} />;
+    case "maze":    return <MazeGame    accent={accent} onSolved={onSolved} />;
+    case "dial":    return <DialGame    accent={accent} onSolved={onSolved} />;
+    case "decode":  return <DecodeGame  accent={accent} onSolved={onSolved} />;
+    case "signal":  return <SignalGame  accent={accent} onSolved={onSolved} />;
+    case "network": return <NetworkGame accent={accent} onSolved={onSolved} />;
   }
 }
 
@@ -115,13 +132,12 @@ function Hint({ children }: { children: React.ReactNode }) {
   );
 }
 
-const NEON = "oklch(0.62 0.22 18)"; // red evidence
-
 /* ============================================================
  * 1. LABYRINTHE SÉCURISÉ — drag pour tracer le chemin
  * ============================================================ */
 
-function MazeGame({ onSolved }: { onSolved: () => void }) {
+function MazeGame({ accent, onSolved }: { accent: string; onSolved: () => void }) {
+  const NEON = accent;
   const W = 8, H = 6, CELL = 36;
   type Cell = { r: boolean; d: boolean };
 
