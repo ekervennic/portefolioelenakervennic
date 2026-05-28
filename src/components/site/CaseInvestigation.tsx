@@ -428,21 +428,22 @@ function DecodeGame({ accent, onSolved }: { accent: string; onSolved: () => void
     { e: "⌚", n: "MONTRE" },
   ];
 
-  // Sélection: 1 cible + ~15 distracteurs, placés sans chevauchement.
+  // Sélection: 1 cible + une trentaine de distracteurs, placés sans chevauchement.
   const { target, items } = useMemo(() => {
-    const picked = shuffle(POOL).slice(0, 16);
+    const picked = shuffle(POOL).slice(0, Math.min(32, POOL.length));
     const target = picked[0];
     const placed: Array<{ e: string; n: string; x: number; y: number; rot: number; isTarget: boolean }> = [];
     const W = 100, H = 100, R = 10; // % units
     let attempts = 0;
-    for (let i = 0; i < picked.length && attempts < 600; i++) {
+    for (let i = 0; i < picked.length && attempts < 2000; i++) {
       let x = 0, y = 0, ok = false;
-      for (let a = 0; a < 50 && !ok; a++) {
+      for (let a = 0; a < 80 && !ok; a++) {
         attempts++;
         x = R + Math.random() * (W - 2 * R);
         y = R + Math.random() * (H - 2 * R);
-        ok = placed.every((p) => Math.hypot(p.x - x, p.y - y) > 13);
+        ok = placed.every((p) => Math.hypot(p.x - x, p.y - y) > 9);
       }
+      if (!ok) continue;
       placed.push({
         ...picked[i],
         x, y,
@@ -470,7 +471,7 @@ function DecodeGame({ accent, onSolved }: { accent: string; onSolved: () => void
   return (
     <div>
       <Hint>
-        Fouillez la pièce et retrouvez l'objet recherché.
+        Fouillez la pièce et retrouvez <span style={{ color: accent }}>{target.e} {target.n}</span>.
       </Hint>
 
       <div className="flex items-center justify-between mb-3 px-1">
@@ -649,11 +650,11 @@ function NetworkGame({ accent, onSolved }: { accent: string; onSolved: () => voi
   const NEON = accent;
   const W = 420, H = 240;
   const nodes = useMemo(() => {
-    // ~12 nœuds répartis sans chevauchement sur le radar.
+    // 8 nœuds répartis sans chevauchement sur le radar.
     const pts: Array<{ x: number; y: number }> = [];
-    const PAD = 36, MIN_D = 58;
+    const PAD = 36, MIN_D = 72;
     let attempts = 0;
-    while (pts.length < 12 && attempts < 600) {
+    while (pts.length < 8 && attempts < 600) {
       attempts++;
       const x = PAD + Math.random() * (W - 2 * PAD);
       const y = PAD + Math.random() * (H - 2 * PAD);
