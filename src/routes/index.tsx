@@ -1,29 +1,34 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Hero } from "@/components/site/Hero";
+import { About } from "@/components/site/About";
+import { Stack } from "@/components/site/Stack";
+import { Cases } from "@/components/site/Cases";
+import { Dataviz } from "@/components/site/Dataviz";
+import { Contact } from "@/components/site/Contact";
+import { Chatbot } from "@/components/site/Chatbot";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Your App" },
-      { name: "description", content: "Replace this with a one-sentence description of your app." },
-      { property: "og:title", content: "Your App" },
-      { property: "og:description", content: "Replace this with a one-sentence description of your app." },
+      { title: "Elena Kervennic — Bureau d'enquête Data & IA" },
+      { name: "description", content: "Portfolio d'Elena Kervennic, enquêtrice data et intelligence artificielle. Dossiers, projets et investigations résolues." },
+      { property: "og:title", content: "Elena Kervennic — Bureau d'enquête Data & IA" },
+      { property: "og:description", content: "Je transforme les données en décisions et les problèmes en enquêtes résolues." },
     ],
   }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <main className="relative overflow-x-hidden">
+      <Hero />
+      <About />
+      <Stack />
+      <Cases />
+      <Dataviz />
+      <Contact />
+      <Chatbot />
+    </main>
   );
 }
