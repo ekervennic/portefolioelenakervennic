@@ -202,9 +202,6 @@ function CaseFolder({ c, index, onOpen }: { c: CaseT; index: number; onOpen: () 
         <p className="text-xs text-paper-foreground/60 mb-3 font-stamp tracking-wider">
           {c.subtitle}
         </p>
-        <p className="text-sm text-paper-foreground/85 italic font-serif-display leading-snug mb-5">
-          « {c.question} »
-        </p>
 
         <div className="flex flex-wrap gap-1.5">
           {c.stack.slice(0, 4).map((s) => (
@@ -251,15 +248,6 @@ function CaseModal({ c, onClose }: { c: CaseT; onClose: () => void }) {
           {c.subtitle}
         </p>
 
-        {/* Question */}
-        <div className="mb-8 p-5 border-l-4 border-evidence bg-paper-foreground/5">
-          <div className="font-stamp text-[10px] tracking-[0.3em] text-evidence mb-2">
-            QUESTION DE DÉPART
-          </div>
-          <p className="font-serif-display italic text-xl md:text-2xl text-paper-foreground leading-snug">
-            « {c.question} »
-          </p>
-        </div>
 
         {/* Mystère */}
         {c.mystery && (
@@ -401,10 +389,6 @@ function CaseModal({ c, onClose }: { c: CaseT; onClose: () => void }) {
               ))}
             </ul>
           </aside>
-        </div>
-
-        <div className="absolute bottom-6 right-12 stamp text-sm">
-          Confidentiel
         </div>
       </div>
 
