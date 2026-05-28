@@ -31,13 +31,13 @@ type CaseT = {
   proofs: string[];
   images?: string[];
 };
-
 const cases: CaseT[] = [
   {
     id: "together",
     num: "01",
     title: "Together",
     subtitle: "⭐ Projet phare · 📱 Produit social",
+    teaser: "Organiser des sorties entre amis sans en perdre une miette → App sociale",
     question:
       "Comment créer une application sociale qui simplifie réellement l'organisation de sorties entre amis ?",
     mystery:
@@ -55,6 +55,30 @@ const cases: CaseT[] = [
     accent: "oklch(0.6 0.18 25)",
     proofs: ["Démo", "Dashboard", "Capture écran", "Résultat obtenu"],
     images: [together1, together2, together3, together4],
+  },
+  {
+    id: "mood",
+    num: "02",
+    title: "Mood Film Finder",
+    subtitle: "🎬 Data IA · RAG · 6 500+ titres",
+    teaser: "Recommander un film par humeur, pas par genre → Moteur IA",
+    question:
+      "Peut-on recommander un film en fonction de l'humeur d'un utilisateur plutôt que d'un simple genre ?",
+    mystery:
+      "Les plateformes de streaming recommandent par genre ou popularité. Mais l'humeur du moment — envie de frissons, de rires, de réflexion — transcende ces catégories. Comment créer un moteur qui pense comme un humain ?",
+    built: [
+      "Scraping de 6 500+ films depuis JustWatch (Python, ~15h de run)",
+      "Vectorisation complète des données et architecture RAG from scratch",
+      "Pipeline : humeur → vecteur → similarité cosinus → recommandation",
+      "Interface interactive pour tester en live (démo intégrée)",
+    ],
+    verdict:
+      "Recommandation émotionnelle fonctionnelle — bien au-delà du filtre par genre classique. La démo est disponible dans le portfolio.",
+    stack: ["Python", "Scraping", "RAG", "IA"],
+    link: { label: "🎬 Tester l'expérience Mood Match", url: "https://vibe-select-recs.lovable.app/match" },
+    accent: "oklch(0.55 0.2 320)",
+    proofs: ["Dataset (6 500+ titres)", "Démo", "Capture écran", "Résultat obtenu"],
+    images: [mood1, mood2],
   },
   {
     id: "mood",
