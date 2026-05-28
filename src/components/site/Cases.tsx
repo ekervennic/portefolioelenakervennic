@@ -216,6 +216,10 @@ function CaseFolder({ c, index, onOpen }: { c: CaseT; index: number; onOpen: () 
           {c.subtitle}
         </p>
 
+        <p className="text-sm text-paper-foreground/80 mb-4 leading-snug italic font-serif-display">
+          {c.teaser}
+        </p>
+
         <div className="flex flex-wrap gap-1.5">
           {c.stack.slice(0, 4).map((s) => (
             <span key={s} className="px-2 py-0.5 bg-paper-foreground/10 border border-paper-foreground/20 text-paper-foreground text-[10px] font-stamp tracking-wider">
