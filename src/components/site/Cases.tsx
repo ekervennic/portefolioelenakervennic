@@ -178,6 +178,30 @@ function CaseModal({ c, onClose }: { c: CaseT; onClose: () => void }) {
           {c.subtitle}
         </p>
 
+        {c.images && c.images.length > 0 && (
+          <div className="mb-8">
+            <div className="font-stamp text-[10px] tracking-[0.3em] text-paper-foreground/60 mb-3">
+              PIÈCES VISUELLES
+            </div>
+            <div className={`grid gap-3 ${c.images.length === 1 ? "grid-cols-1" : "grid-cols-2"}`}>
+              {c.images.map((src, i) => (
+                <div
+                  key={i}
+                  className="relative bg-paper-foreground/5 border border-paper-foreground/20 p-2 paper-shadow"
+                  style={{ transform: `rotate(${((i % 2) - 0.5) * 0.6}deg)` }}
+                >
+                  <img
+                    src={src}
+                    alt={`${c.title} — pièce ${i + 1}`}
+                    loading="lazy"
+                    className="w-full h-48 object-cover"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div className="grid md:grid-cols-3 gap-8">
           <div className="md:col-span-2">
             <div className="font-stamp text-[10px] tracking-[0.3em] text-paper-foreground/60 mb-3">
