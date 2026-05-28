@@ -192,6 +192,15 @@ function CaseFolder({ c, index, onOpen }: { c: CaseT; index: number; onOpen: () 
           CASE FILE
         </div>
 
+        {c.won && (
+          <div
+            className="absolute -top-3 -right-3 w-14 h-14 rounded-full bg-evidence text-evidence-foreground flex items-center justify-center text-3xl paper-shadow rotate-[8deg]"
+            title="Hackathon vainqueur"
+          >
+            🏆
+          </div>
+        )}
+
         <div className="font-stamp text-[11px] tracking-[0.3em] text-evidence mb-2">
           CASE #{c.num}
         </div>
