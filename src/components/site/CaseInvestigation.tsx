@@ -13,7 +13,7 @@ type GameKey = "maze" | "dial" | "decode" | "signal" | "network";
 const META: Record<GameKey, { label: string; success: string; accent: string; accentSoft: string }> = {
   maze:    { label: "Labyrinthe sécurisé",     success: "Sortie atteinte — dossier ouvert.",        accent: "oklch(0.78 0.18 200)", accentSoft: "oklch(0.78 0.18 200 / 0.15)" }, // cyan
   dial:    { label: "Cadran du coffre",        success: "Combinaison verrouillée — accès accordé.", accent: "oklch(0.82 0.16 80)",  accentSoft: "oklch(0.82 0.16 80 / 0.15)"  }, // amber
-  decode:  { label: "Séquence de décodage",    success: "Séquence validée — dossier ouvert.",       accent: "oklch(0.78 0.20 320)", accentSoft: "oklch(0.78 0.20 320 / 0.15)" }, // magenta
+  decode:  { label: "Fouille de la pièce",     success: "Objet retrouvé — dossier ouvert.",         accent: "oklch(0.78 0.20 320)", accentSoft: "oklch(0.78 0.20 320 / 0.15)" }, // magenta
   signal:  { label: "Stabilisation du signal", success: "Signal stabilisé — accès accordé.",        accent: "oklch(0.78 0.18 150)", accentSoft: "oklch(0.78 0.18 150 / 0.15)" }, // green
   network: { label: "Réseau d'interception",   success: "Réseau activé — dossier déverrouillé.",    accent: "oklch(0.72 0.20 18)",  accentSoft: "oklch(0.72 0.20 18 / 0.15)"  }, // red
 };
