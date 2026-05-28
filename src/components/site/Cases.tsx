@@ -78,7 +78,7 @@ const cases: CaseT[] = [
     num: "05",
     title: "Hackathon Mirakl",
     subtitle: "Projet gagnant — pipeline IA de bout en bout",
-    description: "Hackathon Mirakl remporté avec une solution combinant scraping, traitement IA et automatisation no-code pour répondre à un cas d'usage métier en moins de 48 heures.",
+    description: "Dans le cadre du Hackathon Mirakl, notre équipe disposait de moins de 48 heures pour analyser une problématique métier, imaginer une solution et développer un prototype fonctionnel. Nous avons choisi de travailler sur l'automatisation du sourcing de candidats en combinant scraping, intelligence artificielle et automatisation no-code. L'objectif était de réduire le temps nécessaire à l'identification de profils pertinents tout en améliorant la qualité des résultats proposés. Ce projet m'a particulièrement marqué car il a demandé de prendre des décisions rapidement, de collaborer efficacement en équipe et de transformer une idée en solution concrète sous une forte contrainte de temps. Notre approche a finalement été récompensée par la première place du hackathon.",
     stack: ["Python", "Scraping", "IA", "Dust", "n8n"],
     won: true,
     accent: "oklch(0.62 0.22 18)",
