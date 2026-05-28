@@ -1,5 +1,12 @@
 import { useState } from "react";
 import { SectionHeader } from "./About";
+import together1 from "@/assets/cases/together-1.png";
+import together2 from "@/assets/cases/together-2.png";
+import together3 from "@/assets/cases/together-3.png";
+import together4 from "@/assets/cases/together-4.png";
+import mood1 from "@/assets/cases/mood-1.png";
+import mood2 from "@/assets/cases/mood-2.png";
+import lyrics1 from "@/assets/cases/lyrics-1.png";
 
 type CaseT = {
   id: string;
@@ -12,6 +19,7 @@ type CaseT = {
   link?: { label: string; url: string };
   accent: string;
   proofs: string[];
+  images?: string[];
 };
 
 const cases: CaseT[] = [
@@ -24,6 +32,7 @@ const cases: CaseT[] = [
     stack: ["Next.js", "Supabase", "OpenAI", "TypeScript", "Cursor"],
     accent: "oklch(0.6 0.18 25)",
     proofs: ["Démo", "Dashboard", "Capture écran", "Résultat obtenu"],
+    images: [together1, together2, together3, together4],
   },
   {
     id: "mood",
@@ -35,6 +44,7 @@ const cases: CaseT[] = [
     link: { label: "🎬 Tester l'expérience Mood Match", url: "https://vibe-select-recs.lovable.app/match" },
     accent: "oklch(0.55 0.2 320)",
     proofs: ["Dataset (6 500+ titres)", "Démo", "Capture écran", "Résultat obtenu"],
+    images: [mood1, mood2],
   },
   {
     id: "lyrics",
@@ -45,6 +55,7 @@ const cases: CaseT[] = [
     stack: ["Python", "FAISS", "Embeddings", "OpenAI"],
     accent: "oklch(0.55 0.15 280)",
     proofs: ["Dataset", "Démo", "GitHub", "Résultat obtenu"],
+    images: [lyrics1],
   },
   {
     id: "ecole",
@@ -166,6 +177,30 @@ function CaseModal({ c, onClose }: { c: CaseT; onClose: () => void }) {
         <p className="text-paper-foreground/70 italic font-serif-display text-lg mb-8">
           {c.subtitle}
         </p>
+
+        {c.images && c.images.length > 0 && (
+          <div className="mb-8">
+            <div className="font-stamp text-[10px] tracking-[0.3em] text-paper-foreground/60 mb-3">
+              PIÈCES VISUELLES
+            </div>
+            <div className={`grid gap-3 ${c.images.length === 1 ? "grid-cols-1" : "grid-cols-2"}`}>
+              {c.images.map((src, i) => (
+                <div
+                  key={i}
+                  className="relative bg-paper-foreground/5 border border-paper-foreground/20 p-2 paper-shadow"
+                  style={{ transform: `rotate(${((i % 2) - 0.5) * 0.6}deg)` }}
+                >
+                  <img
+                    src={src}
+                    alt={`${c.title} — pièce ${i + 1}`}
+                    loading="lazy"
+                    className="w-full h-48 object-cover"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         <div className="grid md:grid-cols-3 gap-8">
           <div className="md:col-span-2">
