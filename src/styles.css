@@ -249,4 +249,34 @@
     100% { opacity: 0.92; transform: rotate(-8deg) scale(1); }
   }
   .animate-stamp { animation: stamp-in 0.6s ease-out backwards; }
+
+  @keyframes glitch {
+    0%, 100% { transform: translate(0); text-shadow: 0 0 0 transparent; }
+    20% { transform: translate(-1px, 1px); text-shadow: 2px 0 var(--evidence), -2px 0 oklch(0.7 0.2 200); }
+    40% { transform: translate(1px, -1px); text-shadow: -2px 0 var(--evidence), 2px 0 oklch(0.7 0.2 200); }
+    60% { transform: translate(-1px, -1px); text-shadow: 2px 0 var(--evidence); }
+    80% { transform: translate(1px, 1px); text-shadow: -2px 0 oklch(0.7 0.2 200); }
+  }
+  .animate-glitch { animation: glitch 2.2s infinite steps(2, end); }
+
+  @keyframes scanline {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100vh); }
+  }
+  .animate-scanline { animation: scanline 3s linear infinite; }
+
+  @keyframes blink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+  }
+  .animate-blink { animation: blink 1s steps(2, end) infinite; }
+
+  @keyframes thread-draw {
+    from { stroke-dashoffset: 600; }
+    to { stroke-dashoffset: 0; }
+  }
+  .thread-draw { stroke-dasharray: 600; animation: thread-draw 1.6s ease-out forwards; }
+
+  .thread { transition: stroke 0.3s ease, stroke-opacity 0.3s ease, filter 0.3s ease; }
+  .thread-on { stroke: var(--evidence) !important; stroke-opacity: 1 !important; filter: drop-shadow(0 0 6px var(--evidence)); }
 }
