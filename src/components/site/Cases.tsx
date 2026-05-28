@@ -131,7 +131,7 @@ const cases: CaseT[] = [
     question:
       "Comment automatiser la recherche de futurs candidats à partir d'une offre d'emploi ?",
     mystery:
-      "Hackathon remporté en équipe pour Mirakl — solution élue meilleure réponse au problème proposé. Le sourcing RH est chronophage : parcourir LinkedIn manuellement, chercher des profils GitHub, croiser les données des concurrents. Comment automatiser ce processus avec la data et l'IA ?",
+      "Le sourcing RH est un casse-tête : parcourir LinkedIn à la main, fouiller GitHub, croiser les profils des concurrents… des heures perdues pour chaque poste. Comment transformer ce travail manuel en un pipeline data + IA capable de sortir une shortlist de candidats pertinents en quelques minutes ?",
     built: [
       "Scraping LinkedIn & GitHub pour identifier les profils pertinents selon le poste",
       "Scoring IA des candidats en fonction des compétences clés de l'offre",
@@ -141,10 +141,9 @@ const cases: CaseT[] = [
     results: [
       "Automatisation complète du sourcing — gain de temps majeur",
       "Visualisation claire des candidats potentiels en un coup d'œil",
-      "Pipeline data + IA élu meilleur du hackathon",
     ],
     verdict:
-      "Processus RH chronophage transformé en flux automatisé. Solution reconnue comme la plus pertinente par le jury Mirakl.",
+      "🏆 Projet vainqueur du Hackathon Mirakl. Parmi toutes les équipes en lice, notre solution a été élue par le jury comme la réponse la plus pertinente et la plus aboutie au problème posé — saluée pour la qualité du pipeline data, la pertinence du scoring IA et l'exécution produit de bout en bout en moins d'une semaine.",
     stack: ["Python", "Scraping", "IA", "Dust", "n8n"],
     won: true,
     accent: "oklch(0.62 0.22 18)",
@@ -192,6 +191,15 @@ function CaseFolder({ c, index, onOpen }: { c: CaseT; index: number; onOpen: () 
         <div className="absolute -top-4 left-6 px-6 py-2 kraft-bg font-stamp text-[10px] tracking-[0.3em] text-paper-foreground/80">
           CASE FILE
         </div>
+
+        {c.won && (
+          <div
+            className="absolute -top-3 -right-3 w-14 h-14 rounded-full bg-evidence text-evidence-foreground flex items-center justify-center text-3xl paper-shadow rotate-[8deg]"
+            title="Hackathon vainqueur"
+          >
+            🏆
+          </div>
+        )}
 
         <div className="font-stamp text-[11px] tracking-[0.3em] text-evidence mb-2">
           CASE #{c.num}
