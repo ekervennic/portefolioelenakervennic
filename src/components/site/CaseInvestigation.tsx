@@ -7,16 +7,20 @@ type Props = {
   onClose: () => void;
 };
 
-type GameKey = "threads" | "lock" | "shred" | "scan" | "biometric" | "stamp" | "maze";
+type GameKey =
+  | "threads" | "lock" | "shred" | "hidden" | "biometric"
+  | "stamp" | "maze" | "polygraph" | "code";
 
 const GAMES: { key: GameKey; label: string; success: string }[] = [
   { key: "threads", label: "Tableau d'enquête", success: "Connexions établies — dossier déverrouillé." },
   { key: "lock", label: "Cadenas classifié", success: "Code aligné — dossier déverrouillé." },
   { key: "shred", label: "Document à reconstituer", success: "Document reconstitué — dossier ouvert." },
-  { key: "scan", label: "Scanner les preuves", success: "Preuve isolée — dossier autorisé." },
+  { key: "hidden", label: "Cherchez les indices", success: "Indices trouvés — dossier autorisé." },
   { key: "biometric", label: "Déverrouillage biométrique", success: "Empreinte validée — accès autorisé." },
   { key: "stamp", label: "Validation des tampons", success: "Tampon officiel apposé — dossier ouvert." },
-  { key: "maze", label: "Couloir sécurisé", success: "Sortie atteinte — dossier ouvert." },
+  { key: "maze", label: "Labyrinthe d'archives", success: "Sortie atteinte — dossier ouvert." },
+  { key: "polygraph", label: "Polygraphe", success: "Signal vert — accès accordé." },
+  { key: "code", label: "Code à 4 chiffres", success: "Combinaison cassée — dossier ouvert." },
 ];
 
 export function CaseInvestigation({ caseTitle, onSolved, onClose }: Props) {
