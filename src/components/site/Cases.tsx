@@ -56,7 +56,7 @@ const cases: CaseT[] = [
     num: "03",
     title: "Chatbot Paroles",
     subtitle: "Retrouver une chanson à partir de paroles approximatives",
-    description: "Architecture RAG permettant à un utilisateur de retrouver le titre d'une chanson à partir d'un fragment de paroles, même imprécis. Embeddings, recherche vectorielle et reformulation par LLM.",
+    description: "Il nous est tous déjà arrivé de nous souvenir d'une chanson sans parvenir à retrouver son titre. Souvent, seules quelques paroles approximatives restent en mémoire, parfois avec des erreurs ou des oublis. Ce projet répond à cette problématique grâce à une architecture RAG combinant embeddings, recherche vectorielle et génération assistée par LLM. L'utilisateur peut saisir un fragment de paroles, même imprécis, et le système identifie la chanson la plus probable. L'enjeu principal était de dépasser la simple recherche par mots-clés pour permettre une véritable compréhension sémantique des requêtes et améliorer considérablement la qualité des résultats.",
     stack: ["Python", "FAISS", "Embeddings", "OpenAI"],
     accent: "oklch(0.55 0.15 280)",
     proofs: ["Dataset", "Démo", "GitHub", "Résultat obtenu"],
