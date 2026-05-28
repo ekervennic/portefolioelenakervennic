@@ -322,7 +322,6 @@ function CaseModal({ c, onClose }: { c: CaseT; onClose: () => void }) {
               </>
             )}
 
-            {c.verdict && (
             {c.link && (
               <a
                 href={c.link.url}
