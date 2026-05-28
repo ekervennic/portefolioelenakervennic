@@ -18,7 +18,7 @@ type CaseT = {
   num: string;
   title: string;
   subtitle: string;
-  description: string;
+  description: ReactNode;
   stack: string[];
   won?: boolean;
   link?: { label: string; url: string };
