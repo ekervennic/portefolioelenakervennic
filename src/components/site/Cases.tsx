@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
 import { SectionHeader } from "./About";
 import together1 from "@/assets/cases/together-1.png";
 import together2 from "@/assets/cases/together-2.png";
@@ -18,7 +18,11 @@ type CaseT = {
   num: string;
   title: string;
   subtitle: string;
-  description: ReactNode;
+  question: string;
+  mystery?: string;
+  built: string[];
+  results?: string[];
+  verdict?: string;
   stack: string[];
   won?: boolean;
   link?: { label: string; url: string };
@@ -32,27 +36,20 @@ const cases: CaseT[] = [
     id: "together",
     num: "01",
     title: "Together",
-    subtitle: "Application sociale de sorties entre amis",
-    description: (
-      <>
-        <p>
-          Organiser une sortie entre amis paraît simple, mais la réalité est souvent différente :
-          discussions dispersées sur plusieurs applications, sondages improvisés, lieux partagés dans
-          différents groupes et décisions qui prennent du temps à être validées.
-        </p>
-        <p>
-          <strong>Together</strong> est né de cette problématique. L'objectif était de concevoir
-          une plateforme unique permettant de centraliser toute l'organisation d'une sortie :
-          proposition d'activités, votes, confirmation des participants, discussions et
-          recommandations de lieux.
-        </p>
-        <p>
-          Au-delà de l'aspect technique, ce projet m'a permis de travailler sur la conception
-          d'un véritable produit, en réfléchissant autant à l'expérience utilisateur qu'aux
-          fonctionnalités proposées. Il représente aujourd'hui l'un de mes projets les plus complets.
-        </p>
-      </>
-    ),
+    subtitle: "⭐ Projet phare · 📱 Produit social",
+    question:
+      "Comment créer une application sociale qui simplifie réellement l'organisation de sorties entre amis ?",
+    mystery:
+      "Organiser une sortie entre amis implique des dizaines d'échanges sur WhatsApp, des sondages dispersés, des plans qui tombent. Comment centraliser tout ça dans une seule app fluide et moderne ?",
+    built: [
+      "Chat temps réel avec fil de discussion par sortie",
+      "Système de votes et RSVP pour valider les plans",
+      "Carte interactive avec suggestions de lieux via OpenAI",
+      "Feed social, stories et système de follow entre amis",
+      "Interface mobile-first, déployée via Vercel",
+    ],
+    verdict:
+      "Architecture full-stack maîtrisée de A à Z. Vibe coding avec Cursor = vélocité maximale pour un rendu production-ready.",
     stack: ["Next.js", "Supabase", "OpenAI", "TypeScript", "Cursor"],
     accent: "oklch(0.6 0.18 25)",
     proofs: ["Démo", "Dashboard", "Capture écran", "Résultat obtenu"],
@@ -62,28 +59,19 @@ const cases: CaseT[] = [
     id: "mood",
     num: "02",
     title: "Mood Film Finder",
-    subtitle: "Plus de 6 500 films et séries scrapés, recommandation par l'humeur",
-    description: (
-      <>
-        <p>
-          La plupart des plateformes recommandent des films selon un genre ou des habitudes de
-          visionnage. Pourtant, lorsque l'on cherche quelque chose à regarder, on recherche souvent
-          avant tout une <strong>émotion</strong> : rire, réfléchir, être surpris ou simplement
-          se détendre.
-        </p>
-        <p>
-          C'est cette idée qui a donné naissance à <strong>Mood Film Finder</strong>. Pour construire
-          cet outil, j'ai collecté plus de 6 500 films et séries via un important travail de scraping,
-          puis mis en place une logique de recommandation reposant sur une architecture RAG et une
-          base vectorielle.
-        </p>
-        <p>
-          L'objectif n'était pas simplement de proposer des films, mais de créer une expérience capable
-          de comprendre une intention ou un ressenti exprimé naturellement par un utilisateur et de
-          transformer cette émotion en recommandation pertinente.
-        </p>
-      </>
-    ),
+    subtitle: "🎬 Data IA · RAG · 6 500+ titres",
+    question:
+      "Peut-on recommander un film en fonction de l'humeur d'un utilisateur plutôt que d'un simple genre ?",
+    mystery:
+      "Les plateformes de streaming recommandent par genre ou popularité. Mais l'humeur du moment — envie de frissons, de rires, de réflexion — transcende ces catégories. Comment créer un moteur qui pense comme un humain ?",
+    built: [
+      "Scraping de 6 500+ films depuis JustWatch (Python, ~15h de run)",
+      "Vectorisation complète des données et architecture RAG from scratch",
+      "Pipeline : humeur → vecteur → similarité cosinus → recommandation",
+      "Interface interactive pour tester en live (démo intégrée)",
+    ],
+    verdict:
+      "Recommandation émotionnelle fonctionnelle — bien au-delà du filtre par genre classique. La démo est disponible dans le portfolio.",
     stack: ["Python", "Scraping", "RAG", "IA"],
     link: { label: "🎬 Tester l'expérience Mood Match", url: "https://vibe-select-recs.lovable.app/match" },
     accent: "oklch(0.55 0.2 320)",
@@ -94,27 +82,19 @@ const cases: CaseT[] = [
     id: "lyrics",
     num: "03",
     title: "Chatbot Paroles",
-    subtitle: "Retrouver une chanson à partir de paroles approximatives",
-    description: (
-      <>
-        <p>
-          Il nous est tous déjà arrivé de nous souvenir d'une chanson sans parvenir à retrouver
-          son titre. Souvent, seules quelques paroles approximatives restent en mémoire, parfois
-          avec des erreurs ou des oublis.
-        </p>
-        <p>
-          Ce projet répond à cette problématique grâce à une architecture <strong>RAG</strong>{" "}
-          combinant embeddings, recherche vectorielle et génération assistée par LLM. L'utilisateur
-          peut saisir un fragment de paroles, même imprécis, et le système identifie la chanson
-          la plus probable.
-        </p>
-        <p>
-          L'enjeu principal était de dépasser la simple recherche par mots-clés pour permettre
-          une véritable <strong>compréhension sémantique</strong> des requêtes et améliorer
-          considérablement la qualité des résultats.
-        </p>
-      </>
-    ),
+    subtitle: "🎵 NLP · RAG LLM · FAISS · 1 872 chansons",
+    question:
+      "Un agent peut-il identifier une musique depuis un extrait approximatif, partiel ou mal orthographié de paroles ?",
+    mystery:
+      "Musixmatch · Démo RAG. Exemples : « j'ai demandé à la lune, elle n'a rien voulu savoir » → Indochine — J'ai demandé à la lune (similarité 97%). « les chamz elyse » → Joe Dassin — Les Champs-Élysées (similarité 94%, tolérance orthographique).",
+    built: [
+      "Vectorisation de 1 872 chansons françaises avec OpenAI Embeddings (text-embedding-3-large)",
+      "Architecture RAG : extrait flou → K voisins FAISS → réponse LLM contextuelle",
+      "Interface chatbot Flask avec gestion des paroles imprécises, mal orthographiées ou partielles",
+      "Recherche vectorielle via FAISS — bien plus robuste que le mot-clé classique",
+    ],
+    verdict:
+      "La recherche sémantique surpasse le mot-clé classique. Identification réussie même avec des paroles très approximatives ou incomplètes.",
     stack: ["Python", "FAISS", "Embeddings", "OpenAI"],
     accent: "oklch(0.55 0.15 280)",
     proofs: ["Dataset", "Démo", "GitHub", "Résultat obtenu"],
@@ -124,26 +104,20 @@ const cases: CaseT[] = [
     id: "ecole",
     num: "04",
     title: "Plateforme Scolaire",
-    subtitle: "Centraliser cours, agenda, quiz, événements et messagerie",
-    description: (
-      <>
-        <p>
-          Les étudiants utilisent aujourd'hui une multitude d'outils différents pour accéder à
-          leurs cours, consulter leur emploi du temps, échanger avec leurs enseignants ou suivre
-          leurs évaluations.
-        </p>
-        <p>
-          Cette dispersion nuit souvent à la lisibilité et à l'expérience utilisateur. J'ai donc
-          imaginé une <strong>plateforme</strong> capable de centraliser l'ensemble de ces
-          fonctionnalités au sein d'un espace unique, cohérent et simple à utiliser.
-        </p>
-        <p>
-          Ce projet m'a permis de travailler sur la réflexion produit et l'expérience utilisateur,
-          en cherchant à répondre à un <strong>besoin réel</strong> observé dans le quotidien
-          étudiant plutôt qu'à un simple exercice technique.
-        </p>
-      </>
-    ),
+    subtitle: "Interface · UX",
+    question:
+      "Comment centraliser tous les outils utiles aux étudiants dans une seule plateforme cohérente ?",
+    mystery:
+      "Les étudiants jonglent entre plusieurs outils : un agenda ici, un espace cours là, les événements de l'école ailleurs. Comment concevoir une interface unique, fluide, qui centralise tout ?",
+    built: [
+      "Messagerie intégrée entre élèves et professeurs",
+      "Emploi du temps interactif et agenda glisser-déposer",
+      "Quiz d'entraînement avec suivi des scores",
+      "Événements proposés par l'école avec inscription en ligne",
+      "Espace cours : PDF par matière, ressources téléchargeables",
+    ],
+    verdict:
+      "Une plateforme unique pensée pour le quotidien étudiant, qui remplace une dizaine d'outils dispersés par un seul espace cohérent.",
     stack: ["Next.js", "Supabase", "TypeScript"],
     accent: "oklch(0.55 0.18 200)",
     proofs: ["Dashboard", "Capture écran", "Démo"],
@@ -153,28 +127,24 @@ const cases: CaseT[] = [
     id: "mirakl",
     num: "05",
     title: "Hackathon Mirakl",
-    subtitle: "Projet gagnant — pipeline IA de bout en bout",
-    description: (
-      <>
-        <p>
-          Dans le cadre du Hackathon Mirakl, notre équipe disposait de <strong>moins de 48 heures</strong>{" "}
-          pour analyser une problématique métier, imaginer une solution et développer un prototype
-          fonctionnel.
-        </p>
-        <p>
-          Nous avons choisi de travailler sur l'<strong>automatisation du sourcing de candidats</strong>{" "}
-          en combinant scraping, intelligence artificielle et automatisation no-code. L'objectif était
-          de réduire le temps nécessaire à l'identification de profils pertinents tout en améliorant
-          la qualité des résultats proposés.
-        </p>
-        <p>
-          Ce projet m'a particulièrement marqué car il a demandé de prendre des décisions rapidement,
-          de collaborer efficacement en équipe et de transformer une idée en solution concrète sous
-          une forte contrainte de temps. Notre approche a finalement été récompensée par la{" "}
-          <strong>première place</strong> du hackathon.
-        </p>
-      </>
-    ),
+    subtitle: "🏆 Winner · Data · Scraping IA",
+    question:
+      "Comment automatiser la recherche de futurs candidats à partir d'une offre d'emploi ?",
+    mystery:
+      "Hackathon remporté en équipe pour Mirakl — solution élue meilleure réponse au problème proposé. Le sourcing RH est chronophage : parcourir LinkedIn manuellement, chercher des profils GitHub, croiser les données des concurrents. Comment automatiser ce processus avec la data et l'IA ?",
+    built: [
+      "Scraping LinkedIn & GitHub pour identifier les profils pertinents selon le poste",
+      "Scoring IA des candidats en fonction des compétences clés de l'offre",
+      "Scraping des concurrents pour détecter les talents à recruter",
+      "Interface centralisée avec profils filtrables, scorés et triés",
+    ],
+    results: [
+      "Automatisation complète du sourcing — gain de temps majeur",
+      "Visualisation claire des candidats potentiels en un coup d'œil",
+      "Pipeline data + IA élu meilleur du hackathon",
+    ],
+    verdict:
+      "Processus RH chronophage transformé en flux automatisé. Solution reconnue comme la plus pertinente par le jury Mirakl.",
     stack: ["Python", "Scraping", "IA", "Dust", "n8n"],
     won: true,
     accent: "oklch(0.62 0.22 18)",
@@ -215,13 +185,10 @@ function CaseFolder({ c, index, onOpen }: { c: CaseT; index: number; onOpen: () 
       className="group relative text-left"
       style={{ transform: `rotate(${rotate}deg)` }}
     >
-      {/* Papers peeking */}
       <div className="absolute -top-2 left-4 right-4 h-4 bg-paper paper-shadow rotate-[1deg]" />
       <div className="absolute -top-1 left-6 right-6 h-4 bg-[oklch(0.88_0.03_80)] paper-shadow rotate-[-1.5deg]" />
 
-      {/* Folder body */}
       <div className="relative kraft-bg paper-shadow p-6 pt-10 min-h-[280px] transition-all duration-500 group-hover:-translate-y-3 group-hover:rotate-[-1deg]">
-        {/* Tab */}
         <div className="absolute -top-4 left-6 px-6 py-2 kraft-bg font-stamp text-[10px] tracking-[0.3em] text-paper-foreground/80">
           CASE FILE
         </div>
@@ -229,11 +196,14 @@ function CaseFolder({ c, index, onOpen }: { c: CaseT; index: number; onOpen: () 
         <div className="font-stamp text-[11px] tracking-[0.3em] text-evidence mb-2">
           CASE #{c.num}
         </div>
-        <h3 className="font-serif-display text-3xl text-paper-foreground leading-tight mb-3">
+        <h3 className="font-serif-display text-3xl text-paper-foreground leading-tight mb-2">
           {c.title}
         </h3>
-        <p className="text-sm text-paper-foreground/75 mb-5 leading-relaxed">
+        <p className="text-xs text-paper-foreground/60 mb-3 font-stamp tracking-wider">
           {c.subtitle}
+        </p>
+        <p className="text-sm text-paper-foreground/85 italic font-serif-display leading-snug mb-5">
+          « {c.question} »
         </p>
 
         <div className="flex flex-wrap gap-1.5">
@@ -244,7 +214,6 @@ function CaseFolder({ c, index, onOpen }: { c: CaseT; index: number; onOpen: () 
           ))}
         </div>
 
-        {/* Stamps */}
         <div className="absolute bottom-4 right-4 stamp text-[10px] opacity-0 group-hover:opacity-100 transition-opacity">
           Ouvrir →
         </div>
@@ -266,7 +235,7 @@ function CaseModal({ c, onClose }: { c: CaseT; onClose: () => void }) {
       >
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center bg-paper-foreground/10 hover:bg-evidence hover:text-evidence-foreground text-paper-foreground text-xl transition-colors"
+          className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center bg-paper-foreground/10 hover:bg-evidence hover:text-evidence-foreground text-paper-foreground text-xl transition-colors z-10"
           aria-label="Fermer"
         >
           ✕
@@ -278,10 +247,33 @@ function CaseModal({ c, onClose }: { c: CaseT; onClose: () => void }) {
         <h2 className="font-serif-display text-5xl text-paper-foreground leading-tight mb-2">
           {c.title}
         </h2>
-        <p className="text-paper-foreground/70 italic font-serif-display text-lg mb-8">
+        <p className="text-paper-foreground/60 font-stamp text-xs tracking-[0.2em] mb-8">
           {c.subtitle}
         </p>
 
+        {/* Question */}
+        <div className="mb-8 p-5 border-l-4 border-evidence bg-paper-foreground/5">
+          <div className="font-stamp text-[10px] tracking-[0.3em] text-evidence mb-2">
+            QUESTION DE DÉPART
+          </div>
+          <p className="font-serif-display italic text-xl md:text-2xl text-paper-foreground leading-snug">
+            « {c.question} »
+          </p>
+        </div>
+
+        {/* Mystère */}
+        {c.mystery && (
+          <div className="mb-8">
+            <div className="font-stamp text-[10px] tracking-[0.3em] text-paper-foreground/60 mb-3">
+              🔎 LE MYSTÈRE
+            </div>
+            <p className="text-paper-foreground/90 leading-relaxed">
+              {c.mystery}
+            </p>
+          </div>
+        )}
+
+        {/* Images */}
         {c.images && c.images.length > 0 && (
           <div className="mb-8">
             <div className="font-stamp text-[10px] tracking-[0.3em] text-paper-foreground/60 mb-3">
@@ -311,14 +303,47 @@ function CaseModal({ c, onClose }: { c: CaseT; onClose: () => void }) {
           </div>
         )}
 
+        {/* Construit */}
         <div className="grid md:grid-cols-3 gap-8">
           <div className="md:col-span-2">
             <div className="font-stamp text-[10px] tracking-[0.3em] text-paper-foreground/60 mb-3">
-              RAPPORT
+              🔧 CE QUE J'AI CONSTRUIT
             </div>
-            <div className="space-y-4 text-paper-foreground/90 leading-relaxed mb-6">
-              {c.description}
-            </div>
+            <ul className="space-y-2 mb-8">
+              {c.built.map((b, i) => (
+                <li key={i} className="flex gap-3 text-paper-foreground/90 leading-relaxed">
+                  <span className="text-evidence mt-1.5 flex-shrink-0">▸</span>
+                  <span>{b}</span>
+                </li>
+              ))}
+            </ul>
+
+            {c.results && (
+              <>
+                <div className="font-stamp text-[10px] tracking-[0.3em] text-paper-foreground/60 mb-3">
+                  📈 RÉSULTATS
+                </div>
+                <ul className="space-y-2 mb-8">
+                  {c.results.map((r, i) => (
+                    <li key={i} className="flex gap-3 text-paper-foreground/90 leading-relaxed">
+                      <span className="text-evidence mt-1.5 flex-shrink-0">✓</span>
+                      <span>{r}</span>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+
+            {c.verdict && (
+              <div className="mb-6 p-5 border-2 border-evidence/40 bg-evidence/5">
+                <div className="font-stamp text-[10px] tracking-[0.3em] text-evidence mb-2">
+                  ✅ VERDICT
+                </div>
+                <p className="text-paper-foreground/90 leading-relaxed">
+                  {c.verdict}
+                </p>
+              </div>
+            )}
 
             {c.link && (
               <a
@@ -335,12 +360,11 @@ function CaseModal({ c, onClose }: { c: CaseT; onClose: () => void }) {
               <div className="mt-6 p-4 border-2 border-evidence/40 bg-evidence/5">
                 <div className="stamp text-xs mb-2 inline-block">🏆 ENQUÊTE RÉSOLUE</div>
                 <p className="text-paper-foreground/80 text-sm">
-                  Projet récompensé lors du Hackathon Mirakl. Photo de l'équipe gagnante archivée au dossier.
+                  Projet récompensé lors du Hackathon Mirakl.
                 </p>
               </div>
             )}
 
-            {/* Preuves collectées */}
             <div className="mt-8 pt-6 border-t border-dashed border-paper-foreground/25">
               <div className="flex items-center gap-3 mb-4">
                 <div className="stamp text-[10px]">PREUVES COLLECTÉES</div>
