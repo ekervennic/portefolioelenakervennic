@@ -44,7 +44,7 @@ const cases: CaseT[] = [
     num: "02",
     title: "Mood Film Finder",
     subtitle: "Plus de 6 500 films et séries scrapés, recommandation par l'humeur",
-    description: "Un moteur de recommandation basé sur ce que vous ressentez. Pipeline de scraping massif, base vectorielle et architecture RAG pour suggérer le film parfait à partir d'une simple phrase d'humeur.",
+    description: "La plupart des plateformes recommandent des films selon un genre ou des habitudes de visionnage. Pourtant, lorsque l'on cherche quelque chose à regarder, on recherche souvent avant tout une émotion : rire, réfléchir, être surpris ou simplement se détendre. C'est cette idée qui a donné naissance à Mood Film Finder. Pour construire cet outil, j'ai collecté plus de 6500 films et séries via un important travail de scraping, puis mis en place une logique de recommandation reposant sur une architecture RAG et une base vectorielle. L'objectif n'était pas simplement de proposer des films, mais de créer une expérience capable de comprendre une intention ou un ressenti exprimé naturellement par un utilisateur et de transformer cette émotion en recommandation pertinente.",
     stack: ["Python", "Scraping", "RAG", "IA"],
     link: { label: "🎬 Tester l'expérience Mood Match", url: "https://vibe-select-recs.lovable.app/match" },
     accent: "oklch(0.55 0.2 320)",
