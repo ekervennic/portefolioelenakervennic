@@ -49,10 +49,10 @@ export function Stack() {
 
   return (
     <section id="stack" className="relative py-32 px-6">
-      <div className="max-w-[1400px] mx-auto">
+      <div className="max-w-5xl mx-auto">
         <SectionHeader number="01" title="Tableau d'investigation" subtitle="Arsenal · Compétences reliées" />
 
-        <div className="relative mt-12 paper-shadow rounded-sm border border-evidence/20 bg-[radial-gradient(circle_at_20%_10%,oklch(0.22_0.03_25/0.6),transparent_60%),radial-gradient(circle_at_80%_90%,oklch(0.2_0.04_20/0.7),transparent_55%)] bg-card overflow-hidden">
+        <div className="relative mt-10 paper-shadow rounded-sm border border-evidence/20 bg-[radial-gradient(circle_at_20%_10%,oklch(0.22_0.03_25/0.6),transparent_60%),radial-gradient(circle_at_80%_90%,oklch(0.2_0.04_20/0.7),transparent_55%)] bg-card overflow-hidden">
           {/* Cork-like texture */}
           <div
             className="absolute inset-0 opacity-[0.08] pointer-events-none"
@@ -65,7 +65,7 @@ export function Stack() {
           />
           <CornerStamps />
 
-          <div className="relative aspect-[1000/820] w-full">
+          <div className="relative aspect-[1000/720] w-full">
             {/* Threads */}
             <svg
               viewBox="0 0 1000 820"
@@ -83,11 +83,10 @@ export function Stack() {
                     y1={na.y}
                     x2={nb.x}
                     y2={nb.y}
-                    className={`thread thread-draw ${lit ? "thread-on" : ""}`}
+                    className={`thread ${lit ? "thread-on" : ""}`}
                     stroke="oklch(0.62 0.22 18)"
                     strokeOpacity={lit ? 1 : 0.35}
                     strokeWidth={lit ? 2.4 : 1.2}
-                    style={{ animationDelay: `${i * 0.08}s` }}
                   />
                 );
               })}

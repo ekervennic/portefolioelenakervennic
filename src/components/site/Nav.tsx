@@ -28,21 +28,24 @@ export function Nav() {
   }, []);
 
   return (
-    <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-40 hidden md:flex gap-2 px-3 py-2 rounded-full backdrop-blur-md bg-background/60 border border-border/60 noir-shadow">
-      {items.map((it, idx) => (
-        <a
-          key={it.id}
-          href={`#${it.id}`}
-          className={`relative px-4 py-1.5 text-[11px] tracking-[0.18em] font-stamp transition-all rounded-sm ${
-            active === it.id
-              ? "bg-evidence text-evidence-foreground"
-              : "text-foreground/70 hover:text-foreground"
-          }`}
-          style={{ transform: `rotate(${(idx % 2 ? 1 : -1) * 1.2}deg)` }}
-        >
-          {it.label}
-        </a>
-      ))}
+    <nav className="fixed top-6 left-1/2 -translate-x-1/2 z-40 hidden md:flex gap-5 lg:gap-7">
+      {items.map((it, idx) => {
+        const rot = (idx % 2 ? 1 : -1) * 2.2;
+        return (
+          <a
+            key={it.id}
+            href={`#${it.id}`}
+            className={`pin relative paper-bg paper-shadow px-5 py-2 text-[11px] tracking-[0.28em] font-stamp transition-all ${
+              active === it.id
+                ? "text-evidence"
+                : "text-paper-foreground hover:text-evidence"
+            }`}
+            style={{ transform: `rotate(${rot}deg)` }}
+          >
+            {it.label}
+          </a>
+        );
+      })}
     </nav>
   );
 }

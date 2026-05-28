@@ -3,7 +3,7 @@ import { Nav } from "./Nav";
 
 export function Hero() {
   return (
-    <section id="moi-hero" className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section id="moi-hero" className="relative min-h-screen overflow-hidden">
       <Nav />
       {/* Background */}
       <div className="absolute inset-0">
@@ -12,69 +12,75 @@ export function Hero() {
           alt="Bureau de détective"
           width={1920}
           height={1280}
-          className="w-full h-full object-cover opacity-70 scale-105 animate-flicker"
+          className="w-full h-full object-cover opacity-90 animate-flicker"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/60 to-background" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_30%,oklch(0.13_0.01_20)_85%)]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/20 to-background" />
+        <div className="absolute inset-0 bg-gradient-to-r from-background/70 via-transparent to-background/40" />
       </div>
 
-      {/* Crosshair lines */}
-      <div className="absolute inset-0 pointer-events-none opacity-20">
-        <div className="absolute top-1/2 left-0 right-0 h-px bg-evidence" />
-        <div className="absolute left-1/2 top-0 bottom-0 w-px bg-evidence" />
-      </div>
+      {/* Left-aligned content */}
+      <div className="relative z-10 min-h-screen flex items-center">
+        <div className="w-full max-w-7xl mx-auto px-6 md:px-12 lg:px-20 py-32">
+          <div className="max-w-3xl">
+            {/* DOSSIER stamp */}
+            <div className="inline-block mb-10 animate-stamp" style={{ animationDelay: "0.2s" }}>
+              <div
+                className="font-stamp text-[12px] md:text-sm tracking-[0.35em] text-evidence border-2 border-evidence px-5 py-2.5 uppercase"
+                style={{ transform: "rotate(-2deg)", background: "oklch(0.62 0.22 18 / 0.08)" }}
+              >
+                Dossier #EK — Ouvert
+              </div>
+            </div>
 
-      {/* Classified marks */}
-      <div className="absolute top-24 left-8 md:left-16 stamp text-sm animate-stamp" style={{ animationDelay: "0.4s" }}>
-        CLASSIFIÉ · N° 2025
-      </div>
-      <div className="absolute bottom-24 right-8 md:right-16 stamp text-sm animate-stamp" style={{ animationDelay: "0.6s", transform: "rotate(6deg)" }}>
-        DOSSIER OUVERT
-      </div>
+            <h1 className="font-serif-display leading-[0.88] mb-8">
+              <span className="block text-7xl md:text-8xl lg:text-[9rem] text-foreground font-medium tracking-tight">
+                ELENA
+              </span>
+              <span className="block text-7xl md:text-8xl lg:text-[9rem] text-evidence italic font-medium tracking-tight">
+                KERVENNIC
+              </span>
+            </h1>
 
-      <div className="relative z-10 max-w-5xl px-6 text-center">
-        <div className="text-[11px] tracking-[0.4em] text-evidence font-stamp mb-6 animate-fade-in">
-          BUREAU D'ENQUÊTE — DATA &amp; IA
+            <p className="text-xs md:text-sm tracking-[0.35em] uppercase text-foreground/85 font-stamp mb-10">
+              Étudiante Data &amp; Intelligence Artificielle
+            </p>
+
+            <p className="text-lg md:text-xl text-foreground/85 max-w-xl mb-10 leading-relaxed">
+              Je transforme les données en décisions et les problèmes en{" "}
+              <strong className="text-evidence font-semibold">enquêtes résolues</strong>.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4">
+              <a
+                href="#enquetes"
+                className="px-8 py-4 bg-evidence text-evidence-foreground font-stamp tracking-[0.22em] text-sm uppercase noir-shadow hover:translate-y-[-2px] transition-transform"
+              >
+                🔍 Ouvrir les dossiers
+              </a>
+              <a
+                href="#contact"
+                className="px-8 py-4 border border-foreground/30 text-foreground font-stamp tracking-[0.22em] text-sm uppercase backdrop-blur-sm hover:border-evidence hover:text-evidence transition-colors"
+              >
+                ✉ Me contacter
+              </a>
+            </div>
+          </div>
         </div>
-        <h1 className="text-6xl md:text-8xl lg:text-9xl font-serif-display font-medium text-foreground leading-[0.95] mb-6 animate-fade-in">
-          ELENA<br />
-          <span className="italic text-evidence">KERVENNIC</span>
-        </h1>
-        <p className="text-base md:text-lg tracking-[0.25em] uppercase text-muted-foreground font-stamp mb-4">
-          Étudiante Data &amp; Intelligence Artificielle
-        </p>
-        <p className="text-lg md:text-xl text-foreground/80 max-w-2xl mx-auto mb-10 font-serif-display italic">
-          « Je transforme les données en décisions et les problèmes en enquêtes résolues. »
-        </p>
-
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <a
-            href="#enquetes"
-            className="group relative px-8 py-4 bg-evidence text-evidence-foreground font-stamp tracking-[0.2em] text-sm uppercase noir-shadow hover:translate-y-[-2px] transition-transform"
-          >
-            🔍 Ouvrir les dossiers
-          </a>
-          <a
-            href="#contact"
-            className="px-8 py-4 border border-foreground/30 text-foreground font-stamp tracking-[0.2em] text-sm uppercase backdrop-blur-sm hover:border-evidence hover:text-evidence transition-colors"
-          >
-            📩 Me contacter
-          </a>
-        </div>
       </div>
 
-      {/* Pinned cards bottom */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 md:hidden">
-        {["MOI", "STACK", "ENQUÊTES", "DATAVIZ"].map((l, i) => (
-          <a
-            key={l}
-            href={`#${l.toLowerCase().replace("ê", "e").replace("é", "e")}`}
-            className="pin relative px-3 py-2 paper-bg text-[10px] font-stamp tracking-[0.15em] paper-shadow"
-            style={{ transform: `rotate(${(i % 2 ? 2 : -2)}deg)` }}
-          >
-            {l}
-          </a>
-        ))}
+      {/* Bottom: scroll indicator */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 font-stamp text-[10px] md:text-[11px] tracking-[0.4em] text-muted-foreground uppercase z-10">
+        ↓ Descendre dans le dossier
+      </div>
+
+      {/* Bottom right: GPS / live feed */}
+      <div className="absolute bottom-6 right-6 md:right-10 text-right font-stamp text-[10px] tracking-[0.25em] text-muted-foreground z-10 space-y-0.5">
+        <div>LATITUDE 48.85° N</div>
+        <div>LONGITUDE 2.35° E</div>
+        <div className="text-evidence flex items-center justify-end gap-1.5 mt-1">
+          <span className="w-1.5 h-1.5 rounded-full bg-evidence animate-blink" />
+          LIVE FEED
+        </div>
       </div>
 
       <div id="moi" className="absolute bottom-0" />
