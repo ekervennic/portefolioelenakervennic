@@ -61,13 +61,13 @@ export function About() {
             </h3>
             <div className="space-y-4 text-paper-foreground/85 leading-relaxed">
               <p>
-                Je suis <strong>Elena Kervennic</strong>, étudiante en data et intelligence artificielle.
+                Je suis <strong>Elena Kervennic</strong>, étudiante en Data & Intelligence Artificielle.
               </p>
               <p>
-                Je développe mes compétences en analyse de données, visualisation, automatisation et IA à travers des projets concrets.
+                Je développe mes compétences en analyse de données, visualisation, automatisation et IA à travers des projets concrets, en explorant aussi bien la collecte de données que leur exploitation pour répondre à des problématiques réelles.
               </p>
               <p>
-                En parallèle, je réalise mon alternance à la <strong>FDJ</strong> au sein du service data où j'apprends à collecter, structurer, analyser et valoriser les données pour accompagner la prise de décision.
+                En parallèle, je réalise mon alternance à la <strong>FDJ</strong> au sein du service data, où j'apprends à collecter, structurer et analyser des données tout en découvrant leur utilisation dans un contexte professionnel. Cette expérience me permet de compléter les connaissances acquises en formation par une approche plus concrète de la donnée.
               </p>
             </div>
             <blockquote className="mt-8 pt-6 border-t border-paper-foreground/20 font-serif-display italic text-xl text-paper-foreground">
