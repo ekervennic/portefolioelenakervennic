@@ -33,7 +33,7 @@ const cases: CaseT[] = [
     num: "01",
     title: "Together",
     subtitle: "Application sociale de sorties entre amis",
-    description: "Together réinvente l'organisation de sorties. Une plateforme sociale qui aide les groupes d'amis à proposer, planifier et confirmer leurs prochaines aventures — avec une IA qui suggère les meilleures options en fonction des envies du groupe.",
+    description: "Organiser une sortie entre amis paraît simple, mais la réalité est souvent différente : discussions dispersées sur plusieurs applications, sondages improvisés, lieux partagés dans différents groupes et décisions qui prennent du temps à être validées. Together est né de cette problématique. L'objectif était de concevoir une plateforme unique permettant de centraliser toute l'organisation d'une sortie : proposition d'activités, votes, confirmation des participants, discussions et recommandations de lieux. Au-delà de l'aspect technique, ce projet m'a permis de travailler sur la conception d'un véritable produit, en réfléchissant autant à l'expérience utilisateur qu'aux fonctionnalités proposées. Il représente aujourd'hui l'un de mes projets les plus complets.",
     stack: ["Next.js", "Supabase", "OpenAI", "TypeScript", "Cursor"],
     accent: "oklch(0.6 0.18 25)",
     proofs: ["Démo", "Dashboard", "Capture écran", "Résultat obtenu"],
