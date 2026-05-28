@@ -248,6 +248,12 @@ function CaseModal({ c, onClose }: { c: CaseT; onClose: () => void }) {
           {c.subtitle}
         </p>
 
+        {/* Question d'ouverture */}
+        <div className="mb-8 border-l-4 border-evidence pl-5">
+          <p className="font-serif-display italic text-xl md:text-2xl text-paper-foreground leading-snug">
+            « {c.question} »
+          </p>
+        </div>
 
         {/* Mystère */}
         {c.mystery && (
