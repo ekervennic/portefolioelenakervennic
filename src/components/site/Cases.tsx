@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { SectionHeader } from "./About";
+import { CaseInvestigation } from "./CaseInvestigation";
 import together1 from "@/assets/cases/together-1.png";
 import together2 from "@/assets/cases/together-2.png";
 import together3 from "@/assets/cases/together-3.png";
@@ -159,6 +160,7 @@ const cases: CaseT[] = [
 
 export function Cases() {
   const [open, setOpen] = useState<CaseT | null>(null);
+  const [investigating, setInvestigating] = useState<CaseT | null>(null);
 
   return (
     <section id="enquetes" className="relative py-32 px-6">
@@ -171,10 +173,23 @@ export function Cases() {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10 mt-16">
           {cases.map((c, i) => (
-            <CaseFolder key={c.id} c={c} index={i} onOpen={() => setOpen(c)} />
+            <CaseFolder key={c.id} c={c} index={i} onOpen={() => setInvestigating(c)} />
           ))}
         </div>
       </div>
+
+      {investigating && (
+        <CaseInvestigation
+          caseId={investigating.id}
+          caseTitle={investigating.title}
+          onClose={() => setInvestigating(null)}
+          onSolved={() => {
+            const c = investigating;
+            setInvestigating(null);
+            setOpen(c);
+          }}
+        />
+      )}
 
       {open && <CaseModal c={open} onClose={() => setOpen(null)} />}
     </section>
