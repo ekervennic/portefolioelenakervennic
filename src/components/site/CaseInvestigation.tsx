@@ -7,26 +7,27 @@ type Props = {
   onClose: () => void;
 };
 
-const SUCCESS_MESSAGES: Record<string, string> = {
-  together: "Groupe synchronisé — dossier ouvert.",
-  mood: "Humeur détectée — recommandation prête.",
-  lyrics: "Paroles identifiées — piste retrouvée.",
-  ecole: "Outils réunis — plateforme débloquée.",
-  mirakl: "Pipeline activé — enquête gagnante débloquée.",
-  brasil: "Insights reliés — rapport ouvert.",
-};
+type GameKey = "threads" | "lock" | "shred" | "scan" | "biometric" | "stamp" | "maze";
 
-export function CaseInvestigation({ caseId, caseTitle, onSolved, onClose }: Props) {
+const GAMES: { key: GameKey; label: string; success: string }[] = [
+  { key: "threads", label: "Tableau d'enquête", success: "Connexions établies — dossier déverrouillé." },
+  { key: "lock", label: "Cadenas classifié", success: "Code aligné — dossier déverrouillé." },
+  { key: "shred", label: "Document à reconstituer", success: "Document reconstitué — dossier ouvert." },
+  { key: "scan", label: "Scanner les preuves", success: "Preuve isolée — dossier autorisé." },
+  { key: "biometric", label: "Déverrouillage biométrique", success: "Empreinte validée — accès autorisé." },
+  { key: "stamp", label: "Validation des tampons", success: "Tampon officiel apposé — dossier ouvert." },
+  { key: "maze", label: "Couloir sécurisé", success: "Sortie atteinte — dossier ouvert." },
+];
+
+export function CaseInvestigation({ caseTitle, onSolved, onClose }: Props) {
   const [solved, setSolved] = useState(false);
+  const game = useMemo(() => GAMES[Math.floor(Math.random() * GAMES.length)], []);
 
-  // Auto-trigger modal opening shortly after success stamp
   useEffect(() => {
     if (!solved) return;
     const t = setTimeout(() => onSolved(), 900);
     return () => clearTimeout(t);
   }, [solved, onSolved]);
-
-  const successMsg = SUCCESS_MESSAGES[caseId] ?? "Enquête résolue — dossier ouvert.";
 
   return (
     <div
@@ -46,7 +47,7 @@ export function CaseInvestigation({ caseId, caseTitle, onSolved, onClose }: Prop
         </button>
 
         <div className="font-stamp text-[10px] tracking-[0.3em] text-evidence mb-2">
-          MINI-ENQUÊTE
+          ACCÈS CLASSIFIÉ · {game.label.toUpperCase()}
         </div>
         <h3 className="font-serif-display text-2xl md:text-3xl text-paper-foreground leading-tight mb-6">
           {caseTitle}
@@ -54,7 +55,7 @@ export function CaseInvestigation({ caseId, caseTitle, onSolved, onClose }: Prop
 
         <div className="relative min-h-[260px]">
           {!solved && (
-            <GameForCase caseId={caseId} onSolved={() => setSolved(true)} />
+            <GameRouter game={game.key} onSolved={() => setSolved(true)} />
           )}
 
           {solved && (
@@ -63,7 +64,7 @@ export function CaseInvestigation({ caseId, caseTitle, onSolved, onClose }: Prop
                 ✓ DOSSIER OUVERT
               </div>
               <p className="font-serif-display italic text-paper-foreground/80">
-                {successMsg}
+                {game.success}
               </p>
             </div>
           )}
@@ -72,7 +73,7 @@ export function CaseInvestigation({ caseId, caseTitle, onSolved, onClose }: Prop
         {!solved && (
           <div className="mt-6 flex items-center justify-between gap-3 pt-4 border-t border-dashed border-paper-foreground/25">
             <span className="font-stamp text-[10px] tracking-[0.25em] text-paper-foreground/50">
-              5–10s · résolvez pour ouvrir
+              3–10s · épreuve d'accès
             </span>
             <button
               onClick={onSolved}
@@ -87,22 +88,15 @@ export function CaseInvestigation({ caseId, caseTitle, onSolved, onClose }: Prop
   );
 }
 
-function GameForCase({ caseId, onSolved }: { caseId: string; onSolved: () => void }) {
-  switch (caseId) {
-    case "together":
-      return <TogetherGame onSolved={onSolved} />;
-    case "mood":
-      return <MoodGame onSolved={onSolved} />;
-    case "lyrics":
-      return <LyricsGame onSolved={onSolved} />;
-    case "ecole":
-      return <EcoleGame onSolved={onSolved} />;
-    case "mirakl":
-      return <MiraklGame onSolved={onSolved} />;
-    case "brasil":
-      return <BrasilGame onSolved={onSolved} />;
-    default:
-      return <GenericGame onSolved={onSolved} />;
+function GameRouter({ game, onSolved }: { game: GameKey; onSolved: () => void }) {
+  switch (game) {
+    case "threads": return <ThreadsGame onSolved={onSolved} />;
+    case "lock": return <LockGame onSolved={onSolved} />;
+    case "shred": return <ShredGame onSolved={onSolved} />;
+    case "scan": return <ScanGame onSolved={onSolved} />;
+    case "biometric": return <BiometricGame onSolved={onSolved} />;
+    case "stamp": return <StampGame onSolved={onSolved} />;
+    case "maze": return <MazeGame onSolved={onSolved} />;
   }
 }
 
@@ -116,32 +110,30 @@ function Hint({ children }: { children: React.ReactNode }) {
   );
 }
 
-/* ---------- CASE 01 — Together : relier les amis ---------- */
+/* ---------- 1. Tableau d'enquête — fils rouges ---------- */
 
-function TogetherGame({ onSolved }: { onSolved: () => void }) {
-  // 4 amis, 2 paires correctes (même plan)
-  const friends = [
-    { id: "a", label: "Léa", plan: 1, x: 12, y: 20 },
-    { id: "b", label: "Tom", plan: 2, x: 88, y: 22 },
-    { id: "c", label: "Sami", plan: 1, x: 18, y: 78 },
-    { id: "d", label: "Inès", plan: 2, x: 82, y: 80 },
-  ];
+function ThreadsGame({ onSolved }: { onSolved: () => void }) {
+  const nodes = useMemo(() => {
+    const groups = [1, 1, 2, 2];
+    const shuffled = [...groups].sort(() => Math.random() - 0.5);
+    const pos = [
+      { x: 15, y: 22 }, { x: 85, y: 20 },
+      { x: 18, y: 78 }, { x: 82, y: 80 },
+    ];
+    return shuffled.map((g, i) => ({ id: String(i), group: g, ...pos[i] }));
+  }, []);
   const [picked, setPicked] = useState<string | null>(null);
   const [links, setLinks] = useState<Array<[string, string]>>([]);
   const [error, setError] = useState(false);
 
   const pick = (id: string) => {
-    if (picked === null) {
-      setPicked(id);
-      return;
-    }
-    if (picked === id) {
-      setPicked(null);
-      return;
-    }
-    const a = friends.find((f) => f.id === picked)!;
-    const b = friends.find((f) => f.id === id)!;
-    if (a.plan === b.plan) {
+    const alreadyLinked = links.some(([a, b]) => a === id || b === id);
+    if (alreadyLinked) return;
+    if (picked === null) { setPicked(id); return; }
+    if (picked === id) { setPicked(null); return; }
+    const a = nodes.find((f) => f.id === picked)!;
+    const b = nodes.find((f) => f.id === id)!;
+    if (a.group === b.group) {
       setLinks((l) => [...l, [picked, id]]);
       setPicked(null);
     } else {
@@ -158,41 +150,33 @@ function TogetherGame({ onSolved }: { onSolved: () => void }) {
     }
   }, [links, onSolved]);
 
-  const pos = (id: string) => friends.find((f) => f.id === id)!;
+  const at = (id: string) => nodes.find((f) => f.id === id)!;
 
   return (
     <div>
-      <Hint>Reliez les amis qui partagent le même plan de sortie.</Hint>
+      <Hint>Reliez les suspects associés — un fil rouge pour chaque paire.</Hint>
       <div className={`relative w-full h-[240px] bg-paper-foreground/5 border border-paper-foreground/15 ${error ? "animate-pulse" : ""}`}>
         <svg className="absolute inset-0 w-full h-full pointer-events-none">
           {links.map(([a, b], i) => {
-            const A = pos(a);
-            const B = pos(b);
+            const A = at(a); const B = at(b);
             return (
-              <line
-                key={i}
-                x1={`${A.x}%`} y1={`${A.y}%`}
-                x2={`${B.x}%`} y2={`${B.y}%`}
-                stroke="oklch(0.62 0.22 18)"
-                strokeWidth={2}
-                strokeDasharray="0"
-                style={{ filter: "drop-shadow(0 0 4px oklch(0.62 0.22 18 / 0.6))" }}
-              />
+              <line key={i} x1={`${A.x}%`} y1={`${A.y}%`} x2={`${B.x}%`} y2={`${B.y}%`}
+                stroke="oklch(0.62 0.22 18)" strokeWidth={2}
+                style={{ filter: "drop-shadow(0 0 4px oklch(0.62 0.22 18 / 0.6))" }} />
             );
           })}
         </svg>
-        {friends.map((f) => {
+        {nodes.map((f) => {
           const active = picked === f.id;
           const linked = links.some(([a, b]) => a === f.id || b === f.id);
+          const symbol = ["☉", "✦", "✚", "✷"][Number(f.id)];
           return (
-            <button
-              key={f.id}
-              onClick={() => pick(f.id)}
+            <button key={f.id} onClick={() => pick(f.id)}
               style={{ left: `${f.x}%`, top: `${f.y}%`, transform: "translate(-50%, -50%)" }}
-              className={`absolute w-14 h-14 rounded-full border-2 flex items-center justify-center font-stamp text-xs tracking-wider transition-all
+              className={`absolute w-16 h-20 border-2 flex items-center justify-center text-2xl transition-all paper-shadow
                 ${linked ? "bg-evidence text-evidence-foreground border-evidence" : active ? "bg-paper-foreground text-paper border-paper-foreground scale-110" : "bg-paper text-paper-foreground border-paper-foreground/40 hover:border-evidence"}`}
             >
-              {f.label}
+              {symbol}
             </button>
           );
         })}
@@ -201,84 +185,62 @@ function TogetherGame({ onSolved }: { onSolved: () => void }) {
   );
 }
 
-/* ---------- CASE 02 — Mood : calibrer l'humeur ---------- */
+/* ---------- 2. Cadenas classifié — aligner 3 symboles ---------- */
 
-function MoodGame({ onSolved }: { onSolved: () => void }) {
-  const moods = ["Rire", "Aventure", "Réflexion", "Romance"];
-  const target = useMemo(() => Math.floor(Math.random() * moods.length), []);
-  const [value, setValue] = useState(50);
-  const [locked, setLocked] = useState(false);
+function LockGame({ onSolved }: { onSolved: () => void }) {
+  const SYMBOLS = ["☉", "✦", "✚", "✷", "❖", "✱"];
+  const target = useMemo(() => SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)], []);
+  const [reels, setReels] = useState<string[]>(() =>
+    Array.from({ length: 3 }, () => SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)]),
+  );
 
-  // map value 0-100 to zone 0..3
-  const zone = Math.min(moods.length - 1, Math.floor((value / 100) * moods.length));
-  const onLock = () => {
-    if (zone !== target) return;
-    setLocked(true);
-    setTimeout(onSolved, 600);
+  const cycle = (i: number) => {
+    setReels((r) => {
+      const next = [...r];
+      const idx = SYMBOLS.indexOf(next[i]);
+      next[i] = SYMBOLS[(idx + 1) % SYMBOLS.length];
+      return next;
+    });
   };
+
+  useEffect(() => {
+    if (reels.every((s) => s === target)) {
+      const t = setTimeout(onSolved, 500);
+      return () => clearTimeout(t);
+    }
+  }, [reels, target, onSolved]);
 
   return (
     <div>
-      <Hint>Calibrez l'aiguille sur l'humeur recherchée : <span className="text-evidence">« {moods[target]} »</span></Hint>
-
-      <div className="relative h-3 bg-paper-foreground/10 rounded-full overflow-hidden">
-        {moods.map((_, i) => (
-          <div
+      <Hint>Alignez les 3 rouleaux sur le symbole cible : <span className="text-evidence text-base">{target}</span></Hint>
+      <div className="flex items-center justify-center gap-4 my-6">
+        {reels.map((s, i) => (
+          <button
             key={i}
-            className={`absolute top-0 bottom-0 ${i === target ? "bg-evidence/30" : ""}`}
-            style={{ left: `${(i / moods.length) * 100}%`, width: `${100 / moods.length}%` }}
-          />
-        ))}
-        <div
-          className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 rounded-full -ml-2 transition-colors ${zone === target ? "bg-evidence shadow-[0_0_12px_oklch(0.62_0.22_18)]" : "bg-paper-foreground"}`}
-          style={{ left: `${value}%` }}
-        />
-      </div>
-
-      <input
-        type="range"
-        min={0}
-        max={100}
-        value={value}
-        onChange={(e) => setValue(Number(e.target.value))}
-        disabled={locked}
-        className="w-full mt-3 accent-[oklch(0.62_0.22_18)]"
-      />
-
-      <div className="grid grid-cols-4 gap-2 mt-3 text-center font-stamp text-[10px] tracking-wider text-paper-foreground/70">
-        {moods.map((m, i) => (
-          <span key={m} className={i === zone ? "text-paper-foreground" : ""}>{m}</span>
+            onClick={() => cycle(i)}
+            className={`w-20 h-24 flex items-center justify-center text-4xl border-2 paper-shadow transition-all
+              ${s === target ? "bg-evidence/15 border-evidence text-evidence" : "bg-paper border-paper-foreground/40 text-paper-foreground hover:border-evidence"}`}
+          >
+            {s}
+          </button>
         ))}
       </div>
-
-      <button
-        onClick={onLock}
-        disabled={locked}
-        className={`mt-5 w-full py-2.5 font-stamp text-xs tracking-[0.25em] border transition-colors
-          ${zone === target ? "bg-evidence text-evidence-foreground border-evidence" : "bg-paper-foreground/5 border-paper-foreground/20 text-paper-foreground/60"}`}
-      >
-        VERROUILLER L'HUMEUR
-      </button>
+      <p className="text-center font-stamp text-[10px] tracking-[0.25em] text-paper-foreground/50">
+        Cliquez chaque rouleau pour le faire défiler
+      </p>
     </div>
   );
 }
 
-/* ---------- CASE 03 — Lyrics : remettre dans l'ordre ---------- */
+/* ---------- 3. Document déchiré ---------- */
 
-function LyricsGame({ onSolved }: { onSolved: () => void }) {
-  const correct = ["J'ai demandé", "à la lune", "et le soleil", "ne le sait pas"];
-  const [order, setOrder] = useState(() => shuffle(correct.map((_, i) => i)));
+function ShredGame({ onSolved }: { onSolved: () => void }) {
+  const [order, setOrder] = useState(() => shuffle([0, 1, 2, 3]));
   const [selected, setSelected] = useState<number | null>(null);
 
   const swap = (i: number) => {
-    if (selected === null) {
-      setSelected(i);
-      return;
-    }
-    if (selected === i) {
-      setSelected(null);
-      return;
-    }
+    if (selected === null) { setSelected(i); return; }
+    if (selected === i) { setSelected(null); return; }
     setOrder((o) => {
       const next = [...o];
       [next[selected], next[i]] = [next[i], next[selected]];
@@ -294,10 +256,17 @@ function LyricsGame({ onSolved }: { onSolved: () => void }) {
     }
   }, [order, onSolved]);
 
+  const STRIPES = [
+    "▬▬▬▬▬▬▬▬▬▬▬  CONFIDENTIEL  ▬▬▬",
+    "Sujet : Dossier classifié n°427-B",
+    "Statut : Accès restreint — niveau 3",
+    "▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬",
+  ];
+
   return (
     <div>
-      <Hint>Reconstituez l'extrait dans le bon ordre — cliquez deux fragments pour les échanger.</Hint>
-      <div className="space-y-2">
+      <Hint>Reconstituez le document — cliquez deux bandes pour les échanger.</Hint>
+      <div className="space-y-1.5">
         {order.map((idx, i) => {
           const isRight = idx === i;
           const active = selected === i;
@@ -305,12 +274,11 @@ function LyricsGame({ onSolved }: { onSolved: () => void }) {
             <button
               key={i}
               onClick={() => swap(i)}
-              style={{ transform: `rotate(${(i % 2 === 0 ? -0.6 : 0.8)}deg)` }}
-              className={`block w-full text-left px-4 py-2.5 paper-shadow font-serif-display text-base md:text-lg transition-all
-                ${isRight ? "bg-evidence/15 border-l-4 border-evidence text-paper-foreground" : active ? "bg-paper-foreground text-paper" : "bg-paper text-paper-foreground hover:bg-paper-foreground/5"}`}
+              style={{ transform: `translateX(${(i % 2 === 0 ? -2 : 2)}px)` }}
+              className={`block w-full text-left px-4 py-3 font-stamp text-[11px] tracking-[0.15em] paper-shadow transition-all border-l-4
+                ${isRight ? "bg-evidence/10 border-evidence text-paper-foreground" : active ? "bg-paper-foreground text-paper border-paper-foreground" : "bg-paper text-paper-foreground/80 border-paper-foreground/20 hover:border-evidence/60"}`}
             >
-              <span className="font-stamp text-[10px] tracking-[0.25em] opacity-60 mr-3">{i + 1}</span>
-              {correct[idx]}
+              {STRIPES[idx]}
             </button>
           );
         })}
@@ -319,188 +287,166 @@ function LyricsGame({ onSolved }: { onSolved: () => void }) {
   );
 }
 
-/* ---------- CASE 04 — École : centraliser les outils ---------- */
+/* ---------- 4. Scanner les preuves — loupe ---------- */
 
-function EcoleGame({ onSolved }: { onSolved: () => void }) {
-  const tools = [
-    { id: "cours", label: "Cours", x: 8, y: 18 },
-    { id: "agenda", label: "Agenda", x: 86, y: 24 },
-    { id: "quiz", label: "Quiz", x: 12, y: 78 },
-    { id: "chat", label: "Messagerie", x: 82, y: 80 },
-  ];
-  const [collected, setCollected] = useState<string[]>([]);
+function ScanGame({ onSolved }: { onSolved: () => void }) {
+  const docs = useMemo(() => {
+    const target = Math.floor(Math.random() * 6);
+    return Array.from({ length: 6 }, (_, i) => ({ id: i, hidden: i === target }));
+  }, []);
+  const [pos, setPos] = useState({ x: 50, y: 50 });
+  const [found, setFound] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
 
-  const pick = (id: string) => {
-    setCollected((c) => (c.includes(id) ? c : [...c, id]));
+  const onMove = (e: React.MouseEvent) => {
+    const r = ref.current?.getBoundingClientRect();
+    if (!r) return;
+    setPos({ x: ((e.clientX - r.left) / r.width) * 100, y: ((e.clientY - r.top) / r.height) * 100 });
   };
 
-  useEffect(() => {
-    if (collected.length === tools.length) {
-      const t = setTimeout(onSolved, 500);
-      return () => clearTimeout(t);
-    }
-  }, [collected.length, tools.length, onSolved]);
-
-  return (
-    <div>
-      <Hint>Rapatriez chaque outil étudiant dans la plateforme centrale.</Hint>
-      <div className="relative h-[240px] bg-paper-foreground/5 border border-paper-foreground/15">
-        {/* central hub */}
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 rounded-full border-2 border-dashed border-evidence/60 flex items-center justify-center text-center font-stamp text-[10px] tracking-[0.2em] text-paper-foreground/80">
-          PLATEFORME<br />({collected.length}/{tools.length})
-        </div>
-        <svg className="absolute inset-0 w-full h-full pointer-events-none">
-          {tools.map((t) =>
-            collected.includes(t.id) ? (
-              <line
-                key={t.id}
-                x1={`${t.x}%`} y1={`${t.y}%`}
-                x2="50%" y2="50%"
-                stroke="oklch(0.62 0.22 18)"
-                strokeWidth={2}
-                style={{ filter: "drop-shadow(0 0 4px oklch(0.62 0.22 18 / 0.6))" }}
-              />
-            ) : null,
-          )}
-        </svg>
-        {tools.map((t) => {
-          const got = collected.includes(t.id);
-          return (
-            <button
-              key={t.id}
-              onClick={() => pick(t.id)}
-              style={{ left: `${t.x}%`, top: `${t.y}%`, transform: "translate(-50%, -50%)" }}
-              className={`absolute px-3 py-2 font-stamp text-[10px] tracking-[0.2em] border-2 transition-all
-                ${got ? "bg-evidence text-evidence-foreground border-evidence" : "bg-paper text-paper-foreground border-paper-foreground/40 hover:border-evidence hover:-translate-y-0.5"}`}
-            >
-              {t.label}
-            </button>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-/* ---------- CASE 05 — Mirakl : assembler les preuves ---------- */
-
-function MiraklGame({ onSolved }: { onSolved: () => void }) {
-  const proofs = ["GitHub", "LinkedIn", "IA"];
-  const [placed, setPlaced] = useState<string[]>([]);
-
-  const drop = (p: string) => {
-    setPlaced((arr) => (arr.includes(p) ? arr : [...arr, p]));
-  };
-
-  useEffect(() => {
-    if (placed.length === proofs.length) {
-      const t = setTimeout(onSolved, 500);
-      return () => clearTimeout(t);
-    }
-  }, [placed.length, proofs.length, onSolved]);
-
-  return (
-    <div>
-      <Hint>Glissez chaque preuve dans le pipeline de sourcing.</Hint>
-
-      <div className="flex flex-wrap gap-2 mb-4">
-        {proofs.map((p) => {
-          const used = placed.includes(p);
-          return (
-            <button
-              key={p}
-              onClick={() => drop(p)}
-              disabled={used}
-              className={`px-4 py-2 font-stamp text-xs tracking-[0.2em] border-2 transition-all
-                ${used ? "opacity-30 line-through" : "bg-paper border-paper-foreground/40 text-paper-foreground hover:border-evidence hover:-translate-y-0.5"}`}
-            >
-              {p}
-            </button>
-          );
-        })}
-      </div>
-
-      <div className="border-2 border-dashed border-evidence/50 bg-evidence/5 p-4 min-h-[110px]">
-        <div className="font-stamp text-[10px] tracking-[0.3em] text-evidence mb-3">
-          PIPELINE DE SOURCING ({placed.length}/{proofs.length})
-        </div>
-        <div className="flex items-center gap-2 flex-wrap">
-          {placed.map((p, i) => (
-            <span key={p} className="flex items-center gap-2">
-              <span className="px-3 py-1.5 bg-evidence text-evidence-foreground font-stamp text-[11px] tracking-[0.2em] paper-shadow">
-                {p}
-              </span>
-              {i < placed.length - 1 && <span className="text-evidence">→</span>}
-            </span>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ---------- CASE 06 — Brésil : relier les insights ---------- */
-
-function BrasilGame({ onSolved }: { onSolved: () => void }) {
-  const dots = [
-    { id: "pay", label: "Paiement", x: 18, y: 30 },
-    { id: "city", label: "Ville", x: 50, y: 78 },
-    { id: "ship", label: "Livraison", x: 82, y: 30 },
-  ];
-  const sequence = ["pay", "city", "ship"];
-  const [progress, setProgress] = useState<string[]>([]);
-  const [error, setError] = useState(false);
-
-  const pick = (id: string) => {
-    const next = progress.length;
-    if (sequence[next] === id) {
-      const np = [...progress, id];
-      setProgress(np);
-      if (np.length === sequence.length) setTimeout(onSolved, 500);
-    } else {
-      setError(true);
-      setTimeout(() => {
-        setError(false);
-        setProgress([]);
-      }, 400);
+  const onClick = (id: number) => {
+    if (docs[id].hidden) {
+      setFound(true);
+      setTimeout(onSolved, 500);
     }
   };
 
-  const pos = (id: string) => dots.find((d) => d.id === id)!;
-
   return (
     <div>
-      <Hint>Reliez les indices dans l'ordre : Paiement → Ville → Livraison.</Hint>
-      <div className={`relative h-[240px] bg-paper-foreground/5 border border-paper-foreground/15 ${error ? "animate-pulse" : ""}`}>
-        <svg className="absolute inset-0 w-full h-full pointer-events-none">
-          {progress.slice(1).map((id, i) => {
-            const A = pos(progress[i]);
-            const B = pos(id);
-            return (
-              <line
-                key={i}
-                x1={`${A.x}%`} y1={`${A.y}%`}
-                x2={`${B.x}%`} y2={`${B.y}%`}
-                stroke="oklch(0.62 0.22 18)"
-                strokeWidth={2}
-                style={{ filter: "drop-shadow(0 0 6px oklch(0.62 0.22 18 / 0.7))" }}
-              />
-            );
-          })}
-        </svg>
-        {dots.map((d) => {
-          const done = progress.includes(d.id);
+      <Hint>Déplacez la loupe et cliquez sur le document qui dissimule une preuve.</Hint>
+      <div
+        ref={ref}
+        onMouseMove={onMove}
+        className="relative h-[240px] bg-paper-foreground/5 border border-paper-foreground/15 grid grid-cols-3 grid-rows-2 gap-2 p-2 cursor-none overflow-hidden"
+      >
+        {docs.map((d) => {
+          const cx = (d.id % 3) * (100 / 3) + 100 / 6;
+          const cy = Math.floor(d.id / 3) * 50 + 25;
+          const dist = Math.hypot(pos.x - cx, pos.y - cy);
+          const revealed = d.hidden && dist < 22;
           return (
             <button
               key={d.id}
-              onClick={() => pick(d.id)}
-              style={{ left: `${d.x}%`, top: `${d.y}%`, transform: "translate(-50%, -50%)" }}
-              className={`absolute flex flex-col items-center gap-2`}
+              onClick={() => onClick(d.id)}
+              className={`relative border border-paper-foreground/20 bg-paper paper-shadow flex items-center justify-center font-stamp text-[10px] tracking-[0.2em] transition-colors
+                ${revealed ? "border-evidence text-evidence" : "text-paper-foreground/50"}`}
             >
-              <span className={`w-5 h-5 rounded-full border-2 transition-all ${done ? "bg-evidence border-evidence shadow-[0_0_10px_oklch(0.62_0.22_18)]" : "bg-paper border-paper-foreground/50"}`} />
-              <span className="font-stamp text-[10px] tracking-[0.2em] text-paper-foreground">
-                {d.label}
-              </span>
+              {revealed ? "★ PREUVE" : "DOC"}
+            </button>
+          );
+        })}
+        {!found && (
+          <div
+            className="pointer-events-none absolute w-24 h-24 rounded-full border-4 border-evidence/80 -translate-x-1/2 -translate-y-1/2"
+            style={{
+              left: `${pos.x}%`, top: `${pos.y}%`,
+              boxShadow: "0 0 0 9999px rgba(0,0,0,0.35), inset 0 0 12px rgba(0,0,0,0.3)",
+            }}
+          />
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* ---------- 5. Biométrique ---------- */
+
+function BiometricGame({ onSolved }: { onSolved: () => void }) {
+  const [progress, setProgress] = useState(0);
+  const holding = useRef(false);
+
+  useEffect(() => {
+    let raf: number;
+    const tick = () => {
+      setProgress((p) => {
+        const next = holding.current ? Math.min(100, p + 2.2) : Math.max(0, p - 1.2);
+        if (next >= 100) { setTimeout(onSolved, 300); return 100; }
+        return next;
+      });
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [onSolved]);
+
+  const start = () => { holding.current = true; };
+  const stop = () => { holding.current = false; };
+
+  return (
+    <div>
+      <Hint>Maintenez votre empreinte sur le lecteur jusqu'à validation.</Hint>
+      <div className="flex flex-col items-center my-4">
+        <button
+          onMouseDown={start} onMouseUp={stop} onMouseLeave={stop}
+          onTouchStart={start} onTouchEnd={stop}
+          className="relative w-32 h-40 rounded-2xl border-2 border-paper-foreground/40 bg-paper-foreground/5 flex items-center justify-center select-none overflow-hidden"
+        >
+          <svg viewBox="0 0 64 80" className="w-20 h-24" style={{ color: `oklch(${0.4 + progress * 0.003} 0.22 18)` }}>
+            <g fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <path d="M32 6c-14 0-24 12-24 26v18" />
+              <path d="M32 14c-10 0-18 8-18 20v14" />
+              <path d="M32 22c-6 0-12 6-12 14v18" />
+              <path d="M32 30c-4 0-8 4-8 10v18" />
+              <path d="M32 38c-2 0-4 2-4 6v18" />
+              <path d="M40 12c8 4 12 14 12 22v22" />
+              <path d="M44 28c4 4 4 12 4 20v14" />
+            </g>
+          </svg>
+          <div
+            className="absolute left-0 right-0 bottom-0 bg-evidence/25 pointer-events-none transition-[height] duration-100"
+            style={{ height: `${progress}%` }}
+          />
+        </button>
+        <div className="mt-4 w-48 h-1 bg-paper-foreground/15 rounded-full overflow-hidden">
+          <div className="h-full bg-evidence" style={{ width: `${progress}%` }} />
+        </div>
+        <p className="font-stamp text-[10px] tracking-[0.25em] text-paper-foreground/60 mt-2">
+          {progress < 100 ? "MAINTENEZ" : "VALIDÉ"}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+/* ---------- 6. Tampon confidentiel ---------- */
+
+function StampGame({ onSolved }: { onSolved: () => void }) {
+  const stamps = useMemo(() => {
+    const all = ["REFUSÉ", "EN ATTENTE", "AUTORISÉ", "CLASSIFIÉ", "ARCHIVÉ"];
+    return shuffle(all).slice(0, 4);
+  }, []);
+  const [wrong, setWrong] = useState<string | null>(null);
+  const [stamped, setStamped] = useState<string | null>(null);
+
+  const pick = (s: string) => {
+    if (s === "AUTORISÉ") {
+      setStamped(s);
+      setTimeout(onSolved, 600);
+    } else {
+      setWrong(s);
+      setTimeout(() => setWrong(null), 400);
+    }
+  };
+
+  return (
+    <div>
+      <Hint>Apposez le tampon « AUTORISÉ » sur le dossier.</Hint>
+      <div className="grid grid-cols-2 gap-3 my-4">
+        {stamps.map((s, i) => {
+          const isWrong = wrong === s;
+          const isOk = stamped === s;
+          return (
+            <button
+              key={s}
+              onClick={() => pick(s)}
+              disabled={!!stamped}
+              style={{ transform: `rotate(${((i % 2) - 0.5) * 3}deg)` }}
+              className={`py-6 border-4 font-stamp text-lg tracking-[0.25em] transition-all
+                ${isOk ? "border-evidence text-evidence bg-evidence/10 scale-110" :
+                  isWrong ? "border-destructive text-destructive bg-destructive/10 animate-pulse" :
+                  "border-paper-foreground/60 text-paper-foreground/80 hover:border-evidence hover:text-evidence hover:-translate-y-0.5"}`}
+            >
+              {s}
             </button>
           );
         })}
@@ -509,17 +455,78 @@ function BrasilGame({ onSolved }: { onSolved: () => void }) {
   );
 }
 
-/* ---------- fallback ---------- */
+/* ---------- 7. Mini-labyrinthe ---------- */
 
-function GenericGame({ onSolved }: { onSolved: () => void }) {
+function MazeGame({ onSolved }: { onSolved: () => void }) {
+  // 5x5 grid, 0 = libre, 1 = mur, S start, E exit
+  const grid = [
+    [0, 1, 0, 0, 0],
+    [0, 1, 0, 1, 0],
+    [0, 0, 0, 1, 0],
+    [1, 1, 0, 0, 0],
+    [0, 0, 0, 1, 0],
+  ];
+  const start = { x: 0, y: 0 };
+  const exit = { x: 4, y: 4 };
+  const [pos, setPos] = useState(start);
+  const [trail, setTrail] = useState<Array<{ x: number; y: number }>>([start]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const dx = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+      const dy = e.key === "ArrowDown" ? 1 : e.key === "ArrowUp" ? -1 : 0;
+      if (!dx && !dy) return;
+      e.preventDefault();
+      move(dx, dy);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  });
+
+  const move = (dx: number, dy: number) => {
+    const nx = pos.x + dx, ny = pos.y + dy;
+    if (nx < 0 || ny < 0 || nx > 4 || ny > 4) return;
+    if (grid[ny][nx] === 1) return;
+    const np = { x: nx, y: ny };
+    setPos(np);
+    setTrail((t) => [...t, np]);
+    if (nx === exit.x && ny === exit.y) setTimeout(onSolved, 400);
+  };
+
   return (
-    <div className="flex flex-col items-center justify-center h-full">
-      <button
-        onClick={onSolved}
-        className="px-6 py-3 bg-evidence text-evidence-foreground font-stamp text-xs tracking-[0.25em] noir-shadow hover:-translate-y-0.5 transition-transform"
-      >
-        OUVRIR LE DOSSIER
-      </button>
+    <div>
+      <Hint>Atteignez la sortie — flèches du clavier ou boutons directionnels.</Hint>
+      <div className="flex flex-col md:flex-row items-center justify-center gap-6 my-2">
+        <div className="grid grid-cols-5 gap-1 bg-paper-foreground/10 p-2">
+          {grid.map((row, y) =>
+            row.map((cell, x) => {
+              const here = pos.x === x && pos.y === y;
+              const onTrail = trail.some((t) => t.x === x && t.y === y);
+              const isExit = exit.x === x && exit.y === y;
+              return (
+                <div
+                  key={`${x}-${y}`}
+                  className={`w-8 h-8 flex items-center justify-center text-xs font-stamp
+                    ${cell === 1 ? "bg-paper-foreground/80" :
+                      here ? "bg-evidence text-evidence-foreground" :
+                      isExit ? "border-2 border-evidence text-evidence" :
+                      onTrail ? "bg-evidence/15" : "bg-paper"}`}
+                >
+                  {here ? "●" : isExit ? "★" : ""}
+                </div>
+              );
+            }),
+          )}
+        </div>
+        <div className="grid grid-cols-3 gap-1 w-32">
+          <div />
+          <button onClick={() => move(0, -1)} className="py-2 bg-paper border border-paper-foreground/30 font-stamp">↑</button>
+          <div />
+          <button onClick={() => move(-1, 0)} className="py-2 bg-paper border border-paper-foreground/30 font-stamp">←</button>
+          <button onClick={() => move(0, 1)} className="py-2 bg-paper border border-paper-foreground/30 font-stamp">↓</button>
+          <button onClick={() => move(1, 0)} className="py-2 bg-paper border border-paper-foreground/30 font-stamp">→</button>
+        </div>
+      </div>
     </div>
   );
 }
@@ -532,7 +539,6 @@ function shuffle<T>(arr: T[]): T[] {
     const j = Math.floor(Math.random() * (i + 1));
     [a[i], a[j]] = [a[j], a[i]];
   }
-  // s'assurer que l'ordre n'est pas déjà bon
-  if (a.every((v, i) => v === arr[i])) return shuffle(arr);
+  if (arr.length > 1 && a.every((v, i) => v === arr[i])) return shuffle(arr);
   return a;
 }
