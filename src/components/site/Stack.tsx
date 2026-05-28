@@ -54,20 +54,20 @@ export function Stack() {
 
         {/* Wooden frame */}
         <div
-          className="relative mt-10 p-3 md:p-5 rounded-md overflow-hidden"
+          className="relative mt-10 p-4 md:p-7 rounded-lg overflow-hidden"
           style={{
             background:
-              "linear-gradient(135deg, oklch(0.38 0.06 50) 0%, oklch(0.28 0.05 45) 50%, oklch(0.42 0.07 55) 100%)",
+              "linear-gradient(135deg, oklch(0.32 0.07 40) 0%, oklch(0.22 0.06 35) 45%, oklch(0.36 0.08 45) 100%)",
             boxShadow:
-              "0 30px 60px -20px rgba(0,0,0,0.6), inset 0 2px 0 rgba(255,255,255,0.12), inset 0 -2px 0 rgba(0,0,0,0.35)",
+              "0 40px 80px -20px rgba(0,0,0,0.75), inset 0 3px 0 rgba(255,200,150,0.18), inset 0 -3px 0 rgba(0,0,0,0.5), inset 4px 0 6px rgba(0,0,0,0.35), inset -4px 0 6px rgba(0,0,0,0.35)",
           }}
         >
           {/* Wood grain */}
           <div
-            className="absolute inset-0 pointer-events-none opacity-60 mix-blend-overlay"
+            className="absolute inset-0 pointer-events-none opacity-70 mix-blend-overlay"
             style={{
               backgroundImage:
-                "repeating-linear-gradient(92deg, rgba(0,0,0,0.18) 0px, rgba(0,0,0,0.18) 1px, transparent 1px, transparent 4px), repeating-linear-gradient(88deg, rgba(255,220,180,0.08) 0px, rgba(255,220,180,0.08) 2px, transparent 2px, transparent 9px)",
+                "repeating-linear-gradient(91deg, rgba(0,0,0,0.28) 0px, rgba(0,0,0,0.28) 1px, transparent 1px, transparent 3px), repeating-linear-gradient(89deg, rgba(255,210,160,0.1) 0px, rgba(255,210,160,0.1) 2px, transparent 2px, transparent 11px), radial-gradient(ellipse at 20% 30%, rgba(0,0,0,0.3), transparent 60%)",
             }}
           />
 
@@ -76,19 +76,38 @@ export function Stack() {
             className="relative rounded-sm overflow-hidden"
             style={{
               background:
-                "radial-gradient(ellipse at 30% 20%, oklch(0.68 0.09 65) 0%, oklch(0.55 0.09 55) 60%, oklch(0.48 0.08 50) 100%)",
+                "radial-gradient(ellipse at 50% 0%, oklch(0.58 0.16 28) 0%, oklch(0.42 0.15 25) 45%, oklch(0.32 0.12 22) 100%)",
               boxShadow:
-                "inset 0 0 60px rgba(0,0,0,0.45), inset 0 2px 8px rgba(0,0,0,0.3)",
+                "inset 0 0 100px rgba(0,0,0,0.7), inset 0 3px 12px rgba(0,0,0,0.5), inset 0 -3px 12px rgba(0,0,0,0.55)",
             }}
           >
             {/* Cork speckle */}
             <div
-              className="absolute inset-0 opacity-[0.35] pointer-events-none mix-blend-multiply"
+              className="absolute inset-0 opacity-[0.4] pointer-events-none mix-blend-multiply"
               style={{
                 backgroundImage:
-                  "radial-gradient(rgba(60,30,10,0.55) 1px, transparent 1.6px), radial-gradient(rgba(40,20,8,0.4) 1px, transparent 1.4px), radial-gradient(rgba(120,70,30,0.3) 1px, transparent 1.2px)",
+                  "radial-gradient(rgba(30,10,5,0.65) 1px, transparent 1.6px), radial-gradient(rgba(20,8,4,0.5) 1px, transparent 1.4px), radial-gradient(rgba(90,40,20,0.35) 1px, transparent 1.2px)",
                 backgroundSize: "9px 9px, 14px 14px, 22px 22px",
                 backgroundPosition: "0 0, 4px 6px, 11px 3px",
+              }}
+            />
+            {/* Top spotlight */}
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{
+                background:
+                  "radial-gradient(ellipse 60% 70% at 50% -10%, rgba(255,235,200,0.28) 0%, rgba(255,220,180,0.12) 30%, transparent 65%)",
+                mixBlendMode: "screen",
+              }}
+            />
+            {/* Dust particles */}
+            <div
+              className="absolute inset-0 pointer-events-none opacity-50"
+              style={{
+                backgroundImage:
+                  "radial-gradient(circle, rgba(255,240,210,0.8) 0.5px, transparent 1px), radial-gradient(circle, rgba(255,240,210,0.6) 0.5px, transparent 1px)",
+                backgroundSize: "120px 140px, 200px 180px",
+                backgroundPosition: "20px 30px, 80px 60px",
               }}
             />
             <CornerStamps />
@@ -123,9 +142,9 @@ export function Stack() {
                     x2={nb.x}
                     y2={nb.y}
                     className={`thread ${lit ? "thread-on" : ""}`}
-                    stroke="#c4242b"
-                    strokeOpacity={lit ? 1 : 0.85}
-                    strokeWidth={lit ? 3.2 : 2}
+                    stroke="#e63946"
+                    strokeOpacity={lit ? 1 : 0.9}
+                    strokeWidth={lit ? 4 : 2.6}
                     strokeLinecap="round"
                     filter="url(#threadShadow)"
                   />
