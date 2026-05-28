@@ -323,16 +323,6 @@ function CaseModal({ c, onClose }: { c: CaseT; onClose: () => void }) {
             )}
 
             {c.verdict && (
-              <div className="mb-6 p-5 border-2 border-evidence/40 bg-evidence/5">
-                <div className="font-stamp text-[10px] tracking-[0.3em] text-evidence mb-2">
-                  ✅ VERDICT
-                </div>
-                <p className="text-paper-foreground/90 leading-relaxed">
-                  {c.verdict}
-                </p>
-              </div>
-            )}
-
             {c.link && (
               <a
                 href={c.link.url}
@@ -343,37 +333,6 @@ function CaseModal({ c, onClose }: { c: CaseT; onClose: () => void }) {
                 {c.link.label}
               </a>
             )}
-
-            {c.won && (
-              <div className="mt-6 p-4 border-2 border-evidence/40 bg-evidence/5">
-                <div className="stamp text-xs mb-2 inline-block">🏆 ENQUÊTE RÉSOLUE</div>
-                <p className="text-paper-foreground/80 text-sm">
-                  Projet récompensé lors du Hackathon Mirakl.
-                </p>
-              </div>
-            )}
-
-            <div className="mt-8 pt-6 border-t border-dashed border-paper-foreground/25">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="stamp text-[10px]">PREUVES COLLECTÉES</div>
-                <div className="flex-1 h-px bg-paper-foreground/15" />
-                <span className="font-stamp text-[9px] tracking-[0.25em] text-paper-foreground/50">
-                  {c.proofs.length} pièces
-                </span>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {c.proofs.map((p, i) => (
-                  <span
-                    key={p}
-                    className="relative inline-flex items-center gap-1.5 px-3 py-1.5 bg-paper-foreground/5 border border-evidence/40 text-paper-foreground text-xs font-stamp tracking-[0.1em]"
-                    style={{ transform: `rotate(${((i % 3) - 1) * 0.8}deg)` }}
-                  >
-                    <span className="w-1.5 h-1.5 rounded-full bg-evidence" />
-                    {p}
-                  </span>
-                ))}
-              </div>
-            </div>
           </div>
 
           <aside>
@@ -389,6 +348,49 @@ function CaseModal({ c, onClose }: { c: CaseT; onClose: () => void }) {
               ))}
             </ul>
           </aside>
+        </div>
+
+        {/* Full-width blocks */}
+        {c.verdict && (
+          <div className="mt-8 p-5 border-2 border-evidence/40 bg-evidence/5">
+            <div className="font-stamp text-[10px] tracking-[0.3em] text-evidence mb-2">
+              ✅ VERDICT
+            </div>
+            <p className="text-paper-foreground/90 leading-relaxed">
+              {c.verdict}
+            </p>
+          </div>
+        )}
+
+        {c.won && (
+          <div className="mt-6 p-4 border-2 border-evidence/40 bg-evidence/5">
+            <div className="stamp text-xs mb-2 inline-block">🏆 ENQUÊTE RÉSOLUE</div>
+            <p className="text-paper-foreground/80 text-sm">
+              Projet récompensé lors du Hackathon Mirakl.
+            </p>
+          </div>
+        )}
+
+        <div className="mt-8 pt-6 border-t border-dashed border-paper-foreground/25">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="stamp text-[10px]">PREUVES COLLECTÉES</div>
+            <div className="flex-1 h-px bg-paper-foreground/15" />
+            <span className="font-stamp text-[9px] tracking-[0.25em] text-paper-foreground/50">
+              {c.proofs.length} pièces
+            </span>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {c.proofs.map((p, i) => (
+              <span
+                key={p}
+                className="relative inline-flex items-center gap-1.5 px-3 py-1.5 bg-paper-foreground/5 border border-evidence/40 text-paper-foreground text-xs font-stamp tracking-[0.1em]"
+                style={{ transform: `rotate(${((i % 3) - 1) * 0.8}deg)` }}
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-evidence" />
+                {p}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
 
