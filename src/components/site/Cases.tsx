@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { SectionHeader } from "./About";
-import { CaseMiniGame } from "./CaseMiniGame";
 import together1 from "@/assets/cases/together-1.png";
 import together2 from "@/assets/cases/together-2.png";
 import together3 from "@/assets/cases/together-3.png";
@@ -393,8 +392,6 @@ function CaseModal({ c, onClose }: { c: CaseT; onClose: () => void }) {
             </p>
           </div>
         )}
-
-        <CaseMiniGame caseId={c.id} />
 
         <div className="mt-8 pt-6 border-t border-dashed border-paper-foreground/25">
           <div className="flex items-center gap-3 mb-4">
