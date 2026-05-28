@@ -155,7 +155,7 @@ export function Chatbot() {
     }, 500);
   }
 
-  const suggestions = ["Ton parcours ?", "Tes projets ?", "L'alternance FDJ ?", "Le hackathon ?"];
+  const suggestions = ["Qui es-tu ?", "Pourquoi la data ?", "Ton projet préféré ?", "Que cherches-tu ?"];
 
   return (
     <>
