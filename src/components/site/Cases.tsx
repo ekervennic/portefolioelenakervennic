@@ -394,6 +394,8 @@ function CaseModal({ c, onClose }: { c: CaseT; onClose: () => void }) {
           </div>
         )}
 
+        <CaseMiniGame caseId={c.id} />
+
         <div className="mt-8 pt-6 border-t border-dashed border-paper-foreground/25">
           <div className="flex items-center gap-3 mb-4">
             <div className="stamp text-[10px]">PREUVES COLLECTÉES</div>
