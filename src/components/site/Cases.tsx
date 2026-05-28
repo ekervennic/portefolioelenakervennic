@@ -18,6 +18,7 @@ type CaseT = {
   num: string;
   title: string;
   subtitle: string;
+  teaser: string;
   question: string;
   mystery?: string;
   built: string[];
@@ -30,13 +31,13 @@ type CaseT = {
   proofs: string[];
   images?: string[];
 };
-
 const cases: CaseT[] = [
   {
     id: "together",
     num: "01",
     title: "Together",
     subtitle: "⭐ Projet phare · 📱 Produit social",
+    teaser: "Organiser des sorties entre amis sans en perdre une miette → App sociale",
     question:
       "Comment créer une application sociale qui simplifie réellement l'organisation de sorties entre amis ?",
     mystery:
@@ -60,6 +61,7 @@ const cases: CaseT[] = [
     num: "02",
     title: "Mood Film Finder",
     subtitle: "🎬 Data IA · RAG · 6 500+ titres",
+    teaser: "Recommander un film par humeur, pas par genre → Moteur IA",
     question:
       "Peut-on recommander un film en fonction de l'humeur d'un utilisateur plutôt que d'un simple genre ?",
     mystery:
@@ -83,6 +85,7 @@ const cases: CaseT[] = [
     num: "03",
     title: "Chatbot Paroles",
     subtitle: "🎵 NLP · RAG LLM · FAISS · 1 872 chansons",
+    teaser: "Trouver une chanson depuis un extrait flou → Recherche sémantique",
     question:
       "Un agent peut-il identifier une musique depuis un extrait approximatif, partiel ou mal orthographié de paroles ?",
     mystery:
@@ -105,6 +108,7 @@ const cases: CaseT[] = [
     num: "04",
     title: "Plateforme Scolaire",
     subtitle: "Interface · UX",
+    teaser: "Tout l'outillage étudiant éparpillé → Plateforme centralisée",
     question:
       "Comment centraliser tous les outils utiles aux étudiants dans une seule plateforme cohérente ?",
     mystery:
@@ -128,6 +132,7 @@ const cases: CaseT[] = [
     num: "05",
     title: "Hackathon Mirakl",
     subtitle: "🏆 Winner · Data · Scraping IA",
+    teaser: "Sourcing RH manuel et chronophage → Pipeline IA automatisé",
     question:
       "Comment automatiser la recherche de futurs candidats à partir d'une offre d'emploi ?",
     mystery:
@@ -209,6 +214,10 @@ function CaseFolder({ c, index, onOpen }: { c: CaseT; index: number; onOpen: () 
         </h3>
         <p className="text-xs text-paper-foreground/60 mb-3 font-stamp tracking-wider">
           {c.subtitle}
+        </p>
+
+        <p className="text-sm text-paper-foreground/80 mb-4 leading-snug italic font-serif-display">
+          {c.teaser}
         </p>
 
         <div className="flex flex-wrap gap-1.5">
