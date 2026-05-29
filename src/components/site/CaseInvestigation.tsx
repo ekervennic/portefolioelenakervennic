@@ -107,11 +107,18 @@ export function CaseInvestigation({ caseId, caseTitle, onSolved, onClose }: Prop
             </span>
             <button
               onClick={onSolved}
-              className="font-stamp text-[10px] tracking-[0.25em] text-white/50 underline-offset-4 hover:underline transition-colors"
-              onMouseEnter={(e) => (e.currentTarget.style.color = ACCENT)}
-              onMouseLeave={(e) => (e.currentTarget.style.color = "")}
+              className="font-stamp text-[10px] tracking-[0.25em] px-3 py-1.5 border rounded-sm transition-colors"
+              style={{ color: ACCENT, borderColor: ACCENT, background: ACCENT_SOFT }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = ACCENT;
+                e.currentTarget.style.color = "oklch(0.15 0.02 30)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = ACCENT_SOFT;
+                e.currentTarget.style.color = ACCENT;
+              }}
             >
-              Passer l'enquête →
+              PASSER LE MINI-JEU →
             </button>
           </div>
         )}
