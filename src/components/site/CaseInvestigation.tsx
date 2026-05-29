@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
-import avatar from "@/assets/elena-avatar.jpg";
+import { useEffect, useState } from "react";
+import parchment from "@/assets/elena-parchment.png";
+import sceneCabin from "@/assets/scene-cabin.jpg";
 
 type Props = {
   caseId: string;
@@ -98,79 +99,31 @@ export function CaseInvestigation({ caseId, caseTitle, onSolved, onClose }: Prop
 
 /* ============================================================
  * MINI-JEU UNIQUE — Fouille de la scène (format paysage)
- * Inspiré des hidden-object games : trouver un objet précis
- * parmi une scène dense. Consigne donnée par l'avatar en bas.
+ * Décor cabine + vinyle caché à retrouver. Consigne sur papyrus
+ * avec le portrait d'Elena.
  * ============================================================ */
 
+// Position de l'objet caché (vinyle) — coordonnées en % sur la scène.
+// Sous la table basse, légèrement à gauche de l'ancre, partiellement masqué.
+const TARGET = { x: 41, y: 86, r: 4 };
+
+// Leurres : zones cliquables qui ne déclenchent que la pénalité d'erreur.
+// Pas besoin de pixel-perfect — l'utilisateur peut cliquer n'importe où ailleurs.
 function HiddenObjectGame({ accent, onSolved }: { accent: string; onSolved: () => void }) {
-  const POOL = [
-    { e: "🔑", n: "CLÉ" },
-    { e: "🗝️", n: "VIEILLE CLÉ" },
-    { e: "📎", n: "TROMBONE" },
-    { e: "📌", n: "PUNAISE" },
-    { e: "🔒", n: "CADENAS" },
-    { e: "💼", n: "MALLETTE" },
-    { e: "📕", n: "CARNET ROUGE" },
-    { e: "📘", n: "CARNET BLEU" },
-    { e: "📷", n: "APPAREIL PHOTO" },
-    { e: "📻", n: "RADIO" },
-    { e: "🖊️", n: "STYLO" },
-    { e: "🔦", n: "LAMPE TORCHE" },
-    { e: "🕯️", n: "BOUGIE" },
-    { e: "📞", n: "TÉLÉPHONE" },
-    { e: "💾", n: "DISQUETTE" },
-    { e: "💿", n: "CD" },
-    { e: "🔍", n: "LOUPE" },
-    { e: "🗂️", n: "DOSSIER" },
-    { e: "📂", n: "CHEMISE" },
-    { e: "✉️", n: "ENVELOPPE" },
-    { e: "🧷", n: "ÉPINGLE" },
-    { e: "⌚", n: "MONTRE" },
-    { e: "🗞️", n: "JOURNAL" },
-    { e: "🎩", n: "CHAPEAU" },
-    { e: "🧭", n: "BOUSSOLE" },
-    { e: "☕", n: "TASSE" },
-    { e: "🍷", n: "VERRE DE VIN" },
-    { e: "🖋️", n: "PLUME" },
-    { e: "📰", n: "GAZETTE" },
-    { e: "🪙", n: "PIÈCE" },
-  ];
-
-  const { target, items } = useMemo(() => {
-    const picked = shuffle(POOL);
-    const target = picked[0];
-    const placed: Array<{ e: string; n: string; x: number; y: number; rot: number; size: number; isTarget: boolean }> = [];
-    const W = 100, H = 100, R = 6;
-    let attempts = 0;
-    for (let i = 0; i < picked.length && attempts < 3000; i++) {
-      let x = 0, y = 0, ok = false;
-      for (let a = 0; a < 100 && !ok; a++) {
-        attempts++;
-        x = R + Math.random() * (W - 2 * R);
-        y = R + Math.random() * (H - 2 * R);
-        ok = placed.every((p) => Math.hypot(p.x - x, p.y - y) > 7);
-      }
-      if (!ok) continue;
-      placed.push({
-        ...picked[i],
-        x, y,
-        rot: (Math.random() - 0.5) * 40,
-        size: 0.85 + Math.random() * 0.5,
-        isTarget: picked[i].n === target.n,
-      });
-    }
-    return { target, items: placed };
-  }, []);
-
   const [shake, setShake] = useState(false);
   const [found, setFound] = useState(false);
   const [misses, setMisses] = useState(0);
+  const [hint, setHint] = useState(false);
 
-  const click = (isTarget: boolean) => {
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (found) return;
-    if (isTarget) {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    const d = Math.hypot(x - TARGET.x, y - TARGET.y);
+    if (d <= TARGET.r) {
       setFound(true);
-      setTimeout(onSolved, 500);
+      setTimeout(onSolved, 600);
     } else {
       setMisses((m) => m + 1);
       setShake(true);
@@ -180,112 +133,131 @@ function HiddenObjectGame({ accent, onSolved }: { accent: string; onSolved: () =
 
   return (
     <div>
-      {/* SCÈNE — format paysage 16:9 */}
+      {/* SCÈNE — décor cabine, format paysage */}
       <div
-        className={`relative w-full aspect-[16/9] overflow-hidden border border-white/10 rounded-sm ${shake ? "animate-pulse" : ""}`}
+        onClick={handleClick}
+        className={`relative w-full aspect-[16/9] overflow-hidden border border-white/15 rounded-sm cursor-crosshair select-none ${shake ? "animate-pulse" : ""}`}
         style={{
-          background:
-            "radial-gradient(ellipse at 30% 25%, oklch(0.32 0.06 60), oklch(0.14 0.03 40) 75%)",
-          boxShadow: "inset 0 0 80px rgba(0,0,0,0.75)",
+          backgroundImage: `url(${sceneCabin})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          boxShadow: "inset 0 0 80px rgba(0,0,0,0.55)",
         }}
       >
-        {/* texture parquet/papier */}
-        <div
-          className="absolute inset-0 opacity-[0.08] pointer-events-none"
-          style={{
-            backgroundImage:
-              "linear-gradient(rgba(255,220,180,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,220,180,0.5) 1px, transparent 1px)",
-            backgroundSize: "28px 28px",
-          }}
-        />
         {/* vignette */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
             background:
-              "radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,0.65) 100%)",
+              "radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.55) 100%)",
           }}
         />
 
-        {items.map((it, i) => (
-          <button
-            key={i}
-            onClick={() => click(it.isTarget)}
-            className="absolute -translate-x-1/2 -translate-y-1/2 transition-transform hover:scale-125 hover:drop-shadow-[0_0_8px_white] focus:outline-none"
-            style={{
-              left: `${it.x}%`,
-              top: `${it.y}%`,
-              fontSize: `${it.size * 1.6}rem`,
-              transform: `translate(-50%, -50%) rotate(${it.rot}deg) scale(${it.size})`,
-              filter: found && it.isTarget ? `drop-shadow(0 0 14px ${accent})` : "none",
-            }}
-            aria-label={it.n}
-          >
-            {it.e}
-          </button>
-        ))}
+        {/* Vinyle caché — visuel SVG positionné sur la cible.
+            Discret par défaut ; pulsé si l'indice est activé. */}
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: `${TARGET.x}%`,
+            top: `${TARGET.y}%`,
+            transform: `translate(-50%, -50%) rotate(-18deg)`,
+            width: "8%",
+            aspectRatio: "1",
+            opacity: found ? 1 : 0.78,
+            filter: found
+              ? `drop-shadow(0 0 18px ${accent})`
+              : hint
+              ? `drop-shadow(0 0 12px ${accent})`
+              : "drop-shadow(0 2px 3px rgba(0,0,0,0.6))",
+            animation: hint && !found ? "pulse 1.2s ease-in-out infinite" : undefined,
+          }}
+        >
+          <svg viewBox="0 0 100 100" className="w-full h-full">
+            <defs>
+              <radialGradient id="vinylG" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="#1a1a1a" />
+                <stop offset="60%" stopColor="#0a0a0a" />
+                <stop offset="100%" stopColor="#000" />
+              </radialGradient>
+            </defs>
+            <circle cx="50" cy="50" r="48" fill="url(#vinylG)" stroke="#222" strokeWidth="1" />
+            {[42, 36, 30, 24].map((r) => (
+              <circle key={r} cx="50" cy="50" r={r} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="0.5" />
+            ))}
+            <circle cx="50" cy="50" r="16" fill="#b8412a" />
+            <circle cx="50" cy="50" r="2" fill="#0a0a0a" />
+            {/* reflet */}
+            <path d="M 20 30 Q 50 10 80 30" stroke="rgba(255,255,255,0.18)" strokeWidth="2" fill="none" />
+          </svg>
+        </div>
 
+        {/* Halo de cible trouvée */}
         {found && (
           <div
             className="absolute inset-0 pointer-events-none animate-fade-in"
-            style={{ background: `radial-gradient(circle, ${accent.replace(")", " / 0.22)")} 0%, transparent 60%)` }}
+            style={{
+              background: `radial-gradient(circle at ${TARGET.x}% ${TARGET.y}%, ${accent.replace(")", " / 0.45)")} 0%, transparent 35%)`,
+            }}
           />
         )}
 
-        {/* HUD compteur */}
-        <div className="absolute top-2 right-2 font-stamp text-[10px] tracking-[0.25em] text-white/70 bg-black/40 border border-white/10 px-2 py-1">
+        {/* HUD */}
+        <div className="absolute top-2 left-2 font-stamp text-[10px] tracking-[0.25em] text-white bg-black/55 border border-white/15 px-2.5 py-1 rounded-sm pointer-events-none">
+          OBJET RECHERCHÉ · 1 VINYLE
+        </div>
+        <div className="absolute top-2 right-2 font-stamp text-[10px] tracking-[0.25em] text-white/85 bg-black/55 border border-white/15 px-2.5 py-1 rounded-sm pointer-events-none">
           ERREURS · {misses}
         </div>
+
+        {/* Bouton indice (apparaît après 3 erreurs) */}
+        {misses >= 3 && !found && (
+          <button
+            onClick={(ev) => { ev.stopPropagation(); setHint(true); setTimeout(() => setHint(false), 1800); }}
+            className="absolute bottom-2 right-2 font-stamp text-[10px] tracking-[0.25em] px-3 py-1.5 border bg-black/60 hover:bg-black/80 transition-colors"
+            style={{ borderColor: accent, color: accent }}
+          >
+            INDICE
+          </button>
+        )}
       </div>
 
-      {/* CONSIGNE — avatar + bulle */}
-      <div className="mt-4 flex items-stretch gap-3">
-        <div
-          className="shrink-0 w-20 h-20 md:w-24 md:h-24 rounded-sm overflow-hidden border-2"
-          style={{ borderColor: accent, boxShadow: `0 0 18px ${accent.replace(")", " / 0.4)")}` }}
-        >
-          <img src={avatar} alt="Enquêtrice" className="w-full h-full object-cover" />
-        </div>
-        <div
-          className="relative flex-1 px-4 py-3 bg-[oklch(0.22_0.03_60)] border border-white/15 rounded-sm"
-          style={{ boxShadow: "inset 0 0 30px rgba(0,0,0,0.5)" }}
-        >
-          {/* flèche bulle */}
-          <span
-            className="absolute -left-2 top-5 w-3 h-3 rotate-45 bg-[oklch(0.22_0.03_60)] border-l border-b border-white/15"
-          />
-          <div className="font-stamp text-[10px] tracking-[0.3em] mb-1" style={{ color: accent }}>
-            ELENA · ENQUÊTRICE
-          </div>
-          <p className="font-serif-display text-base md:text-lg leading-snug text-white/90">
-            Pour résoudre cette enquête et ouvrir le dossier, retrouve{" "}
-            <span
-              className="inline-flex items-center gap-1.5 px-2 py-0.5 mx-0.5 border align-middle"
-              style={{
-                borderColor: accent,
-                color: accent,
-                background: accent.replace(")", " / 0.12)"),
-              }}
+      {/* CONSIGNE — papyrus avec portrait d'Elena */}
+      <div
+        className="relative mt-4 w-full"
+        style={{
+          aspectRatio: "3 / 1.05",
+          backgroundImage: `url(${parchment})`,
+          backgroundSize: "100% 100%",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
+        {/* Texte calé sur la zone vide à droite du portrait */}
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-[38%]" />
+          <div className="flex-1 pr-[10%] pl-2">
+            <div
+              className="font-stamp text-[10px] md:text-xs tracking-[0.3em] mb-1.5"
+              style={{ color: "oklch(0.35 0.08 30)" }}
             >
-              <span className="text-lg leading-none">{target.e}</span>
-              <span className="font-stamp text-xs tracking-[0.2em]">{target.n}</span>
-            </span>{" "}
-            caché dans la scène.
-          </p>
+              ELENA · ENQUÊTRICE
+            </div>
+            <p
+              className="font-serif-display leading-snug text-[13px] md:text-[17px]"
+              style={{ color: "oklch(0.22 0.04 30)" }}
+            >
+              Pour résoudre cette enquête et ouvrir le dossier, retrouve le{" "}
+              <span
+                className="font-bold"
+                style={{ color: "oklch(0.42 0.16 25)" }}
+              >
+                vinyle caché
+              </span>{" "}
+              quelque part dans la pièce. Observe bien… il se fond dans le décor.
+            </p>
+          </div>
         </div>
       </div>
     </div>
   );
-}
-
-/* ---------- utils ---------- */
-
-function shuffle<T>(arr: T[]): T[] {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
 }
 
