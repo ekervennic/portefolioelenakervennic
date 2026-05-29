@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import parchment from "@/assets/elena-parchment.png";
+import avatar from "@/assets/elena-avatar.jpg";
+import paper from "@/assets/paper-texture.jpg";
 import sceneCabin from "@/assets/scene-cabin.jpg";
 
 type Props = {
