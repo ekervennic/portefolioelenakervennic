@@ -15,6 +15,7 @@ import paris5 from "@/assets/paris-5.jpg";
 import paris6 from "@/assets/paris-6.jpg";
 import paris7 from "@/assets/paris-7.jpg";
 import paris8 from "@/assets/paris-8.jpg";
+import cardBack from "@/assets/card-back.jpg";
 
 type Props = {
   caseId: string;
