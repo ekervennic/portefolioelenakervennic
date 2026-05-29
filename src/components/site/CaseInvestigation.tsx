@@ -6,6 +6,7 @@ import mazeFloor from "@/assets/maze-floor.jpg";
 import mazeWall from "@/assets/maze-wall.jpg";
 import paper from "@/assets/paper-texture.jpg";
 import sceneCabin from "@/assets/scene-cabin.jpg";
+import sceneBalcony from "@/assets/scene-balcony.jpg";
 
 type Props = {
   caseId: string;
@@ -66,6 +67,8 @@ export function CaseInvestigation({ caseId, caseTitle, onSolved, onClose }: Prop
           {!solved && (
             caseId === "together" ? (
               <MazeGame key={caseId} accent={ACCENT} onSolved={() => setSolved(true)} />
+            ) : caseId === "mirakl" ? (
+              <MemoryGame key={caseId} accent={ACCENT} onSolved={() => setSolved(true)} />
             ) : (
               <HiddenObjectGame key={caseId} accent={ACCENT} onSolved={() => setSolved(true)} />
             )
@@ -171,17 +174,17 @@ function HiddenObjectGame({ accent, onSolved }: { accent: string; onSolved: () =
             style={{
               left: `${TARGET.x}%`,
               top: `${TARGET.y}%`,
-              width: "3.2%",
+              width: "2.4%",
               transform: "translate(-50%, -50%)",
-              opacity: 0.85,
-              filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.5))",
+              opacity: 0.55,
+              filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.45))",
             }}
           >
             <path
               d="M5 38 Q22 8 50 30 Q78 8 95 38"
               fill="none"
               stroke="#f6efe2"
-              strokeWidth="6"
+              strokeWidth="4"
               strokeLinecap="round"
             />
           </svg>
