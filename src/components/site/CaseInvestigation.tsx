@@ -112,6 +112,242 @@ export function CaseInvestigation({ caseId, caseTitle, onSolved, onClose }: Prop
 }
 
 /* ============================================================
+ * MINI-JEU MEMORY — Cas "Mirakl"
+ * Retourne les paires de talents pour reconstituer la shortlist.
+ * Décor : balcon parisien au coucher du soleil.
+ * ============================================================ */
+
+const MEMORY_SYMBOLS = ["🎯", "💼", "📊", "🔍", "🏆", "⚡", "🧠", "🌟"];
+
+function shuffleDeck(seed: number) {
+  let s = seed;
+  const rand = () => {
+    s = (s * 9301 + 49297) % 233280;
+    return s / 233280;
+  };
+  const deck = [...MEMORY_SYMBOLS, ...MEMORY_SYMBOLS].map((sym, i) => ({
+    id: i,
+    sym,
+  }));
+  for (let i = deck.length - 1; i > 0; i--) {
+    const j = Math.floor(rand() * (i + 1));
+    [deck[i], deck[j]] = [deck[j], deck[i]];
+  }
+  return deck;
+}
+
+function MemoryGame({ accent, onSolved }: { accent: string; onSolved: () => void }) {
+  const [seed] = useState(() => Math.floor(Math.random() * 100000) + 1);
+  const deck = useMemo(() => shuffleDeck(seed), [seed]);
+  const [flipped, setFlipped] = useState<number[]>([]);
+  const [matched, setMatched] = useState<Set<number>>(new Set());
+  const [moves, setMoves] = useState(0);
+  const lock = useRef(false);
+
+  const allMatched = matched.size === deck.length;
+
+  useEffect(() => {
+    if (allMatched) {
+      const t = setTimeout(onSolved, 900);
+      return () => clearTimeout(t);
+    }
+  }, [allMatched, onSolved]);
+
+  const handleFlip = (idx: number) => {
+    if (lock.current) return;
+    if (matched.has(idx) || flipped.includes(idx)) return;
+    const next = [...flipped, idx];
+    setFlipped(next);
+    if (next.length === 2) {
+      setMoves((m) => m + 1);
+      const [a, b] = next;
+      if (deck[a].sym === deck[b].sym) {
+        setTimeout(() => {
+          setMatched((prev) => new Set(prev).add(a).add(b));
+          setFlipped([]);
+        }, 420);
+      } else {
+        lock.current = true;
+        setTimeout(() => {
+          setFlipped([]);
+          lock.current = false;
+        }, 820);
+      }
+    }
+  };
+
+  return (
+    <div>
+      <div
+        className="relative w-full aspect-[16/9] overflow-hidden rounded-sm select-none"
+        style={{
+          backgroundImage: `url(${sceneBalcony})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          boxShadow:
+            "inset 0 0 120px rgba(20,8,2,0.55), 0 0 0 3px oklch(0.55 0.14 70 / 0.6), 0 14px 50px rgba(0,0,0,0.7)",
+        }}
+      >
+        {/* Voile sombre pour lisibilité */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.45) 100%)",
+          }}
+        />
+
+        {/* HUD */}
+        <div
+          className="absolute top-2 left-2 font-stamp text-[10px] tracking-[0.25em] text-white px-2.5 py-1 rounded-sm pointer-events-none"
+          style={{
+            background: "rgba(0,0,0,0.65)",
+            border: `1px solid ${accent}`,
+            boxShadow: `0 0 8px ${accent.replace(")", " / 0.5)")}`,
+          }}
+        >
+          COUPS · {moves}
+        </div>
+        <div className="absolute top-2 right-2 font-stamp text-[10px] tracking-[0.25em] text-white/90 bg-black/65 border border-white/20 px-2.5 py-1 rounded-sm pointer-events-none">
+          PAIRES · {matched.size / 2}/{MEMORY_SYMBOLS.length}
+        </div>
+
+        {/* Grille de cartes */}
+        <div className="absolute inset-0 flex items-center justify-center p-6 md:p-10">
+          <div
+            className="grid grid-cols-4 gap-2 md:gap-3 h-full"
+            style={{ aspectRatio: "4 / 4", maxHeight: "100%" }}
+          >
+            {deck.map((card, idx) => {
+              const isFlipped = flipped.includes(idx) || matched.has(idx);
+              const isMatched = matched.has(idx);
+              return (
+                <button
+                  key={card.id}
+                  onClick={() => handleFlip(idx)}
+                  className="relative"
+                  style={{ perspective: "800px" }}
+                  aria-label="Carte"
+                >
+                  <div
+                    className="relative w-full h-full transition-transform duration-500"
+                    style={{
+                      transformStyle: "preserve-3d",
+                      transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
+                    }}
+                  >
+                    {/* Dos de carte */}
+                    <div
+                      className="absolute inset-0 flex items-center justify-center rounded-md border"
+                      style={{
+                        backfaceVisibility: "hidden",
+                        background:
+                          "linear-gradient(135deg, oklch(0.28 0.04 30) 0%, oklch(0.16 0.02 30) 100%)",
+                        borderColor: accent,
+                        boxShadow: `0 4px 12px rgba(0,0,0,0.55), inset 0 0 12px rgba(0,0,0,0.5), 0 0 6px ${accent.replace(")", " / 0.4)")}`,
+                      }}
+                    >
+                      <span
+                        className="font-stamp text-[10px] md:text-xs tracking-[0.3em]"
+                        style={{ color: accent, opacity: 0.85 }}
+                      >
+                        M
+                      </span>
+                    </div>
+                    {/* Face de carte */}
+                    <div
+                      className="absolute inset-0 flex items-center justify-center rounded-md border-2"
+                      style={{
+                        backfaceVisibility: "hidden",
+                        transform: "rotateY(180deg)",
+                        background: isMatched
+                          ? `linear-gradient(135deg, ${accent.replace(")", " / 0.85)")} 0%, oklch(0.45 0.12 55) 100%)`
+                          : "linear-gradient(135deg, oklch(0.95 0.02 80) 0%, oklch(0.85 0.04 70) 100%)",
+                        borderColor: isMatched ? accent : "oklch(0.45 0.08 50)",
+                        boxShadow: isMatched
+                          ? `0 0 18px ${accent}, 0 4px 10px rgba(0,0,0,0.5)`
+                          : "0 4px 10px rgba(0,0,0,0.5), inset 0 0 8px rgba(0,0,0,0.15)",
+                      }}
+                    >
+                      <span
+                        className="text-2xl md:text-4xl"
+                        style={{
+                          filter: isMatched
+                            ? "drop-shadow(0 2px 4px rgba(0,0,0,0.5))"
+                            : "none",
+                        }}
+                      >
+                        {card.sym}
+                      </span>
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Halo de victoire */}
+        {allMatched && (
+          <div
+            className="absolute inset-0 pointer-events-none animate-fade-in"
+            style={{
+              background: `radial-gradient(circle at center, ${accent.replace(")", " / 0.45)")} 0%, transparent 60%)`,
+            }}
+          />
+        )}
+      </div>
+
+      {/* CONSIGNE — fond papier, portrait ovale */}
+      <div
+        className="relative mt-4 w-full flex items-center gap-4 md:gap-5 p-4 border border-[oklch(0.45_0.08_50)]"
+        style={{
+          backgroundImage: `url(${paper})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          boxShadow: "inset 0 0 40px rgba(80,40,10,0.25), 0 8px 24px rgba(0,0,0,0.4)",
+        }}
+      >
+        <div
+          className="shrink-0 relative w-14 h-[72px] md:w-16 md:h-[84px]"
+          style={{
+            borderRadius: "50% / 50%",
+            background:
+              "linear-gradient(135deg, oklch(0.72 0.14 75) 0%, oklch(0.45 0.10 55) 50%, oklch(0.72 0.14 75) 100%)",
+            padding: "4px",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.55), inset 0 0 2px rgba(255,220,160,0.8)",
+          }}
+        >
+          <div
+            className="w-full h-full overflow-hidden"
+            style={{ borderRadius: "50% / 50%", boxShadow: "inset 0 0 8px rgba(0,0,0,0.6)" }}
+          >
+            <img
+              src={avatar}
+              alt="Elena"
+              className="w-full h-full object-cover"
+              style={{ objectPosition: "center 22%", filter: "sepia(0.25) contrast(1.05)" }}
+            />
+          </div>
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="font-stamp text-[10px] md:text-xs tracking-[0.3em] mb-1.5" style={{ color: "oklch(0.35 0.10 30)" }}>
+            ELENA · SOURCING IA
+          </div>
+          <p className="font-serif-display leading-snug text-[13px] md:text-[16px]" style={{ color: "oklch(0.22 0.04 30)" }}>
+            Sur le balcon parisien, reconstitue la{" "}
+            <span className="font-bold" style={{ color: "oklch(0.42 0.16 25)" }}>
+              shortlist des talents
+            </span>{" "}
+            en retournant toutes les paires. Mémoire et observation — comme un bon recruteur.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================
  * MINI-JEU UNIQUE — Fouille de la scène (format paysage)
  * Décor cabine + vinyle caché à retrouver. Consigne sur papyrus
  * avec le portrait d'Elena.
