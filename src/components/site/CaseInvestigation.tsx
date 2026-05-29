@@ -163,7 +163,31 @@ function HiddenObjectGame({ accent, onSolved }: { accent: string; onSolved: () =
           }}
         />
 
-        {/* Halo d'indice — la mouette est peinte dans le tableau, pas d'overlay. */}
+        {/* Silhouette de mouette discrète mais visible — overlay SVG par dessus le tableau */}
+        {!found && (
+          <svg
+            className="absolute pointer-events-none"
+            viewBox="0 0 100 60"
+            style={{
+              left: `${TARGET.x}%`,
+              top: `${TARGET.y}%`,
+              width: "3.2%",
+              transform: "translate(-50%, -50%)",
+              opacity: 0.85,
+              filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.5))",
+            }}
+          >
+            <path
+              d="M5 38 Q22 8 50 30 Q78 8 95 38"
+              fill="none"
+              stroke="#f6efe2"
+              strokeWidth="6"
+              strokeLinecap="round"
+            />
+          </svg>
+        )}
+
+        {/* Halo d'indice */}
         {hint && !found && (
           <div
             className="absolute pointer-events-none"
