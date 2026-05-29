@@ -104,9 +104,8 @@ export function CaseInvestigation({ caseId, caseTitle, onSolved, onClose }: Prop
  * avec le portrait d'Elena.
  * ============================================================ */
 
-// Position de l'objet caché (coquillage) — coordonnées en % sur la scène.
-// Posé discrètement sur la table basse, presque confondu avec le décor.
-const TARGET = { x: 50, y: 72, r: 4 };
+// Position de l'objet caché (mouette peinte dans le tableau du fond).
+const TARGET = { x: 55.5, y: 23, r: 4.5 };
 
 // Leurres : zones cliquables qui ne déclenchent que la pénalité d'erreur.
 // Pas besoin de pixel-perfect — l'utilisateur peut cliquer n'importe où ailleurs.
@@ -154,51 +153,22 @@ function HiddenObjectGame({ accent, onSolved }: { accent: string; onSolved: () =
           }}
         />
 
-        {/* Coquillage discret posé dans le décor. */}
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: `${TARGET.x}%`,
-            top: `${TARGET.y}%`,
-            transform: `translate(-50%, -50%) rotate(-8deg)`,
-            width: "4.5%",
-            aspectRatio: "1",
-            opacity: found ? 1 : 0.85,
-            filter: found
-              ? `drop-shadow(0 0 18px ${accent})`
-              : hint
-              ? `drop-shadow(0 0 10px ${accent})`
-              : "drop-shadow(0 1px 2px rgba(0,0,0,0.55))",
-            animation: hint && !found ? "pulse 1.2s ease-in-out infinite" : undefined,
-          }}
-        >
-          <svg viewBox="0 0 100 100" className="w-full h-full">
-            <defs>
-              <radialGradient id="shellG" cx="50%" cy="30%" r="80%">
-                <stop offset="0%" stopColor="#fbeacb" />
-                <stop offset="55%" stopColor="#e8b87a" />
-                <stop offset="100%" stopColor="#9b6638" />
-              </radialGradient>
-            </defs>
-            {/* éventail / coquille Saint-Jacques */}
-            <path
-              d="M50 92 C 12 92 6 50 22 22 C 30 38 38 44 50 46 C 62 44 70 38 78 22 C 94 50 88 92 50 92 Z"
-              fill="url(#shellG)"
-              stroke="#6b3f1f"
-              strokeWidth="1.2"
-            />
-            {[28, 38, 50, 62, 72].map((x) => (
-              <path
-                key={x}
-                d={`M50 88 Q ${x} 55 ${x + (x - 50) * 0.4} 26`}
-                stroke="rgba(107,63,31,0.55)"
-                strokeWidth="0.9"
-                fill="none"
-              />
-            ))}
-            <path d="M40 22 Q 50 14 60 22 L 56 30 Q 50 26 44 30 Z" fill="#c98a4d" stroke="#6b3f1f" strokeWidth="0.8" />
-          </svg>
-        </div>
+        {/* Halo d'indice — la mouette est peinte dans le tableau, pas d'overlay. */}
+        {hint && !found && (
+          <div
+            className="absolute pointer-events-none"
+            style={{
+              left: `${TARGET.x}%`,
+              top: `${TARGET.y}%`,
+              width: "10%",
+              aspectRatio: "1",
+              transform: "translate(-50%, -50%)",
+              borderRadius: "50%",
+              boxShadow: `0 0 24px 6px ${accent}`,
+              animation: "pulse 1.2s ease-in-out infinite",
+            }}
+          />
+        )}
 
         {/* Halo de cible trouvée */}
         {found && (
@@ -212,7 +182,7 @@ function HiddenObjectGame({ accent, onSolved }: { accent: string; onSolved: () =
 
         {/* HUD */}
         <div className="absolute top-2 left-2 font-stamp text-[10px] tracking-[0.25em] text-white bg-black/55 border border-white/15 px-2.5 py-1 rounded-sm pointer-events-none">
-          OBJET RECHERCHÉ · 1 COQUILLAGE
+          OBJET RECHERCHÉ · 1 MOUETTE
         </div>
         <div className="absolute top-2 right-2 font-stamp text-[10px] tracking-[0.25em] text-white/85 bg-black/55 border border-white/15 px-2.5 py-1 rounded-sm pointer-events-none">
           ERREURS · {misses}
@@ -230,35 +200,43 @@ function HiddenObjectGame({ accent, onSolved }: { accent: string; onSolved: () =
         )}
       </div>
 
-      {/* CONSIGNE — papyrus avec petit portrait encadré façon tableau */}
-      <div
-        className="relative mt-4 w-full flex items-stretch gap-4 p-4 border border-[oklch(0.45_0.08_50)]"
-        style={{
-          backgroundImage: `url(${paper})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          boxShadow: "inset 0 0 60px rgba(120,70,20,0.35), 0 8px 24px rgba(0,0,0,0.4)",
-          filter: "sepia(0.15)",
-        }}
-      >
-        {/* Portrait — petit cadre doré façon tableau, non déformé */}
-        <div
-          className="shrink-0 w-14 h-16 md:w-16 md:h-20 overflow-hidden"
-          style={{
-            border: "3px solid oklch(0.62 0.13 70)",
-            outline: "1px solid oklch(0.32 0.06 50)",
-            outlineOffset: "-5px",
-            boxShadow: "0 3px 10px rgba(0,0,0,0.55), inset 0 0 8px rgba(0,0,0,0.4)",
-            background: "oklch(0.25 0.04 40)",
-          }}
-        >
-          <img
-            src={avatar}
-            alt="Elena"
-            className="w-full h-full object-cover"
-            style={{ objectPosition: "center 20%" }}
-          />
-        </div>
+      {/* CONSIGNE — papyrus déchiré avec portrait ovale façon tableau ancien */}
+      <div className="relative mt-4 w-full">
+        <img
+          src={papyrus}
+          alt=""
+          aria-hidden
+          className="absolute inset-0 w-full h-full object-fill pointer-events-none select-none"
+          style={{ filter: "drop-shadow(0 8px 20px rgba(0,0,0,0.55))" }}
+        />
+        <div className="relative flex items-center gap-4 md:gap-5 px-8 md:px-12 py-6 md:py-7">
+          {/* Portrait ovale — cadre doré façon tableau ancien */}
+          <div
+            className="shrink-0 relative w-14 h-[72px] md:w-16 md:h-[84px]"
+            style={{
+              borderRadius: "50% / 50%",
+              background:
+                "linear-gradient(135deg, oklch(0.72 0.14 75) 0%, oklch(0.45 0.10 55) 50%, oklch(0.72 0.14 75) 100%)",
+              padding: "4px",
+              boxShadow:
+                "0 4px 12px rgba(0,0,0,0.55), inset 0 0 2px rgba(255,220,160,0.8)",
+            }}
+          >
+            <div
+              className="w-full h-full overflow-hidden"
+              style={{
+                borderRadius: "50% / 50%",
+                boxShadow: "inset 0 0 8px rgba(0,0,0,0.6)",
+              }}
+            >
+              <img
+                src={avatar}
+                alt="Elena"
+                className="w-full h-full object-cover"
+                style={{ objectPosition: "center 22%", filter: "sepia(0.25) contrast(1.05)" }}
+              />
+            </div>
+          </div>
 
         {/* Texte — bien à droite du portrait */}
         <div className="flex-1 min-w-0">
