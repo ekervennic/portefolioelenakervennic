@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useCallback, useRef } from "react";
 import avatar from "@/assets/elena-avatar.jpg";
 import paper from "@/assets/paper-texture.jpg";
 import sceneCabin from "@/assets/scene-cabin.jpg";
