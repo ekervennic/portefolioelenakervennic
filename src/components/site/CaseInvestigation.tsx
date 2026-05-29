@@ -273,28 +273,45 @@ function HiddenObjectGame({ accent, onSolved }: { accent: string; onSolved: () =
  * Elena cherche la sortie du labyrinthe pour rejoindre ses amis.
  * ============================================================ */
 
-// '#' = mur, '.' = couloir, 'S' = départ, 'E' = sortie (amis).
-const MAZE: string[] = [
-  "###############",
-  "#S....#.......#",
-  "#.###.#.#####.#",
-  "#.#...#.....#.#",
-  "#.#.#######.#.#",
-  "#.#.......#.#.#",
-  "#.#######.#.#.#",
-  "#.........#..E#",
-  "###############",
-];
+// Dimensions du labyrinthe (toujours impaires pour l'algo DFS).
+const MAZE_COLS = 21;
+const MAZE_ROWS = 11;
 
-const COLS = MAZE[0].length;
-const ROWS = MAZE.length;
-
-function findCell(ch: string): { c: number; r: number } {
-  for (let r = 0; r < ROWS; r++) {
-    const c = MAZE[r].indexOf(ch);
-    if (c >= 0) return { c, r };
+// Génération d'un labyrinthe parfait via DFS récursif (avec seed pour stabilité).
+function generateMaze(cols: number, rows: number, seed = 1): string[][] {
+  // PRNG simple seedé
+  let s = seed;
+  const rand = () => {
+    s = (s * 9301 + 49297) % 233280;
+    return s / 233280;
+  };
+  const g: string[][] = Array.from({ length: rows }, () =>
+    Array.from({ length: cols }, () => "#")
+  );
+  const stack: Array<[number, number]> = [[1, 1]];
+  g[1][1] = ".";
+  while (stack.length) {
+    const [cx, cy] = stack[stack.length - 1];
+    const dirs: Array<[number, number]> = [
+      [0, -2], [0, 2], [-2, 0], [2, 0],
+    ].sort(() => rand() - 0.5);
+    let carved = false;
+    for (const [dx, dy] of dirs) {
+      const nx = cx + dx;
+      const ny = cy + dy;
+      if (nx > 0 && ny > 0 && nx < cols - 1 && ny < rows - 1 && g[ny][nx] === "#") {
+        g[cy + dy / 2][cx + dx / 2] = ".";
+        g[ny][nx] = ".";
+        stack.push([nx, ny]);
+        carved = true;
+        break;
+      }
+    }
+    if (!carved) stack.pop();
   }
-  return { c: 1, r: 1 };
+  g[1][1] = "S";
+  g[rows - 2][cols - 2] = "E";
+  return g;
 }
 
 function MazeGame({ accent, onSolved }: { accent: string; onSolved: () => void }) {
