@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import avatar from "@/assets/elena-avatar.jpg";
-import papyrus from "@/assets/papyrus-torn.png";
+import paper from "@/assets/paper-texture.jpg";
 import sceneCabin from "@/assets/scene-cabin.jpg";
 
 type Props = {
@@ -104,8 +104,8 @@ export function CaseInvestigation({ caseId, caseTitle, onSolved, onClose }: Prop
  * avec le portrait d'Elena.
  * ============================================================ */
 
-// Position de l'objet caché (mouette peinte dans le tableau du fond).
-const TARGET = { x: 55.5, y: 23, r: 4.5 };
+// Position de l'objet caché (mouette dehors, vue par la fenêtre).
+const TARGET = { x: 76, y: 33, r: 3.5 };
 
 // Leurres : zones cliquables qui ne déclenchent que la pénalité d'erreur.
 // Pas besoin de pixel-perfect — l'utilisateur peut cliquer n'importe où ailleurs.
@@ -200,16 +200,16 @@ function HiddenObjectGame({ accent, onSolved }: { accent: string; onSolved: () =
         )}
       </div>
 
-      {/* CONSIGNE — papyrus déchiré avec portrait ovale façon tableau ancien */}
-      <div className="relative mt-4 w-full">
-        <img
-          src={papyrus}
-          alt=""
-          aria-hidden
-          className="absolute inset-0 w-full h-full object-fill pointer-events-none select-none"
-          style={{ filter: "drop-shadow(0 8px 20px rgba(0,0,0,0.55))" }}
-        />
-        <div className="relative flex items-center gap-4 md:gap-5 px-8 md:px-12 py-6 md:py-7">
+      {/* CONSIGNE — fond papier sombre avec portrait ovale façon tableau ancien */}
+      <div
+        className="relative mt-4 w-full flex items-center gap-4 md:gap-5 p-4 border border-[oklch(0.45_0.08_50)]"
+        style={{
+          backgroundImage: `url(${paper})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          boxShadow: "inset 0 0 40px rgba(80,40,10,0.25), 0 8px 24px rgba(0,0,0,0.4)",
+        }}
+      >
           {/* Portrait ovale — cadre doré façon tableau ancien */}
           <div
             className="shrink-0 relative w-14 h-[72px] md:w-16 md:h-[84px]"
@@ -237,7 +237,6 @@ function HiddenObjectGame({ accent, onSolved }: { accent: string; onSolved: () =
               />
             </div>
           </div>
-
         {/* Texte — bien à droite du portrait */}
         <div className="flex-1 min-w-0">
           <div
@@ -256,7 +255,6 @@ function HiddenObjectGame({ accent, onSolved }: { accent: string; onSolved: () =
             </span>{" "}
             quelque part dans la pièce. Observe bien… elle se fond dans le décor.
           </p>
-        </div>
         </div>
       </div>
     </div>
