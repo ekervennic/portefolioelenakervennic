@@ -59,7 +59,13 @@ export function CaseInvestigation({ caseId, caseTitle, onSolved, onClose }: Prop
         </h3>
 
         <div className="relative">
-          {!solved && <HiddenObjectGame key={caseId} accent={ACCENT} onSolved={() => setSolved(true)} />}
+          {!solved && (
+            caseId === "together" ? (
+              <MazeGame key={caseId} accent={ACCENT} onSolved={() => setSolved(true)} />
+            ) : (
+              <HiddenObjectGame key={caseId} accent={ACCENT} onSolved={() => setSolved(true)} />
+            )
+          )}
 
           {solved && (
             <div className="min-h-[320px] flex flex-col items-center justify-center text-center animate-fade-in">
@@ -104,8 +110,8 @@ export function CaseInvestigation({ caseId, caseTitle, onSolved, onClose }: Prop
  * avec le portrait d'Elena.
  * ============================================================ */
 
-// Position de l'objet caché (mouette dehors, vue par la fenêtre).
-const TARGET = { x: 76, y: 33, r: 3.5 };
+// Position de l'objet caché (toute petite mouette dans le ciel, par la baie vitrée).
+const TARGET = { x: 8.7, y: 23.5, r: 2.2 };
 
 // Leurres : zones cliquables qui ne déclenchent que la pénalité d'erreur.
 // Pas besoin de pixel-perfect — l'utilisateur peut cliquer n'importe où ailleurs.
