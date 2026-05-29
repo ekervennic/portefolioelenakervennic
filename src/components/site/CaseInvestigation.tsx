@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useCallback, useMemo, useRef } from "react";
 import avatar from "@/assets/elena-avatar.jpg";
 import friendsImg from "@/assets/friends-group.png";
+import mazeFloor from "@/assets/maze-floor.jpg";
+import mazeWall from "@/assets/maze-wall.jpg";
 import paper from "@/assets/paper-texture.jpg";
 import sceneCabin from "@/assets/scene-cabin.jpg";
 
