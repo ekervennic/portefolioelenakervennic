@@ -104,10 +104,9 @@ export function CaseInvestigation({ caseId, caseTitle, onSolved, onClose }: Prop
  * avec le portrait d'Elena.
  * ============================================================ */
 
-// Position de l'objet caché (vinyle) — coordonnées en % sur la scène.
-// Sous la table basse, légèrement à gauche de l'ancre, partiellement masqué.
-// Demi-vinyle qui dépasse de sous le fauteuil de droite.
-const TARGET = { x: 88, y: 81, r: 4 };
+// Position de l'objet caché (coquillage) — coordonnées en % sur la scène.
+// Posé discrètement sur la table basse, presque confondu avec le décor.
+const TARGET = { x: 50, y: 72, r: 4 };
 
 // Leurres : zones cliquables qui ne déclenchent que la pénalité d'erreur.
 // Pas besoin de pixel-perfect — l'utilisateur peut cliquer n'importe où ailleurs.
@@ -155,41 +154,49 @@ function HiddenObjectGame({ accent, onSolved }: { accent: string; onSolved: () =
           }}
         />
 
-        {/* Vinyle à moitié caché sous le fauteuil. Bas clippé pour simuler l'occlusion. */}
+        {/* Coquillage discret posé dans le décor. */}
         <div
           className="absolute pointer-events-none"
           style={{
             left: `${TARGET.x}%`,
             top: `${TARGET.y}%`,
-            transform: `translate(-50%, -50%) rotate(-12deg)`,
-            width: "5.5%",
+            transform: `translate(-50%, -50%) rotate(-8deg)`,
+            width: "4.5%",
             aspectRatio: "1",
-            opacity: found ? 1 : 0.92,
-            clipPath: found ? "none" : "inset(0 0 55% 0)",
+            opacity: found ? 1 : 0.85,
             filter: found
               ? `drop-shadow(0 0 18px ${accent})`
               : hint
               ? `drop-shadow(0 0 10px ${accent})`
-              : "drop-shadow(0 1px 2px rgba(0,0,0,0.7))",
+              : "drop-shadow(0 1px 2px rgba(0,0,0,0.55))",
             animation: hint && !found ? "pulse 1.2s ease-in-out infinite" : undefined,
           }}
         >
           <svg viewBox="0 0 100 100" className="w-full h-full">
             <defs>
-              <radialGradient id="vinylG" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stopColor="#1a1a1a" />
-                <stop offset="60%" stopColor="#0a0a0a" />
-                <stop offset="100%" stopColor="#000" />
+              <radialGradient id="shellG" cx="50%" cy="30%" r="80%">
+                <stop offset="0%" stopColor="#fbeacb" />
+                <stop offset="55%" stopColor="#e8b87a" />
+                <stop offset="100%" stopColor="#9b6638" />
               </radialGradient>
             </defs>
-            <circle cx="50" cy="50" r="48" fill="url(#vinylG)" stroke="#222" strokeWidth="1" />
-            {[42, 36, 30, 24].map((r) => (
-              <circle key={r} cx="50" cy="50" r={r} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="0.5" />
+            {/* éventail / coquille Saint-Jacques */}
+            <path
+              d="M50 92 C 12 92 6 50 22 22 C 30 38 38 44 50 46 C 62 44 70 38 78 22 C 94 50 88 92 50 92 Z"
+              fill="url(#shellG)"
+              stroke="#6b3f1f"
+              strokeWidth="1.2"
+            />
+            {[28, 38, 50, 62, 72].map((x) => (
+              <path
+                key={x}
+                d={`M50 88 Q ${x} 55 ${x + (x - 50) * 0.4} 26`}
+                stroke="rgba(107,63,31,0.55)"
+                strokeWidth="0.9"
+                fill="none"
+              />
             ))}
-            <circle cx="50" cy="50" r="16" fill="#b8412a" />
-            <circle cx="50" cy="50" r="2" fill="#0a0a0a" />
-            {/* reflet */}
-            <path d="M 20 30 Q 50 10 80 30" stroke="rgba(255,255,255,0.18)" strokeWidth="2" fill="none" />
+            <path d="M40 22 Q 50 14 60 22 L 56 30 Q 50 26 44 30 Z" fill="#c98a4d" stroke="#6b3f1f" strokeWidth="0.8" />
           </svg>
         </div>
 
@@ -205,7 +212,7 @@ function HiddenObjectGame({ accent, onSolved }: { accent: string; onSolved: () =
 
         {/* HUD */}
         <div className="absolute top-2 left-2 font-stamp text-[10px] tracking-[0.25em] text-white bg-black/55 border border-white/15 px-2.5 py-1 rounded-sm pointer-events-none">
-          OBJET RECHERCHÉ · 1 VINYLE
+          OBJET RECHERCHÉ · 1 COQUILLAGE
         </div>
         <div className="absolute top-2 right-2 font-stamp text-[10px] tracking-[0.25em] text-white/85 bg-black/55 border border-white/15 px-2.5 py-1 rounded-sm pointer-events-none">
           ERREURS · {misses}
@@ -223,29 +230,33 @@ function HiddenObjectGame({ accent, onSolved }: { accent: string; onSolved: () =
         )}
       </div>
 
-      {/* CONSIGNE — papyrus avec petit portrait à gauche, texte clairement séparé */}
+      {/* CONSIGNE — papyrus avec petit portrait encadré façon tableau */}
       <div
         className="relative mt-4 w-full flex items-stretch gap-4 p-4 border border-[oklch(0.45_0.08_50)]"
         style={{
           backgroundImage: `url(${paper})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
-          boxShadow: "inset 0 0 40px rgba(80,40,10,0.25), 0 8px 24px rgba(0,0,0,0.4)",
+          boxShadow: "inset 0 0 60px rgba(120,70,20,0.35), 0 8px 24px rgba(0,0,0,0.4)",
+          filter: "sepia(0.15)",
         }}
       >
-        {/* Portrait — petit, non déformé */}
+        {/* Portrait — petit cadre doré façon tableau, non déformé */}
         <div
-          className="shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden border-2"
+          className="shrink-0 w-14 h-16 md:w-16 md:h-20 overflow-hidden"
           style={{
-            borderColor: "oklch(0.55 0.12 60)",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.5)",
+            border: "3px solid oklch(0.62 0.13 70)",
+            outline: "1px solid oklch(0.32 0.06 50)",
+            outlineOffset: "-5px",
+            boxShadow: "0 3px 10px rgba(0,0,0,0.55), inset 0 0 8px rgba(0,0,0,0.4)",
+            background: "oklch(0.25 0.04 40)",
           }}
         >
           <img
             src={avatar}
             alt="Elena"
             className="w-full h-full object-cover"
-            style={{ objectPosition: "center 25%" }}
+            style={{ objectPosition: "center 20%" }}
           />
         </div>
 
@@ -263,7 +274,7 @@ function HiddenObjectGame({ accent, onSolved }: { accent: string; onSolved: () =
           >
             Pour résoudre cette enquête et ouvrir le dossier, retrouve le{" "}
             <span className="font-bold" style={{ color: "oklch(0.42 0.16 25)" }}>
-              vinyle caché
+              coquillage caché
             </span>{" "}
             quelque part dans la pièce. Observe bien… il se fond dans le décor.
           </p>
