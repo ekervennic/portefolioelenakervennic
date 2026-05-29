@@ -252,10 +252,11 @@ function HiddenObjectGame({ accent, onSolved }: { accent: string; onSolved: () =
           >
             Pour résoudre cette enquête et ouvrir le dossier, retrouve le{" "}
             <span className="font-bold" style={{ color: "oklch(0.42 0.16 25)" }}>
-              coquillage caché
+              mouette cachée
             </span>{" "}
-            quelque part dans la pièce. Observe bien… il se fond dans le décor.
+            quelque part dans la pièce. Observe bien… elle se fond dans le décor.
           </p>
+        </div>
         </div>
       </div>
     </div>
