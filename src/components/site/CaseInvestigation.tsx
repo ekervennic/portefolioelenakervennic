@@ -320,30 +320,38 @@ function generateMaze(cols: number, rows: number, seed = 1): string[][] {
 }
 
 function MazeGame({ accent, onSolved }: { accent: string; onSolved: () => void }) {
-  const start = findCell("S");
-  const exit = findCell("E");
+  const maze = useMemo(() => generateMaze(MAZE_COLS, MAZE_ROWS, 42), []);
+  const COLS = MAZE_COLS;
+  const ROWS = MAZE_ROWS;
+  const start = { c: 1, r: 1 };
+  const exit = { c: COLS - 2, r: ROWS - 2 };
   const [pos, setPos] = useState(start);
   const [steps, setSteps] = useState(0);
   const [won, setWon] = useState(false);
+  const [trail, setTrail] = useState<Array<{ c: number; r: number }>>([start]);
   const wonRef = useRef(false);
 
-  const move = useCallback((dc: number, dr: number) => {
-    if (wonRef.current) return;
-    setPos((p) => {
-      const nc = p.c + dc;
-      const nr = p.r + dr;
-      if (nr < 0 || nr >= ROWS || nc < 0 || nc >= COLS) return p;
-      const ch = MAZE[nr][nc];
-      if (ch === "#") return p;
-      setSteps((s) => s + 1);
-      if (ch === "E") {
-        wonRef.current = true;
-        setWon(true);
-        setTimeout(onSolved, 700);
-      }
-      return { c: nc, r: nr };
-    });
-  }, [onSolved]);
+  const move = useCallback(
+    (dc: number, dr: number) => {
+      if (wonRef.current) return;
+      setPos((p) => {
+        const nc = p.c + dc;
+        const nr = p.r + dr;
+        if (nr < 0 || nr >= ROWS || nc < 0 || nc >= COLS) return p;
+        const ch = maze[nr][nc];
+        if (ch === "#") return p;
+        setSteps((s) => s + 1);
+        setTrail((t) => (t.some((x) => x.c === nc && x.r === nr) ? t : [...t, { c: nc, r: nr }]));
+        if (ch === "E") {
+          wonRef.current = true;
+          setWon(true);
+          setTimeout(onSolved, 900);
+        }
+        return { c: nc, r: nr };
+      });
+    },
+    [maze, onSolved, COLS, ROWS],
+  );
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -364,60 +372,191 @@ function MazeGame({ accent, onSolved }: { accent: string; onSolved: () => void }
 
   const cellW = 100 / COLS;
   const cellH = 100 / ROWS;
+  const friends = ["👯‍♀️", "🧑‍🤝‍🧑", "🥂", "🎉"];
 
   return (
     <div>
       <div
-        className="relative w-full aspect-[15/9] overflow-hidden border border-white/15 rounded-sm select-none"
+        className="relative w-full aspect-[21/11] overflow-hidden rounded-sm select-none"
         style={{
           background:
-            "radial-gradient(circle at 30% 20%, oklch(0.28 0.04 260), oklch(0.14 0.02 260))",
-          boxShadow: "inset 0 0 80px rgba(0,0,0,0.6)",
+            "radial-gradient(ellipse at 30% 10%, oklch(0.32 0.06 30 / 0.9), transparent 60%), radial-gradient(ellipse at 80% 90%, oklch(0.22 0.05 260 / 0.7), transparent 55%), linear-gradient(135deg, oklch(0.14 0.02 30) 0%, oklch(0.10 0.02 260) 100%)",
+          boxShadow: "inset 0 0 100px rgba(0,0,0,0.85), 0 0 0 2px oklch(0.32 0.08 50 / 0.6), 0 12px 40px rgba(0,0,0,0.6)",
         }}
       >
-        {/* grille de cellules */}
-        <svg viewBox={`0 0 ${COLS} ${ROWS}`} preserveAspectRatio="none" className="absolute inset-0 w-full h-full">
-          {MAZE.map((row, r) =>
-            [...row].map((ch, c) => {
-              if (ch === "#") {
-                return (
-                  <rect
-                    key={`${r}-${c}`}
-                    x={c}
-                    y={r}
-                    width={1}
-                    height={1}
-                    fill="oklch(0.32 0.03 30)"
-                    stroke="oklch(0.18 0.02 30)"
-                    strokeWidth={0.05}
-                  />
-                );
-              }
+        {/* Grille labyrinthe — pierres + parquet */}
+        <svg
+          viewBox={`0 0 ${COLS} ${ROWS}`}
+          preserveAspectRatio="none"
+          className="absolute inset-0 w-full h-full"
+        >
+          <defs>
+            <linearGradient id="wallGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="oklch(0.48 0.06 40)" />
+              <stop offset="50%" stopColor="oklch(0.34 0.05 35)" />
+              <stop offset="100%" stopColor="oklch(0.20 0.04 30)" />
+            </linearGradient>
+            <linearGradient id="floorGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="oklch(0.26 0.03 60)" />
+              <stop offset="100%" stopColor="oklch(0.18 0.02 60)" />
+            </linearGradient>
+            <radialGradient id="trailGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor={accent} stopOpacity="0.45" />
+              <stop offset="100%" stopColor={accent} stopOpacity="0" />
+            </radialGradient>
+            <filter id="wallShadow" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="0.04" dy="0.06" stdDeviation="0.04" floodOpacity="0.55" />
+            </filter>
+          </defs>
+
+          {/* Sol uniforme */}
+          <rect x={0} y={0} width={COLS} height={ROWS} fill="url(#floorGrad)" />
+
+          {/* Lignes de "parquet" */}
+          {Array.from({ length: ROWS }).map((_, r) => (
+            <line
+              key={`row-${r}`}
+              x1={0}
+              x2={COLS}
+              y1={r}
+              y2={r}
+              stroke="oklch(0.12 0.02 60 / 0.5)"
+              strokeWidth={0.02}
+            />
+          ))}
+
+          {/* Traînée de pas */}
+          {trail.map((t, i) => (
+            <circle
+              key={`tr-${i}`}
+              cx={t.c + 0.5}
+              cy={t.r + 0.5}
+              r={0.42}
+              fill="url(#trailGlow)"
+              opacity={0.6}
+            />
+          ))}
+
+          {/* Murs en pierre */}
+          {maze.map((row, r) =>
+            row.map((ch, c) => {
+              if (ch !== "#") return null;
               return (
-                <rect
-                  key={`${r}-${c}`}
-                  x={c}
-                  y={r}
-                  width={1}
-                  height={1}
-                  fill="oklch(0.22 0.02 40)"
-                  stroke="oklch(0.16 0.02 40)"
-                  strokeWidth={0.02}
-                />
+                <g key={`w-${r}-${c}`} filter="url(#wallShadow)">
+                  <rect
+                    x={c + 0.04}
+                    y={r + 0.04}
+                    width={0.92}
+                    height={0.92}
+                    rx={0.12}
+                    fill="url(#wallGrad)"
+                    stroke="oklch(0.12 0.02 30)"
+                    strokeWidth={0.04}
+                  />
+                  {/* reflet supérieur */}
+                  <rect
+                    x={c + 0.12}
+                    y={r + 0.1}
+                    width={0.76}
+                    height={0.08}
+                    rx={0.04}
+                    fill="oklch(0.72 0.05 60 / 0.35)"
+                  />
+                </g>
               );
-            })
+            }),
           )}
-          {/* halo sortie */}
-          <circle
-            cx={exit.c + 0.5}
-            cy={exit.r + 0.5}
-            r={0.6}
-            fill={accent}
-            opacity={0.25}
-          >
-            <animate attributeName="r" values="0.45;0.7;0.45" dur="1.6s" repeatCount="indefinite" />
+
+          {/* Halo arrivée */}
+          <circle cx={exit.c + 0.5} cy={exit.r + 0.5} r={0.7} fill={accent} opacity={0.3}>
+            <animate attributeName="r" values="0.5;0.9;0.5" dur="1.6s" repeatCount="indefinite" />
+            <animate attributeName="opacity" values="0.2;0.5;0.2" dur="1.6s" repeatCount="indefinite" />
           </circle>
+
+          {/* Étoile de départ */}
+          <circle
+            cx={start.c + 0.5}
+            cy={start.r + 0.5}
+            r={0.35}
+            fill="none"
+            stroke={accent}
+            strokeWidth={0.05}
+            strokeDasharray="0.15 0.1"
+            opacity={0.6}
+          />
+
+          {/* Vignette */}
+          <radialGradient id="vign" cx="50%" cy="50%" r="65%">
+            <stop offset="55%" stopColor="rgba(0,0,0,0)" />
+            <stop offset="100%" stopColor="rgba(0,0,0,0.75)" />
+          </radialGradient>
+          <rect x={0} y={0} width={COLS} height={ROWS} fill="url(#vign)" pointerEvents="none" />
         </svg>
+
+        {/* Torches aux coins */}
+        {[
+          { l: 1, t: 1 },
+          { l: 97, t: 1 },
+          { l: 1, t: 97 },
+          { l: 97, t: 97 },
+        ].map((p, i) => (
+          <div
+            key={`torch-${i}`}
+            className="absolute pointer-events-none"
+            style={{
+              left: `${p.l}%`,
+              top: `${p.t}%`,
+              width: 8,
+              height: 8,
+              borderRadius: "50%",
+              background: `radial-gradient(circle, ${accent} 0%, transparent 70%)`,
+              filter: "blur(2px)",
+              animation: `pulse ${1.4 + i * 0.2}s ease-in-out infinite`,
+            }}
+          />
+        ))}
+
+        {/* Groupe d'amis à la sortie */}
+        <div
+          className="absolute flex items-center justify-center pointer-events-none"
+          style={{
+            left: `${(exit.c - 1.5) * cellW}%`,
+            top: `${(exit.r - 0.6) * cellH}%`,
+            width: `${cellW * 4}%`,
+            height: `${cellH * 2.2}%`,
+            filter: `drop-shadow(0 0 8px ${accent})`,
+          }}
+        >
+          <div className="flex items-end gap-0 leading-none" style={{ fontSize: "min(2.4vw, 22px)" }}>
+            {friends.map((f, i) => (
+              <span
+                key={i}
+                style={{
+                  transform: `translateY(${i % 2 === 0 ? -1 : 1}px)`,
+                  filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.6))",
+                }}
+              >
+                {f}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* Bannière FINISH au-dessus de la sortie */}
+        <div
+          className="absolute font-stamp text-[8px] md:text-[10px] tracking-[0.3em] px-2 py-0.5 border pointer-events-none"
+          style={{
+            left: `${(exit.c - 1.5) * cellW}%`,
+            top: `${(exit.r - 1.2) * cellH}%`,
+            color: "oklch(0.15 0.02 30)",
+            background: accent,
+            borderColor: "oklch(0.25 0.05 30)",
+            transform: "rotate(-3deg)",
+            boxShadow: `0 0 12px ${accent}`,
+          }}
+        >
+          ARRIVÉE
+        </div>
 
         {/* Amis à la sortie */}
         <div
@@ -433,26 +572,49 @@ function MazeGame({ accent, onSolved }: { accent: string; onSolved: () => void }
           🎉
         </div>
 
+        {/* Aura lumineuse autour d'Elena */}
+        <div
+          className="absolute pointer-events-none transition-all duration-150 ease-out"
+          style={{
+            left: `${pos.c * cellW + cellW / 2}%`,
+            top: `${pos.r * cellH + cellH / 2}%`,
+            width: 180,
+            height: 180,
+            transform: "translate(-50%, -50%)",
+            background: `radial-gradient(circle, ${accent.replace(")", " / 0.35)")} 0%, transparent 60%)`,
+            filter: "blur(8px)",
+          }}
+        />
+
         {/* Elena (joueur) */}
         <div
           className="absolute rounded-full overflow-hidden border-2 transition-all duration-150 ease-out"
           style={{
-            left: `${pos.c * cellW + cellW * 0.1}%`,
-            top: `${pos.r * cellH + cellH * 0.1}%`,
-            width: `${cellW * 0.8}%`,
-            height: `${cellH * 0.8}%`,
+            left: `${pos.c * cellW + cellW * 0.08}%`,
+            top: `${pos.r * cellH + cellH * 0.05}%`,
+            width: `${cellW * 0.84}%`,
+            height: `${cellH * 0.9}%`,
             borderColor: accent,
-            boxShadow: `0 0 12px ${accent}`,
+            boxShadow: `0 0 18px ${accent}, 0 2px 8px rgba(0,0,0,0.6)`,
+            background: "oklch(0.1 0.02 30)",
           }}
         >
-          <img src={avatar} alt="Elena" className="w-full h-full object-cover" style={{ objectPosition: "center 22%" }} />
+          <img
+            src={avatar}
+            alt="Elena"
+            className="w-full h-full object-cover"
+            style={{ objectPosition: "center 22%" }}
+          />
         </div>
 
         {/* HUD */}
-        <div className="absolute top-2 left-2 font-stamp text-[10px] tracking-[0.25em] text-white bg-black/55 border border-white/15 px-2.5 py-1 rounded-sm pointer-events-none">
+        <div
+          className="absolute top-2 left-2 font-stamp text-[10px] tracking-[0.25em] text-white px-2.5 py-1 rounded-sm pointer-events-none"
+          style={{ background: "rgba(0,0,0,0.65)", border: `1px solid ${accent}`, boxShadow: `0 0 8px ${accent.replace(")", " / 0.5)")}` }}
+        >
           PAS · {steps}
         </div>
-        <div className="absolute top-2 right-2 font-stamp text-[10px] tracking-[0.25em] text-white/85 bg-black/55 border border-white/15 px-2.5 py-1 rounded-sm pointer-events-none">
+        <div className="absolute top-2 right-2 font-stamp text-[10px] tracking-[0.25em] text-white/90 bg-black/65 border border-white/20 px-2.5 py-1 rounded-sm pointer-events-none">
           ← ↑ ↓ → · WASD
         </div>
 
@@ -469,14 +631,34 @@ function MazeGame({ accent, onSolved }: { accent: string; onSolved: () => void }
           <div />
         </div>
 
-        {/* Halo de victoire */}
+        {/* Halo + confettis de victoire */}
         {won && (
-          <div
-            className="absolute inset-0 pointer-events-none animate-fade-in"
-            style={{
-              background: `radial-gradient(circle at ${exit.c * cellW + cellW / 2}% ${exit.r * cellH + cellH / 2}%, ${accent.replace(")", " / 0.5)")} 0%, transparent 45%)`,
-            }}
-          />
+          <>
+            <div
+              className="absolute inset-0 pointer-events-none animate-fade-in"
+              style={{
+                background: `radial-gradient(circle at ${exit.c * cellW + cellW / 2}% ${exit.r * cellH + cellH / 2}%, ${accent.replace(")", " / 0.55)")} 0%, transparent 50%)`,
+              }}
+            />
+            <div className="absolute inset-0 pointer-events-none overflow-hidden">
+              {Array.from({ length: 30 }).map((_, i) => (
+                <span
+                  key={i}
+                  className="absolute text-base"
+                  style={{
+                    left: `${(exit.c / COLS) * 100 + (Math.random() * 30 - 15)}%`,
+                    top: `${(exit.r / ROWS) * 100 - 5}%`,
+                    color: ["#ff6b6b", "#ffd93d", "#6bcfff", accent][i % 4],
+                    animation: `fall ${1 + Math.random()}s ease-in ${Math.random() * 0.4}s forwards`,
+                  }}
+                >
+                  ●
+                </span>
+              ))}
+            </div>
+            <style>{`@keyframes fall { to { transform: translateY(220px) rotate(360deg); opacity: 0; } }`}</style>
+          </>
+        )}
         )}
       </div>
 
