@@ -292,9 +292,14 @@ function generateMaze(cols: number, rows: number, seed = 1): string[][] {
   g[1][1] = ".";
   while (stack.length) {
     const [cx, cy] = stack[stack.length - 1];
-    const dirs: Array<[number, number]> = [
-      [0, -2], [0, 2], [-2, 0], [2, 0],
-    ].sort(() => rand() - 0.5);
+    const dirs: Array<[number, number]> = (
+      [
+        [0, -2],
+        [0, 2],
+        [-2, 0],
+        [2, 0],
+      ] as Array<[number, number]>
+    ).sort(() => rand() - 0.5);
     let carved = false;
     for (const [dx, dy] of dirs) {
       const nx = cx + dx;
