@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useCallback, useMemo, useRef } from "react";
 import avatar from "@/assets/elena-avatar.jpg";
+import friendsImg from "@/assets/friends-group.png";
 import paper from "@/assets/paper-texture.jpg";
 import sceneCabin from "@/assets/scene-cabin.jpg";
 
@@ -372,7 +373,6 @@ function MazeGame({ accent, onSolved }: { accent: string; onSolved: () => void }
 
   const cellW = 100 / COLS;
   const cellH = 100 / ROWS;
-  const friends = ["👯‍♀️", "🧑‍🤝‍🧑", "🥂", "🎉"];
 
   return (
     <div>
@@ -380,8 +380,8 @@ function MazeGame({ accent, onSolved }: { accent: string; onSolved: () => void }
         className="relative w-full aspect-[21/11] overflow-hidden rounded-sm select-none"
         style={{
           background:
-            "radial-gradient(ellipse at 30% 10%, oklch(0.32 0.06 30 / 0.9), transparent 60%), radial-gradient(ellipse at 80% 90%, oklch(0.22 0.05 260 / 0.7), transparent 55%), linear-gradient(135deg, oklch(0.14 0.02 30) 0%, oklch(0.10 0.02 260) 100%)",
-          boxShadow: "inset 0 0 100px rgba(0,0,0,0.85), 0 0 0 2px oklch(0.32 0.08 50 / 0.6), 0 12px 40px rgba(0,0,0,0.6)",
+            "radial-gradient(ellipse at 50% 0%, oklch(0.55 0.10 75 / 0.55), transparent 60%), radial-gradient(ellipse at 20% 100%, oklch(0.30 0.07 50 / 0.7), transparent 55%), linear-gradient(180deg, oklch(0.32 0.08 65) 0%, oklch(0.22 0.06 55) 100%)",
+          boxShadow: "inset 0 0 120px rgba(50,25,5,0.85), 0 0 0 2px oklch(0.45 0.12 70 / 0.6), 0 12px 40px rgba(0,0,0,0.6)",
         }}
       >
         {/* Grille labyrinthe — pierres + parquet */}
@@ -392,38 +392,51 @@ function MazeGame({ accent, onSolved }: { accent: string; onSolved: () => void }
         >
           <defs>
             <linearGradient id="wallGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="oklch(0.48 0.06 40)" />
-              <stop offset="50%" stopColor="oklch(0.34 0.05 35)" />
-              <stop offset="100%" stopColor="oklch(0.20 0.04 30)" />
+              <stop offset="0%" stopColor="oklch(0.78 0.10 78)" />
+              <stop offset="50%" stopColor="oklch(0.58 0.10 70)" />
+              <stop offset="100%" stopColor="oklch(0.36 0.08 55)" />
             </linearGradient>
             <linearGradient id="floorGrad" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="oklch(0.26 0.03 60)" />
-              <stop offset="100%" stopColor="oklch(0.18 0.02 60)" />
+              <stop offset="0%" stopColor="oklch(0.42 0.06 70)" />
+              <stop offset="100%" stopColor="oklch(0.28 0.05 60)" />
             </linearGradient>
             <radialGradient id="trailGlow" cx="50%" cy="50%" r="50%">
               <stop offset="0%" stopColor={accent} stopOpacity="0.45" />
               <stop offset="100%" stopColor={accent} stopOpacity="0" />
             </radialGradient>
             <filter id="wallShadow" x="-20%" y="-20%" width="140%" height="140%">
-              <feDropShadow dx="0.04" dy="0.06" stdDeviation="0.04" floodOpacity="0.55" />
+              <feDropShadow dx="0.05" dy="0.08" stdDeviation="0.05" floodOpacity="0.6" />
             </filter>
+            <pattern id="sandTex" x="0" y="0" width="1" height="1" patternUnits="userSpaceOnUse">
+              <rect width="1" height="1" fill="url(#floorGrad)" />
+              <circle cx="0.25" cy="0.35" r="0.015" fill="oklch(0.55 0.07 70 / 0.6)" />
+              <circle cx="0.7" cy="0.6" r="0.012" fill="oklch(0.20 0.04 50 / 0.5)" />
+              <circle cx="0.45" cy="0.85" r="0.01" fill="oklch(0.55 0.07 70 / 0.4)" />
+            </pattern>
           </defs>
 
-          {/* Sol uniforme */}
-          <rect x={0} y={0} width={COLS} height={ROWS} fill="url(#floorGrad)" />
+          {/* Sol — sable texturé */}
+          <rect x={0} y={0} width={COLS} height={ROWS} fill="url(#sandTex)" />
 
-          {/* Lignes de "parquet" */}
-          {Array.from({ length: ROWS }).map((_, r) => (
-            <line
-              key={`row-${r}`}
-              x1={0}
-              x2={COLS}
-              y1={r}
-              y2={r}
-              stroke="oklch(0.12 0.02 60 / 0.5)"
-              strokeWidth={0.02}
-            />
-          ))}
+          {/* Hiéroglyphes décoratifs */}
+          {Array.from({ length: 14 }).map((_, i) => {
+            const symbols = ["☥", "𓂀", "𓋹", "𓆣", "𓅓", "𓊽", "𓇳"];
+            const x = ((i * 1.873) % (COLS - 1)) + 0.5;
+            const y = ((i * 1.27) % (ROWS - 1)) + 0.5;
+            return (
+              <text
+                key={`hg-${i}`}
+                x={x}
+                y={y}
+                fontSize={0.5}
+                textAnchor="middle"
+                dominantBaseline="middle"
+                fill="oklch(0.20 0.05 50 / 0.35)"
+              >
+                {symbols[i % symbols.length]}
+              </text>
+            );
+          })}
 
           {/* Traînée de pas */}
           {trail.map((t, i) => (
@@ -437,7 +450,7 @@ function MazeGame({ accent, onSolved }: { accent: string; onSolved: () => void }
             />
           ))}
 
-          {/* Murs en pierre */}
+          {/* Murs en pierre de grès */}
           {maze.map((row, r) =>
             row.map((ch, c) => {
               if (ch !== "#") return null;
@@ -448,19 +461,28 @@ function MazeGame({ accent, onSolved }: { accent: string; onSolved: () => void }
                     y={r + 0.04}
                     width={0.92}
                     height={0.92}
-                    rx={0.12}
+                    rx={0.06}
                     fill="url(#wallGrad)"
-                    stroke="oklch(0.12 0.02 30)"
-                    strokeWidth={0.04}
+                    stroke="oklch(0.25 0.06 50)"
+                    strokeWidth={0.03}
                   />
-                  {/* reflet supérieur */}
+                  {/* joint horizontal pierre */}
+                  <line
+                    x1={c + 0.04}
+                    x2={c + 0.96}
+                    y1={r + 0.5}
+                    y2={r + 0.5}
+                    stroke="oklch(0.25 0.06 50 / 0.45)"
+                    strokeWidth={0.025}
+                  />
+                  {/* reflet supérieur doré */}
                   <rect
                     x={c + 0.12}
                     y={r + 0.1}
                     width={0.76}
-                    height={0.08}
+                    height={0.06}
                     rx={0.04}
-                    fill="oklch(0.72 0.05 60 / 0.35)"
+                    fill="oklch(0.92 0.10 85 / 0.45)"
                   />
                 </g>
               );
@@ -520,26 +542,18 @@ function MazeGame({ accent, onSolved }: { accent: string; onSolved: () => void }
         <div
           className="absolute flex items-center justify-center pointer-events-none"
           style={{
-            left: `${(exit.c - 1.5) * cellW}%`,
-            top: `${(exit.r - 0.6) * cellH}%`,
-            width: `${cellW * 4}%`,
-            height: `${cellH * 2.2}%`,
-            filter: `drop-shadow(0 0 8px ${accent})`,
+            left: `${(exit.c - 2.2) * cellW}%`,
+            top: `${(exit.r - 2.4) * cellH}%`,
+            width: `${cellW * 5}%`,
+            height: `${cellH * 4.5}%`,
+            filter: `drop-shadow(0 0 14px ${accent}) drop-shadow(0 4px 8px rgba(0,0,0,0.7))`,
           }}
         >
-          <div className="flex items-end gap-0 leading-none" style={{ fontSize: "min(2.4vw, 22px)" }}>
-            {friends.map((f, i) => (
-              <span
-                key={i}
-                style={{
-                  transform: `translateY(${i % 2 === 0 ? -1 : 1}px)`,
-                  filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.6))",
-                }}
-              >
-                {f}
-              </span>
-            ))}
-          </div>
+          <img
+            src={friendsImg}
+            alt="Les amies d'Elena"
+            className="w-full h-full object-contain"
+          />
         </div>
 
         {/* Bannière FINISH au-dessus de la sortie */}
@@ -556,20 +570,6 @@ function MazeGame({ accent, onSolved }: { accent: string; onSolved: () => void }
           }}
         >
           ARRIVÉE
-        </div>
-
-        {/* Amis à la sortie */}
-        <div
-          className="absolute flex items-center justify-center text-xl md:text-2xl pointer-events-none"
-          style={{
-            left: `${exit.c * cellW}%`,
-            top: `${exit.r * cellH}%`,
-            width: `${cellW}%`,
-            height: `${cellH}%`,
-            filter: `drop-shadow(0 0 6px ${accent})`,
-          }}
-        >
-          🎉
         </div>
 
         {/* Aura lumineuse autour d'Elena */}
