@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import parchment from "@/assets/elena-parchment.png";
+import avatar from "@/assets/elena-avatar.jpg";
+import paper from "@/assets/paper-texture.jpg";
 import sceneCabin from "@/assets/scene-cabin.jpg";
 
 type Props = {
@@ -105,7 +106,8 @@ export function CaseInvestigation({ caseId, caseTitle, onSolved, onClose }: Prop
 
 // Position de l'objet caché (vinyle) — coordonnées en % sur la scène.
 // Sous la table basse, légèrement à gauche de l'ancre, partiellement masqué.
-const TARGET = { x: 41, y: 86, r: 4 };
+// Demi-vinyle qui dépasse de sous le fauteuil de droite.
+const TARGET = { x: 88, y: 81, r: 4 };
 
 // Leurres : zones cliquables qui ne déclenchent que la pénalité d'erreur.
 // Pas besoin de pixel-perfect — l'utilisateur peut cliquer n'importe où ailleurs.
@@ -153,22 +155,22 @@ function HiddenObjectGame({ accent, onSolved }: { accent: string; onSolved: () =
           }}
         />
 
-        {/* Vinyle caché — visuel SVG positionné sur la cible.
-            Discret par défaut ; pulsé si l'indice est activé. */}
+        {/* Vinyle à moitié caché sous le fauteuil. Bas clippé pour simuler l'occlusion. */}
         <div
           className="absolute pointer-events-none"
           style={{
             left: `${TARGET.x}%`,
             top: `${TARGET.y}%`,
-            transform: `translate(-50%, -50%) rotate(-18deg)`,
-            width: "8%",
+            transform: `translate(-50%, -50%) rotate(-12deg)`,
+            width: "5.5%",
             aspectRatio: "1",
-            opacity: found ? 1 : 0.78,
+            opacity: found ? 1 : 0.92,
+            clipPath: found ? "none" : "inset(0 0 55% 0)",
             filter: found
               ? `drop-shadow(0 0 18px ${accent})`
               : hint
-              ? `drop-shadow(0 0 12px ${accent})`
-              : "drop-shadow(0 2px 3px rgba(0,0,0,0.6))",
+              ? `drop-shadow(0 0 10px ${accent})`
+              : "drop-shadow(0 1px 2px rgba(0,0,0,0.7))",
             animation: hint && !found ? "pulse 1.2s ease-in-out infinite" : undefined,
           }}
         >
@@ -221,40 +223,50 @@ function HiddenObjectGame({ accent, onSolved }: { accent: string; onSolved: () =
         )}
       </div>
 
-      {/* CONSIGNE — papyrus avec portrait d'Elena */}
+      {/* CONSIGNE — papyrus avec petit portrait à gauche, texte clairement séparé */}
       <div
-        className="relative mt-4 w-full"
+        className="relative mt-4 w-full flex items-stretch gap-4 p-4 border border-[oklch(0.45_0.08_50)]"
         style={{
-          aspectRatio: "3 / 1.05",
-          backgroundImage: `url(${parchment})`,
-          backgroundSize: "100% 100%",
-          backgroundRepeat: "no-repeat",
+          backgroundImage: `url(${paper})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          boxShadow: "inset 0 0 40px rgba(80,40,10,0.25), 0 8px 24px rgba(0,0,0,0.4)",
         }}
       >
-        {/* Texte calé sur la zone vide à droite du portrait */}
-        <div className="absolute inset-0 flex items-center">
-          <div className="w-[38%]" />
-          <div className="flex-1 pr-[10%] pl-2">
-            <div
-              className="font-stamp text-[10px] md:text-xs tracking-[0.3em] mb-1.5"
-              style={{ color: "oklch(0.35 0.08 30)" }}
-            >
-              ELENA · ENQUÊTRICE
-            </div>
-            <p
-              className="font-serif-display leading-snug text-[13px] md:text-[17px]"
-              style={{ color: "oklch(0.22 0.04 30)" }}
-            >
-              Pour résoudre cette enquête et ouvrir le dossier, retrouve le{" "}
-              <span
-                className="font-bold"
-                style={{ color: "oklch(0.42 0.16 25)" }}
-              >
-                vinyle caché
-              </span>{" "}
-              quelque part dans la pièce. Observe bien… il se fond dans le décor.
-            </p>
+        {/* Portrait — petit, non déformé */}
+        <div
+          className="shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden border-2"
+          style={{
+            borderColor: "oklch(0.55 0.12 60)",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.5)",
+          }}
+        >
+          <img
+            src={avatar}
+            alt="Elena"
+            className="w-full h-full object-cover"
+            style={{ objectPosition: "center 25%" }}
+          />
+        </div>
+
+        {/* Texte — bien à droite du portrait */}
+        <div className="flex-1 min-w-0">
+          <div
+            className="font-stamp text-[10px] md:text-xs tracking-[0.3em] mb-1.5"
+            style={{ color: "oklch(0.35 0.10 30)" }}
+          >
+            ELENA · ENQUÊTRICE
           </div>
+          <p
+            className="font-serif-display leading-snug text-[13px] md:text-[16px]"
+            style={{ color: "oklch(0.22 0.04 30)" }}
+          >
+            Pour résoudre cette enquête et ouvrir le dossier, retrouve le{" "}
+            <span className="font-bold" style={{ color: "oklch(0.42 0.16 25)" }}>
+              vinyle caché
+            </span>{" "}
+            quelque part dans la pièce. Observe bien… il se fond dans le décor.
+          </p>
         </div>
       </div>
     </div>
