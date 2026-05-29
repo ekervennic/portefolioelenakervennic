@@ -15,6 +15,7 @@ import paris5 from "@/assets/paris-5.jpg";
 import paris6 from "@/assets/paris-6.jpg";
 import paris7 from "@/assets/paris-7.jpg";
 import paris8 from "@/assets/paris-8.jpg";
+import cardBack from "@/assets/card-back.jpg";
 
 type Props = {
   caseId: string;
@@ -106,11 +107,18 @@ export function CaseInvestigation({ caseId, caseTitle, onSolved, onClose }: Prop
             </span>
             <button
               onClick={onSolved}
-              className="font-stamp text-[10px] tracking-[0.25em] text-white/50 underline-offset-4 hover:underline transition-colors"
-              onMouseEnter={(e) => (e.currentTarget.style.color = ACCENT)}
-              onMouseLeave={(e) => (e.currentTarget.style.color = "")}
+              className="font-stamp text-[10px] tracking-[0.25em] px-3 py-1.5 border rounded-sm transition-colors"
+              style={{ color: ACCENT, borderColor: ACCENT, background: ACCENT_SOFT }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = ACCENT;
+                e.currentTarget.style.color = "oklch(0.15 0.02 30)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = ACCENT_SOFT;
+                e.currentTarget.style.color = ACCENT;
+              }}
             >
-              Passer l'enquête →
+              PASSER LE MINI-JEU →
             </button>
           </div>
         )}
@@ -253,21 +261,23 @@ function MemoryGame({ accent, onSolved }: { accent: string; onSolved: () => void
                   >
                     {/* Dos de carte */}
                     <div
-                      className="absolute inset-0 flex items-center justify-center rounded-md border"
+                      className="absolute inset-0 rounded-md border overflow-hidden"
                       style={{
                         backfaceVisibility: "hidden",
-                        background:
-                          "linear-gradient(135deg, oklch(0.28 0.04 30) 0%, oklch(0.16 0.02 30) 100%)",
                         borderColor: accent,
                         boxShadow: `0 4px 12px rgba(0,0,0,0.55), inset 0 0 12px rgba(0,0,0,0.5), 0 0 6px ${accent.replace(")", " / 0.4)")}`,
                       }}
                     >
-                      <span
-                        className="font-stamp text-[10px] md:text-xs tracking-[0.3em]"
-                        style={{ color: accent, opacity: 0.85 }}
-                      >
-                        M
-                      </span>
+                      <img
+                        src={cardBack}
+                        alt=""
+                        className="absolute inset-0 w-full h-full object-cover"
+                        draggable={false}
+                      />
+                      <div
+                        className="absolute inset-0 pointer-events-none"
+                        style={{ boxShadow: "inset 0 0 14px rgba(0,0,0,0.55)" }}
+                      />
                     </div>
                     {/* Face de carte */}
                     <div
