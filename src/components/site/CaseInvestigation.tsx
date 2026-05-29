@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
-import avatar from "@/assets/elena-avatar.jpg";
+import { useEffect, useState } from "react";
+import parchment from "@/assets/elena-parchment.png";
+import sceneCabin from "@/assets/scene-cabin.jpg";
 
 type Props = {
   caseId: string;
