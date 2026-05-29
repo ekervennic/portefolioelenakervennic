@@ -542,26 +542,18 @@ function MazeGame({ accent, onSolved }: { accent: string; onSolved: () => void }
         <div
           className="absolute flex items-center justify-center pointer-events-none"
           style={{
-            left: `${(exit.c - 1.5) * cellW}%`,
-            top: `${(exit.r - 0.6) * cellH}%`,
-            width: `${cellW * 4}%`,
-            height: `${cellH * 2.2}%`,
-            filter: `drop-shadow(0 0 8px ${accent})`,
+            left: `${(exit.c - 2.2) * cellW}%`,
+            top: `${(exit.r - 2.4) * cellH}%`,
+            width: `${cellW * 5}%`,
+            height: `${cellH * 4.5}%`,
+            filter: `drop-shadow(0 0 14px ${accent}) drop-shadow(0 4px 8px rgba(0,0,0,0.7))`,
           }}
         >
-          <div className="flex items-end gap-0 leading-none" style={{ fontSize: "min(2.4vw, 22px)" }}>
-            {friends.map((f, i) => (
-              <span
-                key={i}
-                style={{
-                  transform: `translateY(${i % 2 === 0 ? -1 : 1}px)`,
-                  filter: "drop-shadow(0 2px 3px rgba(0,0,0,0.6))",
-                }}
-              >
-                {f}
-              </span>
-            ))}
-          </div>
+          <img
+            src={friendsImg}
+            alt="Les amies d'Elena"
+            className="w-full h-full object-contain"
+          />
         </div>
 
         {/* Bannière FINISH au-dessus de la sortie */}
@@ -578,20 +570,6 @@ function MazeGame({ accent, onSolved }: { accent: string; onSolved: () => void }
           }}
         >
           ARRIVÉE
-        </div>
-
-        {/* Amis à la sortie */}
-        <div
-          className="absolute flex items-center justify-center text-xl md:text-2xl pointer-events-none"
-          style={{
-            left: `${exit.c * cellW}%`,
-            top: `${exit.r * cellH}%`,
-            width: `${cellW}%`,
-            height: `${cellH}%`,
-            filter: `drop-shadow(0 0 6px ${accent})`,
-          }}
-        >
-          🎉
         </div>
 
         {/* Aura lumineuse autour d'Elena */}
