@@ -270,6 +270,7 @@ function MemoryGame({ accent, onSolved }: { accent: string; onSolved: () => void
                         M
                       </span>
                     </div>
+                    {/* (back replaced below) */}
                     {/* Face de carte */}
                     <div
                       className="absolute inset-0 rounded-md border-2 overflow-hidden"
