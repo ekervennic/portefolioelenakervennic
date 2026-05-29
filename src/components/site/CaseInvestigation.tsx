@@ -7,6 +7,14 @@ import mazeWall from "@/assets/maze-wall.jpg";
 import paper from "@/assets/paper-texture.jpg";
 import sceneCabin from "@/assets/scene-cabin.jpg";
 import sceneBalcony from "@/assets/scene-balcony.jpg";
+import paris1 from "@/assets/paris-1.jpg";
+import paris2 from "@/assets/paris-2.jpg";
+import paris3 from "@/assets/paris-3.jpg";
+import paris4 from "@/assets/paris-4.jpg";
+import paris5 from "@/assets/paris-5.jpg";
+import paris6 from "@/assets/paris-6.jpg";
+import paris7 from "@/assets/paris-7.jpg";
+import paris8 from "@/assets/paris-8.jpg";
 
 type Props = {
   caseId: string;
@@ -117,7 +125,16 @@ export function CaseInvestigation({ caseId, caseTitle, onSolved, onClose }: Prop
  * Décor : balcon parisien au coucher du soleil.
  * ============================================================ */
 
-const MEMORY_SYMBOLS = ["🎯", "💼", "📊", "🔍", "🏆", "⚡", "🧠", "🌟"];
+const MEMORY_CARDS: Array<{ id: string; img: string; name: string }> = [
+  { id: "eiffel", img: paris1, name: "Tour Eiffel" },
+  { id: "montparnasse", img: paris2, name: "Montparnasse" },
+  { id: "invalides", img: paris3, name: "Invalides" },
+  { id: "notredame", img: paris4, name: "Notre-Dame" },
+  { id: "sacrecoeur", img: paris5, name: "Sacré-Cœur" },
+  { id: "arc", img: paris6, name: "Arc de Triomphe" },
+  { id: "louvre", img: paris7, name: "Louvre" },
+  { id: "opera", img: paris8, name: "Opéra Garnier" },
+];
 
 function shuffleDeck(seed: number) {
   let s = seed;
@@ -125,10 +142,8 @@ function shuffleDeck(seed: number) {
     s = (s * 9301 + 49297) % 233280;
     return s / 233280;
   };
-  const deck = [...MEMORY_SYMBOLS, ...MEMORY_SYMBOLS].map((sym, i) => ({
-    id: i,
-    sym,
-  }));
+  const base = [...MEMORY_CARDS, ...MEMORY_CARDS];
+  const deck = base.map((c, i) => ({ uid: i, ...c }));
   for (let i = deck.length - 1; i > 0; i--) {
     const j = Math.floor(rand() * (i + 1));
     [deck[i], deck[j]] = [deck[j], deck[i]];
@@ -161,7 +176,7 @@ function MemoryGame({ accent, onSolved }: { accent: string; onSolved: () => void
     if (next.length === 2) {
       setMoves((m) => m + 1);
       const [a, b] = next;
-      if (deck[a].sym === deck[b].sym) {
+      if (deck[a].id === deck[b].id) {
         setTimeout(() => {
           setMatched((prev) => new Set(prev).add(a).add(b));
           setFlipped([]);
@@ -209,7 +224,7 @@ function MemoryGame({ accent, onSolved }: { accent: string; onSolved: () => void
           COUPS · {moves}
         </div>
         <div className="absolute top-2 right-2 font-stamp text-[10px] tracking-[0.25em] text-white/90 bg-black/65 border border-white/20 px-2.5 py-1 rounded-sm pointer-events-none">
-          PAIRES · {matched.size / 2}/{MEMORY_SYMBOLS.length}
+          PAIRES · {matched.size / 2}/{MEMORY_CARDS.length}
         </div>
 
         {/* Grille de cartes */}
@@ -223,11 +238,11 @@ function MemoryGame({ accent, onSolved }: { accent: string; onSolved: () => void
               const isMatched = matched.has(idx);
               return (
                 <button
-                  key={card.id}
+                  key={card.uid}
                   onClick={() => handleFlip(idx)}
                   className="relative"
                   style={{ perspective: "800px" }}
-                  aria-label="Carte"
+                  aria-label={isFlipped ? card.name : "Carte face cachée"}
                 >
                   <div
                     className="relative w-full h-full transition-transform duration-500"
@@ -256,29 +271,43 @@ function MemoryGame({ accent, onSolved }: { accent: string; onSolved: () => void
                     </div>
                     {/* Face de carte */}
                     <div
-                      className="absolute inset-0 flex items-center justify-center rounded-md border-2"
+                      className="absolute inset-0 rounded-md border-2 overflow-hidden"
                       style={{
                         backfaceVisibility: "hidden",
                         transform: "rotateY(180deg)",
-                        background: isMatched
-                          ? `linear-gradient(135deg, ${accent.replace(")", " / 0.85)")} 0%, oklch(0.45 0.12 55) 100%)`
-                          : "linear-gradient(135deg, oklch(0.95 0.02 80) 0%, oklch(0.85 0.04 70) 100%)",
                         borderColor: isMatched ? accent : "oklch(0.45 0.08 50)",
                         boxShadow: isMatched
                           ? `0 0 18px ${accent}, 0 4px 10px rgba(0,0,0,0.5)`
                           : "0 4px 10px rgba(0,0,0,0.5), inset 0 0 8px rgba(0,0,0,0.15)",
                       }}
                     >
-                      <span
-                        className="text-2xl md:text-4xl"
+                      <img
+                        src={card.img}
+                        alt={card.name}
+                        className="absolute inset-0 w-full h-full object-cover"
                         style={{
-                          filter: isMatched
-                            ? "drop-shadow(0 2px 4px rgba(0,0,0,0.5))"
-                            : "none",
+                          filter: isMatched ? "saturate(1.15)" : "saturate(1)",
+                        }}
+                      />
+                      {/* Voile inférieur + nom */}
+                      <div
+                        className="absolute inset-x-0 bottom-0 px-1 py-0.5 font-stamp text-[7px] md:text-[9px] tracking-[0.18em] text-white text-center"
+                        style={{
+                          background:
+                            "linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.75) 100%)",
                         }}
                       >
-                        {card.sym}
-                      </span>
+                        {card.name}
+                      </div>
+                      {isMatched && (
+                        <div
+                          className="absolute inset-0 pointer-events-none"
+                          style={{
+                            boxShadow: `inset 0 0 16px ${accent}`,
+                            background: `linear-gradient(135deg, ${accent.replace(")", " / 0.15)")} 0%, transparent 60%)`,
+                          }}
+                        />
+                      )}
                     </div>
                   </div>
                 </button>
