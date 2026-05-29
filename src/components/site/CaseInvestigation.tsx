@@ -659,7 +659,6 @@ function MazeGame({ accent, onSolved }: { accent: string; onSolved: () => void }
             <style>{`@keyframes fall { to { transform: translateY(220px) rotate(360deg); opacity: 0; } }`}</style>
           </>
         )}
-        )}
       </div>
 
       {/* CONSIGNE — fond papier, portrait ovale */}
