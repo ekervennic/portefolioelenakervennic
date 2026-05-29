@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useCallback, useMemo, useRef } from "react";
 import avatar from "@/assets/elena-avatar.jpg";
 import friendsImg from "@/assets/friends-group.png";
+import mazeFloor from "@/assets/maze-floor.jpg";
+import mazeWall from "@/assets/maze-wall.jpg";
 import paper from "@/assets/paper-texture.jpg";
 import sceneCabin from "@/assets/scene-cabin.jpg";
 
@@ -379,64 +381,61 @@ function MazeGame({ accent, onSolved }: { accent: string; onSolved: () => void }
       <div
         className="relative w-full aspect-[21/11] overflow-hidden rounded-sm select-none"
         style={{
-          background:
-            "radial-gradient(ellipse at 50% 0%, oklch(0.55 0.10 75 / 0.55), transparent 60%), radial-gradient(ellipse at 20% 100%, oklch(0.30 0.07 50 / 0.7), transparent 55%), linear-gradient(180deg, oklch(0.32 0.08 65) 0%, oklch(0.22 0.06 55) 100%)",
-          boxShadow: "inset 0 0 120px rgba(50,25,5,0.85), 0 0 0 2px oklch(0.45 0.12 70 / 0.6), 0 12px 40px rgba(0,0,0,0.6)",
+          backgroundImage: `url(${mazeFloor})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          boxShadow:
+            "inset 0 0 140px rgba(20,8,2,0.85), 0 0 0 3px oklch(0.55 0.14 70 / 0.7), 0 14px 50px rgba(0,0,0,0.7)",
         }}
       >
-        {/* Grille labyrinthe — pierres + parquet */}
+        {/* Voile sombre par-dessus le sol pour le contraste */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(ellipse at center, rgba(0,0,0,0) 30%, rgba(0,0,0,0.55) 100%)",
+          }}
+        />
+
+        {/* Murs en pierre — tuiles image */}
+        <div className="absolute inset-0">
+          {maze.map((row, r) =>
+            row.map((ch, c) => {
+              if (ch !== "#") return null;
+              return (
+                <div
+                  key={`w-${r}-${c}`}
+                  className="absolute"
+                  style={{
+                    left: `${c * cellW}%`,
+                    top: `${r * cellH}%`,
+                    width: `${cellW}%`,
+                    height: `${cellH}%`,
+                    backgroundImage: `url(${mazeWall})`,
+                    backgroundSize: "300% 300%",
+                    backgroundPosition: `${((c * 37) % 100)}% ${((r * 53) % 100)}%`,
+                    boxShadow:
+                      "inset 0 0 0 1px rgba(60,30,5,0.6), inset 0 -3px 6px rgba(0,0,0,0.45), inset 0 2px 3px rgba(255,210,140,0.25), 0 2px 4px rgba(0,0,0,0.55)",
+                    borderRadius: 3,
+                  }}
+                />
+              );
+            }),
+          )}
+        </div>
+
+        {/* Couche SVG : traînée, halos, hiéroglyphes au sol */}
         <svg
           viewBox={`0 0 ${COLS} ${ROWS}`}
           preserveAspectRatio="none"
           className="absolute inset-0 w-full h-full"
         >
           <defs>
-            <linearGradient id="wallGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="oklch(0.78 0.10 78)" />
-              <stop offset="50%" stopColor="oklch(0.58 0.10 70)" />
-              <stop offset="100%" stopColor="oklch(0.36 0.08 55)" />
-            </linearGradient>
-            <linearGradient id="floorGrad" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="oklch(0.42 0.06 70)" />
-              <stop offset="100%" stopColor="oklch(0.28 0.05 60)" />
-            </linearGradient>
             <radialGradient id="trailGlow" cx="50%" cy="50%" r="50%">
               <stop offset="0%" stopColor={accent} stopOpacity="0.45" />
               <stop offset="100%" stopColor={accent} stopOpacity="0" />
             </radialGradient>
-            <filter id="wallShadow" x="-20%" y="-20%" width="140%" height="140%">
-              <feDropShadow dx="0.05" dy="0.08" stdDeviation="0.05" floodOpacity="0.6" />
-            </filter>
-            <pattern id="sandTex" x="0" y="0" width="1" height="1" patternUnits="userSpaceOnUse">
-              <rect width="1" height="1" fill="url(#floorGrad)" />
-              <circle cx="0.25" cy="0.35" r="0.015" fill="oklch(0.55 0.07 70 / 0.6)" />
-              <circle cx="0.7" cy="0.6" r="0.012" fill="oklch(0.20 0.04 50 / 0.5)" />
-              <circle cx="0.45" cy="0.85" r="0.01" fill="oklch(0.55 0.07 70 / 0.4)" />
-            </pattern>
           </defs>
-
-          {/* Sol — sable texturé */}
-          <rect x={0} y={0} width={COLS} height={ROWS} fill="url(#sandTex)" />
-
-          {/* Hiéroglyphes décoratifs */}
-          {Array.from({ length: 14 }).map((_, i) => {
-            const symbols = ["☥", "𓂀", "𓋹", "𓆣", "𓅓", "𓊽", "𓇳"];
-            const x = ((i * 1.873) % (COLS - 1)) + 0.5;
-            const y = ((i * 1.27) % (ROWS - 1)) + 0.5;
-            return (
-              <text
-                key={`hg-${i}`}
-                x={x}
-                y={y}
-                fontSize={0.5}
-                textAnchor="middle"
-                dominantBaseline="middle"
-                fill="oklch(0.20 0.05 50 / 0.35)"
-              >
-                {symbols[i % symbols.length]}
-              </text>
-            );
-          })}
 
           {/* Traînée de pas */}
           {trail.map((t, i) => (
@@ -449,45 +448,6 @@ function MazeGame({ accent, onSolved }: { accent: string; onSolved: () => void }
               opacity={0.6}
             />
           ))}
-
-          {/* Murs en pierre de grès */}
-          {maze.map((row, r) =>
-            row.map((ch, c) => {
-              if (ch !== "#") return null;
-              return (
-                <g key={`w-${r}-${c}`} filter="url(#wallShadow)">
-                  <rect
-                    x={c + 0.04}
-                    y={r + 0.04}
-                    width={0.92}
-                    height={0.92}
-                    rx={0.06}
-                    fill="url(#wallGrad)"
-                    stroke="oklch(0.25 0.06 50)"
-                    strokeWidth={0.03}
-                  />
-                  {/* joint horizontal pierre */}
-                  <line
-                    x1={c + 0.04}
-                    x2={c + 0.96}
-                    y1={r + 0.5}
-                    y2={r + 0.5}
-                    stroke="oklch(0.25 0.06 50 / 0.45)"
-                    strokeWidth={0.025}
-                  />
-                  {/* reflet supérieur doré */}
-                  <rect
-                    x={c + 0.12}
-                    y={r + 0.1}
-                    width={0.76}
-                    height={0.06}
-                    rx={0.04}
-                    fill="oklch(0.92 0.10 85 / 0.45)"
-                  />
-                </g>
-              );
-            }),
-          )}
 
           {/* Halo arrivée */}
           <circle cx={exit.c + 0.5} cy={exit.r + 0.5} r={0.7} fill={accent} opacity={0.3}>
