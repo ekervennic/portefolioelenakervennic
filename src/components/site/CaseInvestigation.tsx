@@ -176,7 +176,7 @@ function MemoryGame({ accent, onSolved }: { accent: string; onSolved: () => void
     if (next.length === 2) {
       setMoves((m) => m + 1);
       const [a, b] = next;
-      if (deck[a].sym === deck[b].sym) {
+      if (deck[a].id === deck[b].id) {
         setTimeout(() => {
           setMatched((prev) => new Set(prev).add(a).add(b));
           setFlipped([]);
