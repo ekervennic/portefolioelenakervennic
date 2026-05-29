@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import avatar from "@/assets/elena-avatar.jpg";
-import paper from "@/assets/paper-texture.jpg";
+import papyrus from "@/assets/papyrus-torn.png";
 import sceneCabin from "@/assets/scene-cabin.jpg";
 
 type Props = {
