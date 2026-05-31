@@ -618,7 +618,7 @@ function _PuzzleGameLegacy({ accent, onSolved }: { accent: string; onSolved: () 
 const CRIME_CLUES: Array<{ id: string; x: number; y: number; w: number; h: number; rotate?: number; icon: string; label: string }> = [
   { id: "knife",     x: 36.0, y: 48.0, w: 17.0, h: 15.0, rotate: -15, icon: "🗡️", label: "Poignard ensanglanté" },
   { id: "wound",     x: 56.0, y: 47.5, w: 5.5,  h: 6.0, icon: "🩸", label: "Plaie sanglante" },
-  { id: "footprint", x: 65.0, y: 65.0, w: 11.0, h: 14.0, rotate: -5, icon: "👞", label: "Empreinte de chaussure" },
+  { id: "footprint", x: 66.0, y: 70.0, w: 11.0, h: 16.0, rotate: 0, icon: "👞", label: "Empreinte de chaussure" },
 ];
 
 function WireGame({ accent, onSolved }: { accent: string; onSolved: () => void }) {
