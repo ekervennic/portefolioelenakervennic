@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { SectionHeader } from "./About";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 type Node = { id: string; name: string; cat: string; x: number; y: number };
 
@@ -40,6 +41,7 @@ const links: [string, string][] = [
 
 export function Stack() {
   const [active, setActive] = useState<string | null>(null);
+  const isMobile = useIsMobile();
 
   const isLinked = (a: string, b: string) =>
     active != null && (a === active || b === active);
@@ -112,6 +114,51 @@ export function Stack() {
             />
             <CornerStamps />
 
+            {isMobile ? (
+              <div className="relative w-full px-3 py-10">
+                <div className="flex flex-wrap justify-center gap-3 gap-y-5">
+                  {nodes.map((n, i) => {
+                    const lit = isNodeLit(n.id);
+                    const dim = active != null && !lit;
+                    const rot = ((i % 5) - 2) * 1.2;
+                    return (
+                      <button
+                        key={n.id}
+                        type="button"
+                        onClick={() => setActive((p) => (p === n.id ? null : n.id))}
+                        className={`pin relative paper-bg paper-shadow px-3 py-2 pt-4 text-left transition-all duration-300 ${
+                          dim ? "opacity-50" : "opacity-100"
+                        } ${lit ? "scale-105 ring-2 ring-evidence" : ""}`}
+                        style={{
+                          transform: `rotate(${rot}deg)`,
+                          minWidth: 96,
+                        }}
+                      >
+                        <span
+                          aria-hidden
+                          className="absolute left-1/2 -top-1.5 -translate-x-1/2 w-3.5 h-3.5 rounded-full z-10"
+                          style={{
+                            background:
+                              "radial-gradient(circle at 30% 30%, #ff8a8a 0%, #d62b2b 45%, #7a1313 100%)",
+                            boxShadow:
+                              "0 1px 2px rgba(0,0,0,0.5), inset -1px -1px 2px rgba(0,0,0,0.4), inset 1px 1px 1.5px rgba(255,255,255,0.55)",
+                          }}
+                        />
+                        <div className="font-serif-display text-base leading-none text-paper-foreground">
+                          {n.name}
+                        </div>
+                        <div className="font-stamp text-[9px] tracking-[0.2em] text-evidence uppercase mt-0.5">
+                          {n.cat}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+                <p className="mt-4 text-center font-stamp text-[10px] tracking-[0.25em] text-paper-foreground/60">
+                  TAPE UN PIN POUR L'ISOLER
+                </p>
+              </div>
+            ) : (
             <div className="relative aspect-[1600/680] w-full">
             {/* Red thread */}
             <svg
@@ -197,6 +244,7 @@ export function Stack() {
               );
             })}
             </div>
+            )}
           </div>
         </div>
 

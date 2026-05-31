@@ -16,11 +16,11 @@ export function Contact() {
   };
 
   return (
-    <section id="contact" className="relative py-32 px-6">
+    <section id="contact" className="relative py-20 md:py-32 px-4 sm:px-6 overflow-x-hidden">
       <div className="max-w-4xl mx-auto">
         <SectionHeader number="04" title="Prendre contact" subtitle="Communication · Sécurisée" />
 
-        <div className="mt-16 relative paper-bg paper-shadow p-8 md:p-14 -rotate-[0.5deg]">
+        <div className="mt-12 md:mt-16 relative paper-bg paper-shadow p-5 sm:p-8 md:p-14 md:-rotate-[0.5deg]">
           <div className="absolute top-4 right-4 stamp text-xs">
             URGENT
           </div>
@@ -35,59 +35,59 @@ export function Contact() {
             Stage, alternance, mission data ou IA : ouvrez votre dossier. Je réponds rapidement, avec un brief clair et structuré.
           </p>
 
-          <div className="grid sm:grid-cols-2 gap-4">
+          <div className="grid sm:grid-cols-2 gap-3 sm:gap-4">
             <a
               href="mailto:ekervennic@eugeniaschool.com"
-              className="group flex items-center gap-4 p-5 border-2 border-paper-foreground/20 hover:border-evidence transition-colors"
+              className="group flex items-center gap-3 sm:gap-4 p-4 sm:p-5 border-2 border-paper-foreground/20 hover:border-evidence transition-colors min-w-0"
             >
-              <div className="w-12 h-12 bg-evidence text-evidence-foreground flex items-center justify-center text-xl">
+              <div className="w-12 h-12 shrink-0 bg-evidence text-evidence-foreground flex items-center justify-center text-xl">
                 ✉
               </div>
-              <div>
+              <div className="min-w-0">
                 <div className="font-stamp text-[10px] tracking-[0.25em] text-paper-foreground/60">EMAIL</div>
-                <div className="font-serif-display text-lg text-paper-foreground">ekervennic@eugeniaschool.com</div>
+                <div className="font-serif-display text-sm sm:text-base md:text-lg text-paper-foreground break-all">ekervennic@eugeniaschool.com</div>
               </div>
             </a>
             <a
               href="https://www.linkedin.com/in/elena-k-60b559223"
               target="_blank"
               rel="noreferrer"
-              className="group flex items-center gap-4 p-5 border-2 border-paper-foreground/20 hover:border-evidence transition-colors"
+              className="group flex items-center gap-3 sm:gap-4 p-4 sm:p-5 border-2 border-paper-foreground/20 hover:border-evidence transition-colors min-w-0"
             >
-              <div className="w-12 h-12 bg-paper-foreground text-paper flex items-center justify-center text-xl font-bold">
+              <div className="w-12 h-12 shrink-0 bg-paper-foreground text-paper flex items-center justify-center text-xl font-bold">
                 in
               </div>
-              <div>
+              <div className="min-w-0">
                 <div className="font-stamp text-[10px] tracking-[0.25em] text-paper-foreground/60">LINKEDIN</div>
-                <div className="font-serif-display text-lg text-paper-foreground">elena-k-60b559223</div>
+                <div className="font-serif-display text-base md:text-lg text-paper-foreground break-all">elena-k-60b559223</div>
               </div>
             </a>
             <a
               href="https://github.com/ekervennic"
               target="_blank"
               rel="noreferrer"
-              className="group flex items-center gap-4 p-5 border-2 border-paper-foreground/20 hover:border-evidence transition-colors"
+              className="group flex items-center gap-3 sm:gap-4 p-4 sm:p-5 border-2 border-paper-foreground/20 hover:border-evidence transition-colors min-w-0"
             >
-              <div className="w-12 h-12 bg-paper-foreground text-paper flex items-center justify-center text-xl font-bold">
+              <div className="w-12 h-12 shrink-0 bg-paper-foreground text-paper flex items-center justify-center text-xl font-bold">
                 ⌥
               </div>
-              <div>
+              <div className="min-w-0">
                 <div className="font-stamp text-[10px] tracking-[0.25em] text-paper-foreground/60">GITHUB</div>
-                <div className="font-serif-display text-lg text-paper-foreground">ekervennic</div>
+                <div className="font-serif-display text-base md:text-lg text-paper-foreground break-all">ekervennic</div>
               </div>
             </a>
             <a
               href="https://public.tableau.com/app/profile/elena.kervennic"
               target="_blank"
               rel="noreferrer"
-              className="group flex items-center gap-4 p-5 border-2 border-paper-foreground/20 hover:border-evidence transition-colors"
+              className="group flex items-center gap-3 sm:gap-4 p-4 sm:p-5 border-2 border-paper-foreground/20 hover:border-evidence transition-colors min-w-0"
             >
-              <div className="w-12 h-12 bg-evidence text-evidence-foreground flex items-center justify-center text-xl">
+              <div className="w-12 h-12 shrink-0 bg-evidence text-evidence-foreground flex items-center justify-center text-xl">
                 📊
               </div>
-              <div>
+              <div className="min-w-0">
                 <div className="font-stamp text-[10px] tracking-[0.25em] text-paper-foreground/60">TABLEAU PUBLIC</div>
-                <div className="font-serif-display text-lg text-paper-foreground">Voir mes dashboards</div>
+                <div className="font-serif-display text-base md:text-lg text-paper-foreground">Voir mes dashboards</div>
               </div>
             </a>
           </div>
