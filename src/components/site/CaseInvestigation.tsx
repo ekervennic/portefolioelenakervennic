@@ -461,7 +461,7 @@ function PuzzleGame({ accent, onSolved }: { accent: string; onSolved: () => void
       {/* Barre de navigation — flèches sous l'aquarium pour ne rien cacher */}
       {!won && (
         <div
-          className="mt-3 flex items-center justify-center gap-3 p-3 rounded-sm"
+          className="mt-2 flex items-center justify-center gap-2 p-2 rounded-sm"
           style={{
             background:
               "linear-gradient(180deg, rgba(8,16,32,0.92), rgba(4,10,22,0.92))",
@@ -474,7 +474,7 @@ function PuzzleGame({ accent, onSolved }: { accent: string; onSolved: () => void
             room.options.includes(dir) ? (
               <ArrowBtn key={dir} dir={dir} />
             ) : (
-              <div key={dir} style={{ width: 84, height: 72, opacity: 0.15 }} className="rounded-[14px] border border-white/10" />
+              <div key={dir} style={{ width: 60, height: 52, opacity: 0.15 }} className="rounded-[10px] border border-white/10" />
             )
           )}
         </div>
