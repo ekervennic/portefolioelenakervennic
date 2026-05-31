@@ -901,7 +901,7 @@ function MemoryGame({ accent, onSolved }: { accent: string; onSolved: () => void
         <div className="absolute inset-0 flex items-center justify-center p-2 sm:p-6 md:p-10">
           <div
             className="grid grid-cols-4 gap-1.5 sm:gap-2 md:gap-3"
-            style={{ aspectRatio: "1 / 1", width: "min(100%, 560px)", maxHeight: "100%" }}
+            style={{ aspectRatio: "4 / 3", width: "min(100%, 520px)", maxHeight: "100%" }}
           >
             {deck.map((card, idx) => {
               const isFlipped = flipped.includes(idx) || matched.has(idx);
