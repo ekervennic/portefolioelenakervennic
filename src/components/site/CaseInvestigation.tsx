@@ -289,53 +289,8 @@ function PuzzleGame({ accent, onSolved }: { accent: string; onSolved: () => void
           AQUARIUM CLASSIFIÉ · TROUVE LA SORTIE
         </div>
 
-        {/* Mini-carte (style polaroid de la photo de réf) */}
-        <div
-          className="absolute bottom-3 left-3 z-30 bg-white p-1.5 pb-3 rotate-[-3deg]"
-          style={{
-            boxShadow: "0 8px 18px rgba(0,0,0,0.6)",
-          }}
-        >
-          <div className="bg-[oklch(0.22_0.04_30)] p-1.5">
-            <div className="flex items-center gap-1">
-              {AQ_ROOMS.map((_, i) => (
-                <div key={i} className="flex items-center">
-                  <div
-                    className="w-3 h-3 rounded-full"
-                    style={{
-                      background:
-                        i < step
-                          ? "rgba(120,230,255,0.95)"
-                          : i === step
-                          ? accent
-                          : "rgba(255,255,255,0.18)",
-                      boxShadow:
-                        i === step
-                          ? `0 0 8px ${accent}`
-                          : i < step
-                          ? "0 0 6px rgba(120,230,255,0.7)"
-                          : "none",
-                      border:
-                        i === step ? "1px solid white" : "1px solid rgba(255,255,255,0.3)",
-                    }}
-                  />
-                  {i < AQ_ROOMS.length - 1 && (
-                    <div
-                      className="w-2.5 h-px"
-                      style={{
-                        background: i < step ? "rgba(120,230,255,0.7)" : "rgba(255,255,255,0.2)",
-                      }}
-                    />
-                  )}
-                </div>
-              ))}
-              <div className="ml-1 font-stamp text-[8px] text-white/90 tracking-[0.2em]">SORTIE</div>
-            </div>
-          </div>
-          <div className="font-stamp text-[8px] tracking-[0.2em] text-[oklch(0.22_0.04_30)] mt-1 text-center">
-            PLAN · {attempts > 0 ? `TENTATIVE ${attempts + 1}` : "DÉPART"}
-          </div>
-        </div>
+        {/* Mini-carte : vrai plan du labyrinthe à suivre (style polaroid) */}
+        <MazePlan step={step} attempts={attempts} accent={accent} />
 
         {/* Flèches de navigation */}
         {!won &&
