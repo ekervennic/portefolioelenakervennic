@@ -80,6 +80,10 @@ export function CaseInvestigation({ caseId, caseTitle, onSolved, onClose }: Prop
               <MazeGame key={caseId} accent={ACCENT} onSolved={() => setSolved(true)} />
             ) : caseId === "mirakl" ? (
               <MemoryGame key={caseId} accent={ACCENT} onSolved={() => setSolved(true)} />
+            ) : caseId === "mood" ? (
+              <PuzzleGame key={caseId} accent={ACCENT} onSolved={() => setSolved(true)} />
+            ) : caseId === "ecole" ? (
+              <WireGame key={caseId} accent={ACCENT} onSolved={() => setSolved(true)} />
             ) : (
               <HiddenObjectGame key={caseId} accent={ACCENT} onSolved={() => setSolved(true)} />
             )
