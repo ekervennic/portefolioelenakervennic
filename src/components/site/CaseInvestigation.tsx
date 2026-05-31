@@ -614,13 +614,13 @@ function _PuzzleGameLegacy({ accent, onSolved }: { accent: string; onSolved: () 
  * croiser tes propres tracés. Décor : temple égyptien.
  * ============================================================ */
 
-// Indices à trouver autour du corps. Positions en % du décor.
-const CRIME_CLUES: Array<{ id: string; x: number; y: number; icon: string; label: string }> = [
-  { id: "knife",     x: 38, y: 56, icon: "🗡️", label: "Poignard sanglant" },
-  { id: "amulet",    x: 49, y: 46, icon: "☥", label: "Ankh brisé" },
-  { id: "papyrus",   x: 88, y: 18, icon: "📜", label: "Papyrus déchiré" },
-  { id: "footprint", x: 78, y: 72, icon: "👣", label: "Empreinte de sable" },
-  { id: "scarab",    x: 92, y: 76, icon: "🪲", label: "Scarabée maudit" },
+// Indices à trouver autour du corps. Zones resserrées sur les objets visibles.
+const CRIME_CLUES: Array<{ id: string; x: number; y: number; w: number; h: number; rotate?: number; icon: string; label: string }> = [
+  { id: "knife",     x: 38.4, y: 54.2, w: 11.5, h: 5.2, rotate: -16, icon: "🗡️", label: "Poignard sanglant" },
+  { id: "amulet",    x: 43.8, y: 37.5, w: 5.8,  h: 9.8, icon: "☥", label: "Ankh brisé" },
+  { id: "papyrus",   x: 87.4, y: 15.2, w: 5.2,  h: 16.5, rotate: 8, icon: "📜", label: "Papyrus déchiré" },
+  { id: "footprint", x: 71.1, y: 69.8, w: 8.6,  h: 11.2, rotate: 10, icon: "👣", label: "Empreinte de sable" },
+  { id: "scarab",    x: 86.8, y: 74.4, w: 5.4,  h: 5.2, rotate: 12, icon: "🪲", label: "Scarabée maudit" },
 ];
 
 function WireGame({ accent, onSolved }: { accent: string; onSolved: () => void }) {
@@ -692,15 +692,16 @@ function WireGame({ accent, onSolved }: { accent: string; onSolved: () => void }
               style={{
                 left: `${c.x}%`,
                 top: `${c.y}%`,
-                width: 110,
-                height: 110,
-                transform: "translate(-50%, -50%)",
+                width: `${c.w}%`,
+                height: `${c.h}%`,
+                transform: `translate(-50%, -50%) rotate(${c.rotate ?? 0}deg)`,
                 background: "transparent",
                 border: "none",
                 boxShadow: isFound
                   ? "0 0 28px 4px rgba(38,208,124,0.6), inset 0 0 18px rgba(38,208,124,0.35)"
                   : "none",
                 borderRadius: "9999px",
+                clipPath: "ellipse(50% 48% at 50% 50%)",
                 cursor: isFound ? "default" : "crosshair",
               }}
               aria-label={c.label}
