@@ -134,6 +134,403 @@ export function CaseInvestigation({ caseId, caseTitle, onSolved, onClose }: Prop
 }
 
 /* ============================================================
+ * MINI-JEU SLIDING PUZZLE — Cas "Mood Film Finder"
+ * Reconstitue la scène cinéma en glissant les tuiles.
+ * Grille 3x3 — case vide en bas à droite.
+ * ============================================================ */
+
+function PuzzleGame({ accent, onSolved }: { accent: string; onSolved: () => void }) {
+  const SIZE = 3;
+  const TOTAL = SIZE * SIZE;
+  const EMPTY = TOTAL - 1;
+
+  const [tiles, setTiles] = useState<number[]>(() => {
+    // Mélange via mouvements valides (toujours solvable)
+    const arr = Array.from({ length: TOTAL }, (_, i) => i);
+    let empty = EMPTY;
+    let last = -1;
+    for (let k = 0; k < 60; k++) {
+      const r = Math.floor(empty / SIZE);
+      const c = empty % SIZE;
+      const opts: number[] = [];
+      if (r > 0) opts.push(empty - SIZE);
+      if (r < SIZE - 1) opts.push(empty + SIZE);
+      if (c > 0) opts.push(empty - 1);
+      if (c < SIZE - 1) opts.push(empty + 1);
+      const choices = opts.filter((x) => x !== last);
+      const pick = choices[Math.floor(Math.random() * choices.length)];
+      [arr[empty], arr[pick]] = [arr[pick], arr[empty]];
+      last = empty;
+      empty = pick;
+    }
+    return arr;
+  });
+  const [moves, setMoves] = useState(0);
+  const won = useMemo(() => tiles.every((v, i) => v === i), [tiles]);
+
+  useEffect(() => {
+    if (won) {
+      const t = setTimeout(onSolved, 900);
+      return () => clearTimeout(t);
+    }
+  }, [won, onSolved]);
+
+  const tryMove = (idx: number) => {
+    if (won) return;
+    const emptyIdx = tiles.indexOf(EMPTY);
+    const r1 = Math.floor(idx / SIZE), c1 = idx % SIZE;
+    const r2 = Math.floor(emptyIdx / SIZE), c2 = emptyIdx % SIZE;
+    if (Math.abs(r1 - r2) + Math.abs(c1 - c2) !== 1) return;
+    const next = tiles.slice();
+    [next[idx], next[emptyIdx]] = [next[emptyIdx], next[idx]];
+    setTiles(next);
+    setMoves((m) => m + 1);
+  };
+
+  return (
+    <div>
+      <div
+        className="relative w-full aspect-square sm:aspect-[16/12] overflow-hidden rounded-sm select-none"
+        style={{
+          backgroundImage: `url(${sceneCinema})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          boxShadow:
+            "inset 0 0 120px rgba(20,8,2,0.7), 0 0 0 3px oklch(0.55 0.14 70 / 0.6), 0 14px 50px rgba(0,0,0,0.7)",
+        }}
+      >
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.7))" }}
+        />
+
+        {/* HUD */}
+        <div
+          className="absolute top-2 left-2 z-10 font-stamp text-[10px] tracking-[0.25em] text-white px-2.5 py-1 rounded-sm"
+          style={{
+            background: "rgba(0,0,0,0.65)",
+            border: `1px solid ${accent}`,
+            boxShadow: `0 0 8px ${accent.replace(")", " / 0.5)")}`,
+          }}
+        >
+          MOUVEMENTS · {moves}
+        </div>
+        <div className="absolute top-2 right-2 z-10 font-stamp text-[10px] tracking-[0.25em] text-white/90 bg-black/65 border border-white/20 px-2.5 py-1 rounded-sm">
+          BOBINE · {SIZE}×{SIZE}
+        </div>
+
+        {/* Grille du puzzle */}
+        <div className="absolute inset-0 flex items-center justify-center p-3 md:p-6">
+          <div
+            className="relative grid gap-1 sm:gap-1.5"
+            style={{
+              gridTemplateColumns: `repeat(${SIZE}, minmax(0, 1fr))`,
+              gridTemplateRows: `repeat(${SIZE}, minmax(0, 1fr))`,
+              width: "min(92%, 460px)",
+              aspectRatio: "1 / 1",
+              boxShadow: `0 0 0 2px ${accent}, 0 0 30px ${accent.replace(")", " / 0.4)")}`,
+            }}
+          >
+            {tiles.map((v, idx) => {
+              if (v === EMPTY) {
+                return <div key={idx} className="bg-black/55 rounded-sm" />;
+              }
+              const tr = Math.floor(v / SIZE);
+              const tc = v % SIZE;
+              return (
+                <button
+                  key={idx}
+                  onClick={() => tryMove(idx)}
+                  className="relative rounded-sm overflow-hidden transition-transform active:scale-95"
+                  style={{
+                    backgroundImage: `url(${sceneCinema})`,
+                    backgroundSize: `${SIZE * 100}% ${SIZE * 100}%`,
+                    backgroundPosition: `${(tc / (SIZE - 1)) * 100}% ${(tr / (SIZE - 1)) * 100}%`,
+                    boxShadow:
+                      "inset 0 0 0 1px rgba(255,255,255,0.18), 0 4px 10px rgba(0,0,0,0.6)",
+                  }}
+                  aria-label={`Tuile ${v + 1}`}
+                />
+              );
+            })}
+          </div>
+        </div>
+
+        {won && (
+          <div
+            className="absolute inset-0 pointer-events-none animate-fade-in"
+            style={{
+              background: `radial-gradient(circle at center, ${accent.replace(")", " / 0.45)")} 0%, transparent 60%)`,
+            }}
+          />
+        )}
+      </div>
+
+      {/* CONSIGNE */}
+      <div
+        className="relative mt-4 w-full flex items-center gap-4 md:gap-5 p-4 border border-[oklch(0.45_0.08_50)]"
+        style={{
+          backgroundImage: `url(${paper})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          boxShadow: "inset 0 0 40px rgba(80,40,10,0.25), 0 8px 24px rgba(0,0,0,0.4)",
+        }}
+      >
+        <div
+          className="shrink-0 relative w-14 h-[72px] md:w-16 md:h-[84px]"
+          style={{
+            borderRadius: "50% / 50%",
+            background:
+              "linear-gradient(135deg, oklch(0.72 0.14 75) 0%, oklch(0.45 0.10 55) 50%, oklch(0.72 0.14 75) 100%)",
+            padding: "4px",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.55), inset 0 0 2px rgba(255,220,160,0.8)",
+          }}
+        >
+          <div
+            className="w-full h-full overflow-hidden"
+            style={{ borderRadius: "50% / 50%", boxShadow: "inset 0 0 8px rgba(0,0,0,0.6)" }}
+          >
+            <img src={avatar} alt="Elena" className="w-full h-full object-cover" style={{ objectPosition: "center 22%", filter: "sepia(0.25) contrast(1.05)" }} />
+          </div>
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="font-stamp text-[10px] md:text-xs tracking-[0.3em] mb-1.5" style={{ color: "oklch(0.35 0.10 30)" }}>
+            ELENA · CINÉPHILE
+          </div>
+          <p className="font-serif-display leading-snug text-[13px] md:text-[16px]" style={{ color: "oklch(0.22 0.04 30)" }}>
+            La bobine s'est emmêlée dans la salle de projection. Glisse les tuiles pour{" "}
+            <span className="font-bold" style={{ color: "oklch(0.42 0.16 25)" }}>
+              reconstituer la scène
+            </span>{" "}
+            et accéder au dossier.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================
+ * MINI-JEU CONNEXIONS — Cas "Plateforme Scolaire"
+ * Relie chaque rune à sa jumelle de la même couleur, sans
+ * croiser tes propres tracés. Décor : temple égyptien.
+ * ============================================================ */
+
+type WirePoint = { id: string; color: string; label: string; x: number; y: number };
+
+const WIRE_POINTS: WirePoint[] = [
+  { id: "a1", color: "#ff6b6b", label: "Cours", x: 12, y: 22 },
+  { id: "a2", color: "#ff6b6b", label: "Cours", x: 86, y: 30 },
+  { id: "b1", color: "#ffd93d", label: "Agenda", x: 18, y: 78 },
+  { id: "b2", color: "#ffd93d", label: "Agenda", x: 82, y: 72 },
+  { id: "c1", color: "#6bcfff", label: "Chat", x: 50, y: 14 },
+  { id: "c2", color: "#6bcfff", label: "Chat", x: 52, y: 86 },
+  { id: "d1", color: "#a78bfa", label: "Quiz", x: 30, y: 50 },
+  { id: "d2", color: "#a78bfa", label: "Quiz", x: 72, y: 52 },
+];
+
+function WireGame({ accent, onSolved }: { accent: string; onSolved: () => void }) {
+  const [connections, setConnections] = useState<Array<{ from: string; to: string; color: string }>>([]);
+  const [pending, setPending] = useState<WirePoint | null>(null);
+  const allColors = useMemo(() => Array.from(new Set(WIRE_POINTS.map((p) => p.color))), []);
+  const won = useMemo(
+    () => allColors.every((c) => connections.some((cn) => cn.color === c)),
+    [connections, allColors],
+  );
+
+  useEffect(() => {
+    if (won) {
+      const t = setTimeout(onSolved, 900);
+      return () => clearTimeout(t);
+    }
+  }, [won, onSolved]);
+
+  const isUsed = (id: string) =>
+    connections.some((c) => c.from === id || c.to === id);
+
+  const onPointClick = (p: WirePoint) => {
+    if (won) return;
+    if (isUsed(p.id)) {
+      // Annule la connexion liée à ce point
+      setConnections((cs) => cs.filter((c) => c.from !== p.id && c.to !== p.id));
+      setPending(null);
+      return;
+    }
+    if (!pending) {
+      setPending(p);
+      return;
+    }
+    if (pending.id === p.id) {
+      setPending(null);
+      return;
+    }
+    if (pending.color !== p.color) {
+      // mauvaise paire — feedback rapide
+      setPending(null);
+      return;
+    }
+    setConnections((cs) => [
+      ...cs.filter((c) => c.color !== p.color),
+      { from: pending.id, to: p.id, color: p.color },
+    ]);
+    setPending(null);
+  };
+
+  return (
+    <div>
+      <div
+        className="relative w-full aspect-[16/10] overflow-hidden rounded-sm select-none"
+        style={{
+          backgroundImage: `url(${sceneTemple})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          boxShadow:
+            "inset 0 0 120px rgba(20,8,2,0.55), 0 0 0 3px oklch(0.55 0.14 70 / 0.7), 0 14px 50px rgba(0,0,0,0.7)",
+        }}
+      >
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.55) 100%)",
+          }}
+        />
+
+        {/* HUD */}
+        <div
+          className="absolute top-2 left-2 z-20 font-stamp text-[10px] tracking-[0.25em] text-white px-2.5 py-1 rounded-sm"
+          style={{
+            background: "rgba(0,0,0,0.65)",
+            border: `1px solid ${accent}`,
+            boxShadow: `0 0 8px ${accent.replace(")", " / 0.5)")}`,
+          }}
+        >
+          RUNES · {connections.length}/{allColors.length}
+        </div>
+        <div className="absolute top-2 right-2 z-20 font-stamp text-[10px] tracking-[0.25em] text-white/90 bg-black/65 border border-white/20 px-2.5 py-1 rounded-sm">
+          RELIE LES PAIRES
+        </div>
+
+        {/* Tracés lumineux */}
+        <svg
+          viewBox="0 0 100 100"
+          preserveAspectRatio="none"
+          className="absolute inset-0 w-full h-full pointer-events-none z-10"
+        >
+          <defs>
+            {connections.map((c) => (
+              <filter key={`f-${c.color}`} id={`glow-${c.color.replace("#", "")}`} x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="0.6" result="b" />
+                <feMerge>
+                  <feMergeNode in="b" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            ))}
+          </defs>
+          {connections.map((c, i) => {
+            const a = WIRE_POINTS.find((p) => p.id === c.from)!;
+            const b = WIRE_POINTS.find((p) => p.id === c.to)!;
+            const mx = (a.x + b.x) / 2;
+            const my = (a.y + b.y) / 2 - 8;
+            return (
+              <path
+                key={i}
+                d={`M ${a.x} ${a.y} Q ${mx} ${my} ${b.x} ${b.y}`}
+                stroke={c.color}
+                strokeWidth={1.1}
+                fill="none"
+                strokeLinecap="round"
+                filter={`url(#glow-${c.color.replace("#", "")})`}
+                opacity={0.95}
+              />
+            );
+          })}
+        </svg>
+
+        {/* Points cliquables */}
+        {WIRE_POINTS.map((p) => {
+          const used = isUsed(p.id);
+          const isPending = pending?.id === p.id;
+          return (
+            <button
+              key={p.id}
+              onClick={() => onPointClick(p)}
+              className="absolute z-20 flex items-center justify-center rounded-full transition-transform active:scale-90"
+              style={{
+                left: `${p.x}%`,
+                top: `${p.y}%`,
+                width: 44,
+                height: 44,
+                transform: "translate(-50%, -50%)",
+                background: `radial-gradient(circle at 30% 30%, ${p.color}, ${p.color}cc 60%, ${p.color}55 100%)`,
+                border: `2px solid ${isPending ? "#fff" : "rgba(255,255,255,0.5)"}`,
+                boxShadow: `0 0 ${used ? 24 : isPending ? 28 : 12}px ${p.color}, inset 0 0 6px rgba(0,0,0,0.4)`,
+              }}
+              aria-label={`${p.label} ${p.color}`}
+            >
+              <span className="font-stamp text-[8px] tracking-[0.2em] text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">
+                {p.label}
+              </span>
+            </button>
+          );
+        })}
+
+        {won && (
+          <div
+            className="absolute inset-0 pointer-events-none animate-fade-in z-30"
+            style={{
+              background: `radial-gradient(circle at center, ${accent.replace(")", " / 0.5)")} 0%, transparent 65%)`,
+            }}
+          />
+        )}
+      </div>
+
+      {/* CONSIGNE */}
+      <div
+        className="relative mt-4 w-full flex items-center gap-4 md:gap-5 p-4 border border-[oklch(0.45_0.08_50)]"
+        style={{
+          backgroundImage: `url(${paper})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          boxShadow: "inset 0 0 40px rgba(80,40,10,0.25), 0 8px 24px rgba(0,0,0,0.4)",
+        }}
+      >
+        <div
+          className="shrink-0 relative w-14 h-[72px] md:w-16 md:h-[84px]"
+          style={{
+            borderRadius: "50% / 50%",
+            background:
+              "linear-gradient(135deg, oklch(0.72 0.14 75) 0%, oklch(0.45 0.10 55) 50%, oklch(0.72 0.14 75) 100%)",
+            padding: "4px",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.55), inset 0 0 2px rgba(255,220,160,0.8)",
+          }}
+        >
+          <div
+            className="w-full h-full overflow-hidden"
+            style={{ borderRadius: "50% / 50%", boxShadow: "inset 0 0 8px rgba(0,0,0,0.6)" }}
+          >
+            <img src={avatar} alt="Elena" className="w-full h-full object-cover" style={{ objectPosition: "center 22%", filter: "sepia(0.25) contrast(1.05)" }} />
+          </div>
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="font-stamp text-[10px] md:text-xs tracking-[0.3em] mb-1.5" style={{ color: "oklch(0.35 0.10 30)" }}>
+            ELENA · EXPLORATRICE
+          </div>
+          <p className="font-serif-display leading-snug text-[13px] md:text-[16px]" style={{ color: "oklch(0.22 0.04 30)" }}>
+            Dans le temple oublié, chaque rune cherche sa jumelle. Relie les{" "}
+            <span className="font-bold" style={{ color: "oklch(0.42 0.16 25)" }}>
+              paires de couleur
+            </span>{" "}
+            pour réveiller les piliers et déverrouiller le dossier.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================
  * MINI-JEU MEMORY — Cas "Mirakl"
  * Retourne les paires de talents pour reconstituer la shortlist.
  * Décor : balcon parisien au coucher du soleil.
