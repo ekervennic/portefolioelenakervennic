@@ -2,30 +2,30 @@ import { useState } from "react";
 import { SectionHeader } from "./About";
 import { useIsMobile } from "@/hooks/use-mobile";
 
-type Node = { id: string; name: string; cat: string; x: number; y: number };
+type Node = { id: string; name: string; cat: string; x: number; y: number; mx: number; my: number };
 
 // Coordinates are in a 1000x620 viewBox — we scale the cards to match.
 const nodes: Node[] = [
-  { id: "python",   name: "Python",          cat: "Langage",        x: 200, y: 150 },
-  { id: "js",       name: "JavaScript",      cat: "Langage",        x:  90, y: 360 },
-  { id: "ts",       name: "TypeScript",      cat: "Langage",        x: 920, y: 200 },
-  { id: "scraping", name: "Scraping",        cat: "Collecte",       x: 360, y:  90 },
-  { id: "rag",      name: "RAG",             cat: "IA",             x: 260, y: 520 },
-  { id: "dataiku",  name: "Dataiku",         cat: "Plateforme",     x: 460, y: 300 },
-  { id: "openai",   name: "OpenAI",          cat: "IA",             x: 620, y: 150 },
-  { id: "dust",     name: "Dust",            cat: "Agents",         x: 820, y: 320 },
-  { id: "n8n",      name: "n8n",             cat: "Automatisation", x: 900, y: 520 },
-  { id: "agents",   name: "Agents LLM",      cat: "IA",             x: 700, y: 460 },
-  { id: "make",     name: "Make",            cat: "Automatisation", x: 540, y: 620 },
-  { id: "tableau",  name: "Tableau",         cat: "BI",             x: 120, y: 620 },
-  { id: "powerbi",  name: "Power BI",        cat: "BI",             x: 740, y:  80 },
-  { id: "dataviz",  name: "DataViz",         cat: "Analyse",        x: 380, y: 720 },
-  { id: "piano",    name: "Piano Analytics", cat: "Analytics",      x: 880, y: 660 },
-  { id: "tagco",    name: "Tag Commander",   cat: "Tracking",       x: 600, y: 760 },
-  { id: "sql",      name: "SQL",             cat: "Données",        x: 160, y: 760 },
-  { id: "next",     name: "Next.js",         cat: "Web",            x: 500, y: 440 },
-  { id: "supa",     name: "Supabase",        cat: "Backend",        x: 820, y: 760 },
-  { id: "html",     name: "HTML / CSS",      cat: "Web",            x: 340, y: 220 },
+  { id: "python",   name: "Python",          cat: "Langage",        x: 200, y: 150, mx: 180, my:  90 },
+  { id: "js",       name: "JavaScript",      cat: "Langage",        x:  90, y: 360, mx:  90, my: 230 },
+  { id: "ts",       name: "TypeScript",      cat: "Langage",        x: 920, y: 200, mx: 470, my: 140 },
+  { id: "scraping", name: "Scraping",        cat: "Collecte",       x: 360, y:  90, mx: 420, my:  60 },
+  { id: "rag",      name: "RAG",             cat: "IA",             x: 260, y: 520, mx: 130, my: 540 },
+  { id: "dataiku",  name: "Dataiku",         cat: "Plateforme",     x: 460, y: 300, mx: 300, my: 380 },
+  { id: "openai",   name: "OpenAI",          cat: "IA",             x: 620, y: 150, mx: 320, my: 210 },
+  { id: "dust",     name: "Dust",            cat: "Agents",         x: 820, y: 320, mx: 480, my: 320 },
+  { id: "n8n",      name: "n8n",             cat: "Automatisation", x: 900, y: 520, mx: 490, my: 480 },
+  { id: "agents",   name: "Agents LLM",      cat: "IA",             x: 700, y: 460, mx: 330, my: 460 },
+  { id: "make",     name: "Make",            cat: "Automatisation", x: 540, y: 620, mx: 200, my: 660 },
+  { id: "tableau",  name: "Tableau",         cat: "BI",             x: 120, y: 620, mx: 100, my: 760 },
+  { id: "powerbi",  name: "Power BI",        cat: "BI",             x: 740, y:  80, mx: 470, my:  60 },
+  { id: "dataviz",  name: "DataViz",         cat: "Analyse",        x: 380, y: 720, mx: 320, my: 780 },
+  { id: "piano",    name: "Piano Analytics", cat: "Analytics",      x: 880, y: 660, mx: 490, my: 880 },
+  { id: "tagco",    name: "Tag Commander",   cat: "Tracking",       x: 600, y: 760, mx: 470, my: 1020 },
+  { id: "sql",      name: "SQL",             cat: "Données",        x: 160, y: 760, mx: 110, my: 920 },
+  { id: "next",     name: "Next.js",         cat: "Web",            x: 500, y: 440, mx: 310, my: 580 },
+  { id: "supa",     name: "Supabase",        cat: "Backend",        x: 820, y: 760, mx: 310, my: 1050 },
+  { id: "html",     name: "HTML / CSS",      cat: "Web",            x: 340, y: 220, mx: 230, my: 150 },
 ];
 
 const links: [string, string][] = [
@@ -115,48 +115,83 @@ export function Stack() {
             <CornerStamps />
 
             {isMobile ? (
-              <div className="relative w-full px-3 py-10">
-                <div className="flex flex-wrap justify-center gap-3 gap-y-5">
-                  {nodes.map((n, i) => {
-                    const lit = isNodeLit(n.id);
-                    const dim = active != null && !lit;
-                    const rot = ((i % 5) - 2) * 1.2;
+              <div className="relative w-full" style={{ aspectRatio: "600 / 1140" }}>
+                <svg
+                  viewBox="0 0 600 1140"
+                  className="absolute inset-0 w-full h-full pointer-events-none"
+                  preserveAspectRatio="none"
+                >
+                  <defs>
+                    <filter id="threadShadowM" x="-10%" y="-10%" width="120%" height="120%">
+                      <feGaussianBlur in="SourceAlpha" stdDeviation="1.2" />
+                      <feOffset dx="0.5" dy="1.2" result="off" />
+                      <feComponentTransfer><feFuncA type="linear" slope="0.55" /></feComponentTransfer>
+                      <feMerge>
+                        <feMergeNode />
+                        <feMergeNode in="SourceGraphic" />
+                      </feMerge>
+                    </filter>
+                  </defs>
+                  {links.map(([a, b], i) => {
+                    const na = nodes.find((n) => n.id === a)!;
+                    const nb = nodes.find((n) => n.id === b)!;
+                    const lit = isLinked(a, b);
                     return (
-                      <button
-                        key={n.id}
-                        type="button"
-                        onClick={() => setActive((p) => (p === n.id ? null : n.id))}
-                        className={`pin relative paper-bg paper-shadow px-3 py-2 pt-4 text-left transition-all duration-300 ${
-                          dim ? "opacity-50" : "opacity-100"
-                        } ${lit ? "scale-105 ring-2 ring-evidence" : ""}`}
-                        style={{
-                          transform: `rotate(${rot}deg)`,
-                          minWidth: 96,
-                        }}
-                      >
-                        <span
-                          aria-hidden
-                          className="absolute left-1/2 -top-1.5 -translate-x-1/2 w-3.5 h-3.5 rounded-full z-10"
-                          style={{
-                            background:
-                              "radial-gradient(circle at 30% 30%, #ff8a8a 0%, #d62b2b 45%, #7a1313 100%)",
-                            boxShadow:
-                              "0 1px 2px rgba(0,0,0,0.5), inset -1px -1px 2px rgba(0,0,0,0.4), inset 1px 1px 1.5px rgba(255,255,255,0.55)",
-                          }}
-                        />
-                        <div className="font-serif-display text-base leading-none text-paper-foreground">
-                          {n.name}
-                        </div>
-                        <div className="font-stamp text-[9px] tracking-[0.2em] text-evidence uppercase mt-0.5">
-                          {n.cat}
-                        </div>
-                      </button>
+                      <line
+                        key={i}
+                        x1={na.mx}
+                        y1={na.my}
+                        x2={nb.mx}
+                        y2={nb.my}
+                        className={`thread ${lit ? "thread-on" : ""}`}
+                        stroke="#e63946"
+                        strokeOpacity={lit ? 1 : 0.85}
+                        strokeWidth={lit ? 3 : 2}
+                        strokeLinecap="round"
+                        filter="url(#threadShadowM)"
+                      />
                     );
                   })}
-                </div>
-                <p className="mt-4 text-center font-stamp text-[10px] tracking-[0.25em] text-paper-foreground/60">
-                  TAPE UN PIN POUR L'ISOLER
-                </p>
+                </svg>
+
+                {nodes.map((n, i) => {
+                  const lit = isNodeLit(n.id);
+                  const dim = active != null && !lit;
+                  const rot = ((i % 5) - 2) * 1.4;
+                  return (
+                    <button
+                      key={n.id}
+                      type="button"
+                      onClick={() => setActive((p) => (p === n.id ? null : n.id))}
+                      className={`pin absolute paper-bg paper-shadow px-2 py-1.5 pt-3 text-left transition-all duration-300 ${
+                        dim ? "opacity-50" : "opacity-100"
+                      } ${lit ? "scale-110 z-20 ring-2 ring-evidence" : "z-10"}`}
+                      style={{
+                        left: `${(n.mx / 600) * 100}%`,
+                        top: `${(n.my / 1140) * 100}%`,
+                        transform: `translate(-50%, -50%) rotate(${rot}deg)`,
+                        minWidth: 80,
+                      }}
+                    >
+                      <span
+                        aria-hidden
+                        className="absolute left-1/2 -top-1.5 -translate-x-1/2 w-3 h-3 rounded-full z-10"
+                        style={{
+                          background:
+                            "radial-gradient(circle at 30% 30%, #ff8a8a 0%, #d62b2b 45%, #7a1313 100%)",
+                          boxShadow:
+                            "0 1px 2px rgba(0,0,0,0.5), inset -1px -1px 2px rgba(0,0,0,0.4), inset 1px 1px 1.5px rgba(255,255,255,0.55)",
+                        }}
+                      />
+                      <div className="font-serif-display text-[13px] leading-none text-paper-foreground">
+                        {n.name}
+                      </div>
+                      <div className="font-stamp text-[8px] tracking-[0.18em] text-evidence uppercase mt-0.5">
+                        {n.cat}
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
             ) : (
             <div className="relative aspect-[1600/680] w-full">
