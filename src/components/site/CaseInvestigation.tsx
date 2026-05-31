@@ -605,7 +605,7 @@ function MemoryGame({ accent, onSolved }: { accent: string; onSolved: () => void
   return (
     <div>
       <div
-        className="relative w-full aspect-[16/9] overflow-hidden rounded-sm select-none"
+        className="relative w-full aspect-square sm:aspect-[16/10] overflow-hidden rounded-sm select-none"
         style={{
           backgroundImage: `url(${sceneBalcony})`,
           backgroundSize: "cover",
@@ -639,10 +639,10 @@ function MemoryGame({ accent, onSolved }: { accent: string; onSolved: () => void
         </div>
 
         {/* Grille de cartes */}
-        <div className="absolute inset-0 flex items-center justify-center p-6 md:p-10">
+        <div className="absolute inset-0 flex items-center justify-center p-2 sm:p-6 md:p-10">
           <div
-            className="grid grid-cols-4 gap-2 md:gap-3 h-full"
-            style={{ aspectRatio: "4 / 4", maxHeight: "100%" }}
+            className="grid grid-cols-4 gap-1.5 sm:gap-2 md:gap-3"
+            style={{ aspectRatio: "1 / 1", width: "min(100%, 560px)", maxHeight: "100%" }}
           >
             {deck.map((card, idx) => {
               const isFlipped = flipped.includes(idx) || matched.has(idx);
