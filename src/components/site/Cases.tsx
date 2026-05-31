@@ -152,6 +152,7 @@ const cases: CaseT[] = [
       "🏆 Projet vainqueur du Hackathon Mirakl. Parmi toutes les équipes en lice, notre solution a été élue par le jury comme la réponse la plus pertinente et la plus aboutie au problème posé — saluée pour la qualité du pipeline data, la pertinence du scoring IA et l'exécution produit de bout en bout en moins d'une semaine.",
     stack: ["Python", "Scraping", "IA", "Dust", "n8n"],
     won: true,
+    link: { label: "🔗 Voir la démo Talent AI Sage", url: "https://talent-ai-sage.vercel.app" },
     accent: "oklch(0.62 0.22 18)",
     proofs: ["🏆 1er prix", "Démo", "Dashboard", "Capture écran", "Résultat obtenu"],
     images: [mirakl1],
