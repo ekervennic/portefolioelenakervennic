@@ -616,9 +616,9 @@ function _PuzzleGameLegacy({ accent, onSolved }: { accent: string; onSolved: () 
 
 // Indices à trouver autour du corps. Zones resserrées sur les objets visibles.
 const CRIME_CLUES: Array<{ id: string; x: number; y: number; w: number; h: number; rotate?: number; icon: string; label: string }> = [
-  { id: "knife",     x: 31.0, y: 41.5, w: 13.0, h: 9.0, rotate: -18, icon: "🗡️", label: "Poignard ensanglanté" },
-  { id: "wound",     x: 52.5, y: 37.5, w: 5.0,  h: 5.0, icon: "🩸", label: "Plaie sanglante" },
-  { id: "footprint", x: 75.0, y: 63.5, w: 5.0,  h: 7.0, rotate: 8, icon: "👞", label: "Empreinte de chaussure" },
+  { id: "knife",     x: 36.0, y: 48.0, w: 17.0, h: 15.0, rotate: -15, icon: "🗡️", label: "Poignard ensanglanté" },
+  { id: "wound",     x: 56.0, y: 47.5, w: 5.5,  h: 6.0, icon: "🩸", label: "Plaie sanglante" },
+  { id: "footprint", x: 65.0, y: 65.0, w: 11.0, h: 14.0, rotate: -5, icon: "👞", label: "Empreinte de chaussure" },
 ];
 
 function WireGame({ accent, onSolved }: { accent: string; onSolved: () => void }) {
@@ -693,14 +693,12 @@ function WireGame({ accent, onSolved }: { accent: string; onSolved: () => void }
                 width: `${c.w}%`,
                 height: `${c.h}%`,
                 transform: `translate(-50%, -50%) rotate(${c.rotate ?? 0}deg)`,
-                background: isFound
-                  ? "transparent"
-                  : "radial-gradient(ellipse at center, rgba(255,210,120,0.35) 0%, rgba(255,180,80,0.18) 45%, rgba(255,180,80,0) 70%)",
-                border: isFound ? "none" : "1px dashed rgba(255,220,150,0.65)",
-                animation: isFound ? "none" : "cluePulse 1.8s ease-in-out infinite",
+                background: "transparent",
+                border: "none",
+                animation: "none",
                 boxShadow: isFound
                   ? "0 0 28px 4px rgba(38,208,124,0.6), inset 0 0 18px rgba(38,208,124,0.35)"
-                  : "0 0 14px 2px rgba(255,190,90,0.45)",
+                  : "none",
                 borderRadius: "9999px",
                 clipPath: "ellipse(50% 48% at 50% 50%)",
                 cursor: isFound ? "default" : "crosshair",
