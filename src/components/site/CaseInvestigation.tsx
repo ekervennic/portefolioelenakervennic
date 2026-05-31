@@ -161,8 +161,10 @@ type AqRoom = {
 const AQ_ROOMS: AqRoom[] = [
   { id: "titanoboa", name: "Titanoboa",       bg: aquariumSnake,  correct: "up",    options: ["up", "right"] },
   { id: "cobra",     name: "Cobra Royal",     bg: aquariumFish,   correct: "right", options: ["up", "right"] },
-  { id: "python",    name: "Python Réticulé", bg: aquariumShark,  correct: "up",    options: ["left", "up"] },
-  { id: "serpent",   name: "Serpent de Mer",  bg: aquariumPlesio, correct: "left",  options: ["left", "right"] },
+  { id: "viper",     name: "Vipère Heurtante",bg: aquariumViper,  correct: "up",    options: ["up", "left"] },
+  { id: "python",    name: "Python Réticulé", bg: aquariumShark,  correct: "left",  options: ["left", "up"] },
+  { id: "anaconda",  name: "Anaconda Vert",   bg: aquariumAnaconda, correct: "up",  options: ["up", "right"] },
+  { id: "serpent",   name: "Serpent de Mer",  bg: aquariumPlesio, correct: "right", options: ["left", "right"] },
   { id: "mamba",     name: "Mamba Noir",      bg: aquariumMosa,   correct: "up",    options: ["up", "left", "right"] },
 ];
 
@@ -170,12 +172,14 @@ const AQ_ROOMS: AqRoom[] = [
  * Séquence des directions correctes : up, right, up, left, up.
  * Grille 2 colonnes × 4 lignes. (0,3) = départ, (0,0) = sortie. */
 const MAZE_CELLS: Array<[number, number]> = [
-  [0, 3], // step 0 — Titanoboa (départ)
-  [0, 2], // step 1 — Cobra Royal (après up)
-  [1, 2], // step 2 — Python (après right)
-  [1, 1], // step 3 — Serpent de mer (après up)
-  [0, 1], // step 4 — Mamba (après left)
-  [0, 0], // step 5 — SORTIE (après up)
+  [0, 4], // step 0 — Titanoboa (départ)
+  [0, 3], // step 1 — Cobra Royal (après up)
+  [1, 3], // step 2 — Vipère (après right)
+  [1, 2], // step 3 — Python (après up)
+  [0, 2], // step 4 — Anaconda (après left)
+  [0, 1], // step 5 — Serpent de mer (après up)
+  [1, 1], // step 6 — Mamba (après right)
+  [1, 0], // step 7 — SORTIE (après up)
 ];
 
 function MazePlan({
