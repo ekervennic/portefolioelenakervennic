@@ -228,11 +228,11 @@ function PuzzleGame({ accent, onSolved }: { accent: string; onSolved: () => void
 
 // Indices à trouver autour du corps. Positions en % du décor.
 const CRIME_CLUES: Array<{ id: string; x: number; y: number; icon: string; label: string }> = [
-  { id: "knife",     x: 33, y: 76, icon: "🗡️", label: "Poignard sanglant" },
-  { id: "amulet",    x: 38, y: 71, icon: "☥", label: "Ankh brisé" },
-  { id: "papyrus",   x: 36, y: 87, icon: "📜", label: "Papyrus déchiré" },
-  { id: "scarab",    x: 60, y: 80, icon: "🪲", label: "Scarabée maudit" },
-  { id: "footprint", x: 66, y: 90, icon: "👣", label: "Empreinte boueuse" },
+  { id: "knife",     x: 49, y: 38, icon: "🗡️", label: "Poignard sanglant" },
+  { id: "amulet",    x: 17, y: 49, icon: "☥", label: "Ankh brisé" },
+  { id: "papyrus",   x: 80, y: 49, icon: "📜", label: "Papyrus déchiré" },
+  { id: "footprint", x: 25, y: 83, icon: "👣", label: "Empreinte boueuse" },
+  { id: "scarab",    x: 85, y: 86, icon: "🪲", label: "Scarabée maudit" },
 ];
 
 function WireGame({ accent, onSolved }: { accent: string; onSolved: () => void }) {
@@ -300,40 +300,29 @@ function WireGame({ accent, onSolved }: { accent: string; onSolved: () => void }
             <button
               key={c.id}
               onClick={() => reveal(c.id)}
-              className="absolute z-20 flex items-center justify-center rounded-full transition-transform active:scale-90"
+              className="absolute z-20 flex items-center justify-center rounded-full transition-all"
               style={{
                 left: `${c.x}%`,
                 top: `${c.y}%`,
-                width: 48,
-                height: 48,
+                width: 56,
+                height: 56,
                 transform: "translate(-50%, -50%)",
-                background: isFound
-                  ? "rgba(20,200,120,0.25)"
-                  : "rgba(255,255,255,0.12)",
-                border: `2px solid ${isFound ? "#26d07c" : "rgba(255,255,255,0.95)"}`,
+                background: isFound ? "rgba(20,200,120,0.25)" : "transparent",
+                border: isFound ? "2px solid #26d07c" : "2px solid transparent",
                 boxShadow: isFound
-                  ? "0 0 18px rgba(38,208,124,0.85), inset 0 0 8px rgba(0,0,0,0.4)"
-                  : `0 0 14px ${accent.replace(")", " / 0.7)")}, inset 0 0 6px rgba(0,0,0,0.35)`,
-                backdropFilter: "blur(2px)",
-                animation: isFound ? undefined : "pulse 1.6s ease-in-out infinite",
+                  ? "0 0 22px rgba(38,208,124,0.85), inset 0 0 8px rgba(0,0,0,0.4)"
+                  : "none",
+                cursor: isFound ? "default" : "crosshair",
               }}
               aria-label={c.label}
               title={c.label}
             >
               <span
                 className="leading-none drop-shadow-[0_1px_2px_rgba(0,0,0,0.95)]"
-                style={{ fontSize: 22, opacity: isFound ? 1 : 0.0, transition: "opacity 200ms" }}
+                style={{ fontSize: 24, opacity: isFound ? 1 : 0, transition: "opacity 220ms" }}
               >
-                {isFound ? c.icon : ""}
+                ✓
               </span>
-              {!isFound && (
-                <span
-                  className="absolute inset-0 rounded-full pointer-events-none"
-                  style={{
-                    boxShadow: "inset 0 0 0 6px rgba(255,255,255,0.25)",
-                  }}
-                />
-              )}
             </button>
           );
         })}
