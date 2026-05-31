@@ -804,8 +804,6 @@ const MEMORY_CARDS: Array<{ id: string; img: string; name: string }> = [
   { id: "notredame", img: paris4, name: "Notre-Dame" },
   { id: "sacrecoeur", img: paris5, name: "Sacré-Cœur" },
   { id: "arc", img: paris6, name: "Arc de Triomphe" },
-  { id: "louvre", img: paris7, name: "Louvre" },
-  { id: "opera", img: paris8, name: "Opéra Garnier" },
 ];
 
 function shuffleDeck(seed: number) {
