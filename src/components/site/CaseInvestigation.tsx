@@ -1109,10 +1109,10 @@ function HiddenObjectGame({ accent, onSolved }: { accent: string; onSolved: () =
             style={{
               left: `${TARGET.x}%`,
               top: `${TARGET.y}%`,
-              width: "1.4%",
+              width: "1.9%",
               transform: "translate(-50%, -50%)",
-              opacity: 0.32,
-              filter: "blur(0.3px)",
+              opacity: 0.5,
+              filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.3))",
             }}
           >
             <path
