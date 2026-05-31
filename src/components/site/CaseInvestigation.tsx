@@ -381,7 +381,7 @@ function PuzzleGame({ accent, onSolved }: { accent: string; onSolved: () => void
   return (
     <div>
       <div
-        className="relative w-full aspect-[16/10] overflow-hidden rounded-sm select-none"
+        className="relative w-full aspect-[16/10] md:max-h-[48vh] overflow-hidden rounded-sm select-none"
         style={{
           backgroundImage: `url(${room.bg})`,
           backgroundSize: "cover",
@@ -648,7 +648,7 @@ function WireGame({ accent, onSolved }: { accent: string; onSolved: () => void }
   return (
     <div>
       <div
-        className="relative w-full aspect-[16/10] overflow-hidden rounded-sm select-none"
+        className="relative w-full aspect-[16/10] md:max-h-[48vh] overflow-hidden rounded-sm select-none"
         style={{
           backgroundImage: `url(${sceneTemple})`,
           backgroundSize: "cover",
@@ -866,7 +866,7 @@ function MemoryGame({ accent, onSolved }: { accent: string; onSolved: () => void
   return (
     <div>
       <div
-        className="relative w-full aspect-square sm:aspect-[16/10] overflow-hidden rounded-sm select-none"
+        className="relative w-full aspect-square sm:aspect-[16/10] md:max-h-[48vh] overflow-hidden rounded-sm select-none"
         style={{
           backgroundImage: `url(${sceneBalcony})`,
           backgroundSize: "cover",
@@ -1088,7 +1088,7 @@ function HiddenObjectGame({ accent, onSolved }: { accent: string; onSolved: () =
       {/* SCÈNE — décor cabine, format paysage */}
       <div
         onClick={handleClick}
-        className={`relative w-full aspect-[16/9] overflow-hidden border border-white/15 rounded-sm cursor-crosshair select-none ${shake ? "animate-pulse" : ""}`}
+        className={`relative w-full aspect-[16/9] md:max-h-[48vh] overflow-hidden border border-white/15 rounded-sm cursor-crosshair select-none ${shake ? "animate-pulse" : ""}`}
         style={{
           backgroundImage: `url(${sceneCabin})`,
           backgroundSize: "cover",
@@ -1345,7 +1345,7 @@ function MazeGame({ accent, onSolved }: { accent: string; onSolved: () => void }
   return (
     <div>
       <div
-        className="relative w-full aspect-[21/11] overflow-hidden rounded-sm select-none"
+        className="relative w-full aspect-[21/11] md:max-h-[48vh] overflow-hidden rounded-sm select-none"
         style={{
           backgroundImage: `url(${mazeFloor})`,
           backgroundSize: "cover",
