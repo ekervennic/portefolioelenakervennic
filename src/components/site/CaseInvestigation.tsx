@@ -228,11 +228,11 @@ function PuzzleGame({ accent, onSolved }: { accent: string; onSolved: () => void
 
 // Indices à trouver autour du corps. Positions en % du décor.
 const CRIME_CLUES: Array<{ id: string; x: number; y: number; icon: string; label: string }> = [
-  { id: "knife",     x: 52, y: 40, icon: "🗡️", label: "Poignard sanglant" },
-  { id: "amulet",    x: 28, y: 55, icon: "☥", label: "Ankh brisé" },
-  { id: "papyrus",   x: 82, y: 58, icon: "📜", label: "Papyrus déchiré" },
-  { id: "footprint", x: 22, y: 80, icon: "👣", label: "Empreinte boueuse" },
-  { id: "scarab",    x: 82, y: 90, icon: "🪲", label: "Scarabée maudit" },
+  { id: "knife",     x: 45, y: 41, icon: "🗡️", label: "Poignard sanglant" },
+  { id: "amulet",    x: 22, y: 53, icon: "☥", label: "Ankh brisé" },
+  { id: "papyrus",   x: 78, y: 67, icon: "📜", label: "Papyrus déchiré" },
+  { id: "footprint", x: 17, y: 88, icon: "👣", label: "Empreinte boueuse" },
+  { id: "scarab",    x: 80, y: 92, icon: "🪲", label: "Scarabée maudit" },
 ];
 
 function WireGame({ accent, onSolved }: { accent: string; onSolved: () => void }) {
