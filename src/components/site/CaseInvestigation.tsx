@@ -164,6 +164,145 @@ const AQ_ROOMS: AqRoom[] = [
   { id: "mamba",     name: "Mamba Noir",      bg: aquariumMosa,   correct: "up",    options: ["up", "left", "right"] },
 ];
 
+/* Plan du labyrinthe : positions (col,row) à parcourir, dans l'ordre.
+ * Séquence des directions correctes : up, right, up, left, up.
+ * Grille 2 colonnes × 4 lignes. (0,3) = départ, (0,0) = sortie. */
+const MAZE_CELLS: Array<[number, number]> = [
+  [0, 3], // step 0 — Titanoboa (départ)
+  [0, 2], // step 1 — Cobra Royal (après up)
+  [1, 2], // step 2 — Python (après right)
+  [1, 1], // step 3 — Serpent de mer (après up)
+  [0, 1], // step 4 — Mamba (après left)
+  [0, 0], // step 5 — SORTIE (après up)
+];
+
+function MazePlan({
+  step,
+  attempts,
+  accent,
+}: {
+  step: number;
+  attempts: number;
+  accent: string;
+}) {
+  const COLS = 2;
+  const ROWS = 4;
+  const CELL = 22;
+  const PAD = 8;
+  const W = COLS * CELL + PAD * 2;
+  const H = ROWS * CELL + PAD * 2;
+  const cx = (c: number) => PAD + c * CELL + CELL / 2;
+  const cy = (r: number) => PAD + r * CELL + CELL / 2;
+  const pathD = MAZE_CELLS.map(
+    ([c, r], i) => `${i === 0 ? "M" : "L"}${cx(c)},${cy(r)}`
+  ).join(" ");
+  const current = MAZE_CELLS[Math.min(step, MAZE_CELLS.length - 1)];
+
+  return (
+    <div
+      className="absolute bottom-3 left-3 z-30 bg-[oklch(0.96_0.01_80)] p-1.5 pb-2 rotate-[-3deg]"
+      style={{ boxShadow: "0 10px 22px rgba(0,0,0,0.7)" }}
+    >
+      <div
+        className="relative"
+        style={{
+          width: W,
+          height: H,
+          background:
+            "repeating-linear-gradient(0deg, oklch(0.32 0.05 30), oklch(0.32 0.05 30) 1px, oklch(0.28 0.04 30) 1px, oklch(0.28 0.04 30) " +
+            CELL +
+            "px), repeating-linear-gradient(90deg, oklch(0.32 0.05 30), oklch(0.32 0.05 30) 1px, oklch(0.28 0.04 30) 1px, oklch(0.28 0.04 30) " +
+            CELL +
+            "px)",
+        }}
+      >
+        <svg
+          width={W}
+          height={H}
+          viewBox={`0 0 ${W} ${H}`}
+          className="absolute inset-0"
+        >
+          {/* Chemin complet à suivre */}
+          <path
+            d={pathD}
+            stroke="rgba(120,200,255,0.85)"
+            strokeWidth={4}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            fill="none"
+            strokeDasharray="3 3"
+          />
+          {/* Portion déjà parcourue (pleine) */}
+          <path
+            d={MAZE_CELLS.slice(0, step + 1)
+              .map(([c, r], i) => `${i === 0 ? "M" : "L"}${cx(c)},${cy(r)}`)
+              .join(" ")}
+            stroke={accent}
+            strokeWidth={4}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            fill="none"
+          />
+          {/* Marqueur DÉPART */}
+          <circle
+            cx={cx(MAZE_CELLS[0][0])}
+            cy={cy(MAZE_CELLS[0][1])}
+            r={5}
+            fill="white"
+            stroke="rgba(0,0,0,0.5)"
+            strokeWidth={1}
+          />
+          {/* Marqueur SORTIE */}
+          <rect
+            x={cx(MAZE_CELLS[MAZE_CELLS.length - 1][0]) - 5}
+            y={cy(MAZE_CELLS[MAZE_CELLS.length - 1][1]) - 5}
+            width={10}
+            height={10}
+            fill="rgba(120,230,255,0.95)"
+            stroke="white"
+            strokeWidth={1}
+          />
+          {/* Position actuelle */}
+          <circle
+            cx={cx(current[0])}
+            cy={cy(current[1])}
+            r={6}
+            fill={accent}
+            stroke="white"
+            strokeWidth={1.5}
+          >
+            <animate
+              attributeName="r"
+              values="6;8;6"
+              dur="1.2s"
+              repeatCount="indefinite"
+            />
+          </circle>
+        </svg>
+        {/* Labels start/end */}
+        <div
+          className="absolute font-stamp text-[7px] tracking-[0.18em] text-white/90"
+          style={{ left: cx(MAZE_CELLS[0][0]) + 8, top: cy(MAZE_CELLS[0][1]) - 5 }}
+        >
+          DÉPART
+        </div>
+        <div
+          className="absolute font-stamp text-[7px] tracking-[0.18em] text-white"
+          style={{
+            left: cx(MAZE_CELLS[MAZE_CELLS.length - 1][0]) + 8,
+            top: cy(MAZE_CELLS[MAZE_CELLS.length - 1][1]) - 5,
+          }}
+        >
+          SORTIE
+        </div>
+      </div>
+      <div className="font-stamp text-[8px] tracking-[0.2em] text-[oklch(0.22_0.04_30)] mt-1 text-center">
+        PLAN · {attempts > 0 ? `TENTATIVE ${attempts + 1}` : "À SUIVRE"}
+      </div>
+    </div>
+  );
+}
+
 function PuzzleGame({ accent, onSolved }: { accent: string; onSolved: () => void }) {
   const [step, setStep] = useState(0);
   const [wrong, setWrong] = useState<null | "up" | "left" | "right">(null);
