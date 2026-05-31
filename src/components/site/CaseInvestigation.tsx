@@ -8,7 +8,6 @@ import paper from "@/assets/paper-texture.jpg";
 import sceneCabin from "@/assets/scene-cabin.jpg";
 import sceneBalcony from "@/assets/scene-balcony.jpg";
 import sceneTemple from "@/assets/scene-temple.jpg";
-import bodyEgypt from "@/assets/body-egypt.png";
 import sceneCinema from "@/assets/scene-cinema.jpg";
 import paris1 from "@/assets/paris-1.jpg";
 import paris2 from "@/assets/paris-2.jpg";
@@ -229,11 +228,11 @@ function PuzzleGame({ accent, onSolved }: { accent: string; onSolved: () => void
 
 // Indices à trouver autour du corps. Positions en % du décor.
 const CRIME_CLUES: Array<{ id: string; x: number; y: number; icon: string; label: string }> = [
-  { id: "knife",     x: 36, y: 58, icon: "🗡️", label: "Poignard sanglant" },
-  { id: "amulet",    x: 70, y: 36, icon: "📿", label: "Amulette brisée" },
-  { id: "footprint", x: 22, y: 78, icon: "👣", label: "Empreinte boueuse" },
-  { id: "scarab",    x: 78, y: 70, icon: "🪲", label: "Scarabée maudit" },
-  { id: "papyrus",   x: 18, y: 30, icon: "📜", label: "Papyrus déchiré" },
+  { id: "knife",     x: 33, y: 76, icon: "🗡️", label: "Poignard sanglant" },
+  { id: "amulet",    x: 38, y: 71, icon: "☥", label: "Ankh brisé" },
+  { id: "papyrus",   x: 36, y: 87, icon: "📜", label: "Papyrus déchiré" },
+  { id: "scarab",    x: 60, y: 80, icon: "🪲", label: "Scarabée maudit" },
+  { id: "footprint", x: 66, y: 90, icon: "👣", label: "Empreinte boueuse" },
 ];
 
 function WireGame({ accent, onSolved }: { accent: string; onSolved: () => void }) {
@@ -293,22 +292,6 @@ function WireGame({ accent, onSolved }: { accent: string; onSolved: () => void }
         <div className="absolute top-2 right-2 z-20 font-stamp text-[10px] tracking-[0.25em] text-white/90 bg-black/65 border border-white/20 px-2.5 py-1 rounded-sm">
           SCÈNE DE CRIME · TEMPLE
         </div>
-
-        {/* Corps de la victime au centre */}
-        <img
-          src={bodyEgypt}
-          alt="Victime"
-          loading="lazy"
-          width={1024}
-          height={768}
-          className="absolute left-1/2 top-1/2 z-[5] pointer-events-none"
-          style={{
-            transform: "translate(-50%, -50%) rotate(-8deg)",
-            width: "62%",
-            maxWidth: 460,
-            filter: "drop-shadow(0 16px 24px rgba(0,0,0,0.75)) saturate(1.05)",
-          }}
-        />
 
         {/* Indices cliquables */}
         {CRIME_CLUES.map((c) => {
