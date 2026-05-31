@@ -15,6 +15,8 @@ import aquariumFish from "@/assets/aquarium-fish.jpg";
 import aquariumShark from "@/assets/aquarium-shark.jpg";
 import aquariumPlesio from "@/assets/aquarium-plesio.jpg";
 import aquariumMosa from "@/assets/aquarium-mosa.jpg";
+import aquariumViper from "@/assets/aquarium-viper.jpg";
+import aquariumAnaconda from "@/assets/aquarium-anaconda.jpg";
 import paris1 from "@/assets/paris-1.jpg";
 import paris2 from "@/assets/paris-2.jpg";
 import paris3 from "@/assets/paris-3.jpg";
@@ -159,8 +161,10 @@ type AqRoom = {
 const AQ_ROOMS: AqRoom[] = [
   { id: "titanoboa", name: "Titanoboa",       bg: aquariumSnake,  correct: "up",    options: ["up", "right"] },
   { id: "cobra",     name: "Cobra Royal",     bg: aquariumFish,   correct: "right", options: ["up", "right"] },
-  { id: "python",    name: "Python Réticulé", bg: aquariumShark,  correct: "up",    options: ["left", "up"] },
-  { id: "serpent",   name: "Serpent de Mer",  bg: aquariumPlesio, correct: "left",  options: ["left", "right"] },
+  { id: "viper",     name: "Vipère Heurtante",bg: aquariumViper,  correct: "up",    options: ["up", "left"] },
+  { id: "python",    name: "Python Réticulé", bg: aquariumShark,  correct: "left",  options: ["left", "up"] },
+  { id: "anaconda",  name: "Anaconda Vert",   bg: aquariumAnaconda, correct: "up",  options: ["up", "right"] },
+  { id: "serpent",   name: "Serpent de Mer",  bg: aquariumPlesio, correct: "right", options: ["left", "right"] },
   { id: "mamba",     name: "Mamba Noir",      bg: aquariumMosa,   correct: "up",    options: ["up", "left", "right"] },
 ];
 
@@ -168,12 +172,14 @@ const AQ_ROOMS: AqRoom[] = [
  * Séquence des directions correctes : up, right, up, left, up.
  * Grille 2 colonnes × 4 lignes. (0,3) = départ, (0,0) = sortie. */
 const MAZE_CELLS: Array<[number, number]> = [
-  [0, 3], // step 0 — Titanoboa (départ)
-  [0, 2], // step 1 — Cobra Royal (après up)
-  [1, 2], // step 2 — Python (après right)
-  [1, 1], // step 3 — Serpent de mer (après up)
-  [0, 1], // step 4 — Mamba (après left)
-  [0, 0], // step 5 — SORTIE (après up)
+  [0, 4], // step 0 — Titanoboa (départ)
+  [0, 3], // step 1 — Cobra Royal (après up)
+  [1, 3], // step 2 — Vipère (après right)
+  [1, 2], // step 3 — Python (après up)
+  [0, 2], // step 4 — Anaconda (après left)
+  [0, 1], // step 5 — Serpent de mer (après up)
+  [1, 1], // step 6 — Mamba (après right)
+  [1, 0], // step 7 — SORTIE (après up)
 ];
 
 function MazePlan({
@@ -186,7 +192,7 @@ function MazePlan({
   accent: string;
 }) {
   const COLS = 2;
-  const ROWS = 4;
+  const ROWS = 5;
   const CELL = 22;
   const PAD = 8;
   const W = COLS * CELL + PAD * 2;
@@ -337,31 +343,25 @@ function PuzzleGame({ accent, onSolved }: { accent: string; onSolved: () => void
     }
   };
 
-  const ArrowBtn = ({
-    dir,
-    style,
-  }: {
-    dir: "up" | "left" | "right";
-    style: React.CSSProperties;
-  }) => {
+  const ArrowBtn = ({ dir }: { dir: "up" | "left" | "right" }) => {
     const isWrong = wrong === dir;
     const glyph = dir === "up" ? "↑" : dir === "left" ? "←" : "→";
+    const label = dir === "up" ? "AVANCER" : dir === "left" ? "GAUCHE" : "DROITE";
     return (
       <button
         onClick={() => choose(dir)}
         disabled={!!wrong || won}
         aria-label={`Aller ${dir}`}
-        className="absolute z-30 flex items-center justify-center transition-transform active:scale-90 hover:scale-110"
+        className="flex flex-col items-center justify-center gap-0.5 transition-transform active:scale-90 hover:scale-105"
         style={{
-          ...style,
-          width: 76,
-          height: 76,
+          width: 84,
+          height: 72,
           borderRadius: 14,
           background: isWrong
             ? "rgba(220,40,40,0.85)"
             : "linear-gradient(180deg, rgba(80,180,255,0.95), rgba(20,80,160,0.95))",
           color: "white",
-          fontSize: 38,
+          fontSize: 34,
           fontWeight: 700,
           lineHeight: 1,
           border: `2px solid ${isWrong ? "rgba(255,200,200,0.95)" : "rgba(180,230,255,0.95)"}`,
@@ -372,16 +372,10 @@ function PuzzleGame({ accent, onSolved }: { accent: string; onSolved: () => void
           animation: isWrong ? "shake 0.35s ease-in-out 2" : undefined,
         }}
       >
-        {glyph}
+        <span>{glyph}</span>
+        <span className="font-stamp text-[8px] tracking-[0.2em] opacity-90">{label}</span>
       </button>
     );
-  };
-
-  // Positions des flèches (centré pour up, sur les bords pour left/right)
-  const pos: Record<"up" | "left" | "right", React.CSSProperties> = {
-    up:    { left: "50%", top: "38%", transform: "translate(-50%, -50%)" },
-    left:  { left: "8%",  top: "55%", transform: "translateY(-50%)" },
-    right: { right: "8%", top: "55%", transform: "translateY(-50%)" },
   };
 
   return (
@@ -431,10 +425,6 @@ function PuzzleGame({ accent, onSolved }: { accent: string; onSolved: () => void
         {/* Mini-carte : vrai plan du labyrinthe à suivre (style polaroid) */}
         <MazePlan step={step} attempts={attempts} accent={accent} />
 
-        {/* Flèches de navigation */}
-        {!won &&
-          room.options.map((dir) => <ArrowBtn key={dir} dir={dir} style={pos[dir]} />)}
-
         {/* Bandeau bas — feedback */}
         <div className="absolute inset-x-0 bottom-2 z-30 flex justify-center pointer-events-none">
           <div
@@ -467,6 +457,28 @@ function PuzzleGame({ accent, onSolved }: { accent: string; onSolved: () => void
           />
         )}
       </div>
+
+      {/* Barre de navigation — flèches sous l'aquarium pour ne rien cacher */}
+      {!won && (
+        <div
+          className="mt-3 flex items-center justify-center gap-3 p-3 rounded-sm"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(8,16,32,0.92), rgba(4,10,22,0.92))",
+            border: "1px solid rgba(120,200,255,0.25)",
+            boxShadow:
+              "inset 0 0 24px rgba(0,8,20,0.7), 0 6px 18px rgba(0,0,0,0.5)",
+          }}
+        >
+          {(["left", "up", "right"] as const).map((dir) =>
+            room.options.includes(dir) ? (
+              <ArrowBtn key={dir} dir={dir} />
+            ) : (
+              <div key={dir} style={{ width: 84, height: 72, opacity: 0.15 }} className="rounded-[14px] border border-white/10" />
+            )
+          )}
+        </div>
+      )}
 
       <style>{`@keyframes shake { 0%,100% { transform: translateX(0) } 25% { transform: translateX(-6px) } 75% { transform: translateX(6px) } }`}</style>
 
