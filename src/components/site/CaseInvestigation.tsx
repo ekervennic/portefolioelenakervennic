@@ -1111,17 +1111,17 @@ function HiddenObjectGame({ accent, onSolved }: { accent: string; onSolved: () =
             style={{
               left: `${TARGET.x}%`,
               top: `${TARGET.y}%`,
-              width: "2.4%",
+              width: "1.4%",
               transform: "translate(-50%, -50%)",
-              opacity: 0.55,
-              filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.45))",
+              opacity: 0.32,
+              filter: "blur(0.3px)",
             }}
           >
             <path
               d="M5 38 Q22 8 50 30 Q78 8 95 38"
               fill="none"
-              stroke="#f6efe2"
-              strokeWidth="4"
+              stroke="#e8eef5"
+              strokeWidth="3"
               strokeLinecap="round"
             />
           </svg>
