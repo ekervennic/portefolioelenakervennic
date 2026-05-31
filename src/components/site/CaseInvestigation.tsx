@@ -425,10 +425,6 @@ function PuzzleGame({ accent, onSolved }: { accent: string; onSolved: () => void
         {/* Mini-carte : vrai plan du labyrinthe à suivre (style polaroid) */}
         <MazePlan step={step} attempts={attempts} accent={accent} />
 
-        {/* Flèches de navigation */}
-        {!won &&
-          room.options.map((dir) => <ArrowBtn key={dir} dir={dir} style={pos[dir]} />)}
-
         {/* Bandeau bas — feedback */}
         <div className="absolute inset-x-0 bottom-2 z-30 flex justify-center pointer-events-none">
           <div
