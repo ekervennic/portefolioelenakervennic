@@ -15,6 +15,8 @@ import aquariumFish from "@/assets/aquarium-fish.jpg";
 import aquariumShark from "@/assets/aquarium-shark.jpg";
 import aquariumPlesio from "@/assets/aquarium-plesio.jpg";
 import aquariumMosa from "@/assets/aquarium-mosa.jpg";
+import aquariumViper from "@/assets/aquarium-viper.jpg";
+import aquariumAnaconda from "@/assets/aquarium-anaconda.jpg";
 import paris1 from "@/assets/paris-1.jpg";
 import paris2 from "@/assets/paris-2.jpg";
 import paris3 from "@/assets/paris-3.jpg";
