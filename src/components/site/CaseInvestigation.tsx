@@ -804,8 +804,6 @@ const MEMORY_CARDS: Array<{ id: string; img: string; name: string }> = [
   { id: "notredame", img: paris4, name: "Notre-Dame" },
   { id: "sacrecoeur", img: paris5, name: "Sacré-Cœur" },
   { id: "arc", img: paris6, name: "Arc de Triomphe" },
-  { id: "louvre", img: paris7, name: "Louvre" },
-  { id: "opera", img: paris8, name: "Opéra Garnier" },
 ];
 
 function shuffleDeck(seed: number) {
@@ -903,7 +901,7 @@ function MemoryGame({ accent, onSolved }: { accent: string; onSolved: () => void
         <div className="absolute inset-0 flex items-center justify-center p-2 sm:p-6 md:p-10">
           <div
             className="grid grid-cols-4 gap-1.5 sm:gap-2 md:gap-3"
-            style={{ aspectRatio: "1 / 1", width: "min(100%, 560px)", maxHeight: "100%" }}
+            style={{ aspectRatio: "4 / 3", width: "min(100%, 520px)", maxHeight: "100%" }}
           >
             {deck.map((card, idx) => {
               const isFlipped = flipped.includes(idx) || matched.has(idx);
@@ -1113,17 +1111,17 @@ function HiddenObjectGame({ accent, onSolved }: { accent: string; onSolved: () =
             style={{
               left: `${TARGET.x}%`,
               top: `${TARGET.y}%`,
-              width: "2.4%",
+              width: "1.4%",
               transform: "translate(-50%, -50%)",
-              opacity: 0.55,
-              filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.45))",
+              opacity: 0.32,
+              filter: "blur(0.3px)",
             }}
           >
             <path
               d="M5 38 Q22 8 50 30 Q78 8 95 38"
               fill="none"
-              stroke="#f6efe2"
-              strokeWidth="4"
+              stroke="#e8eef5"
+              strokeWidth="3"
               strokeLinecap="round"
             />
           </svg>
