@@ -458,6 +458,28 @@ function PuzzleGame({ accent, onSolved }: { accent: string; onSolved: () => void
         )}
       </div>
 
+      {/* Barre de navigation — flèches sous l'aquarium pour ne rien cacher */}
+      {!won && (
+        <div
+          className="mt-3 flex items-center justify-center gap-3 p-3 rounded-sm"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(8,16,32,0.92), rgba(4,10,22,0.92))",
+            border: "1px solid rgba(120,200,255,0.25)",
+            boxShadow:
+              "inset 0 0 24px rgba(0,8,20,0.7), 0 6px 18px rgba(0,0,0,0.5)",
+          }}
+        >
+          {(["left", "up", "right"] as const).map((dir) =>
+            room.options.includes(dir) ? (
+              <ArrowBtn key={dir} dir={dir} />
+            ) : (
+              <div key={dir} style={{ width: 84, height: 72, opacity: 0.15 }} className="rounded-[14px] border border-white/10" />
+            )
+          )}
+        </div>
+      )}
+
       <style>{`@keyframes shake { 0%,100% { transform: translateX(0) } 25% { transform: translateX(-6px) } 75% { transform: translateX(6px) } }`}</style>
 
       {/* CONSIGNE */}
