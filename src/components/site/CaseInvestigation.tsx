@@ -305,7 +305,9 @@ function PuzzleGame({ accent, onSolved }: { accent: string; onSolved: () => void
             return (
               <button
                 key={c.id}
-                ref={(el) => (leftRefs.current[c.id] = el)}
+                ref={(el) => {
+                  leftRefs.current[c.id] = el;
+                }}
                 onClick={() => handleLeft(c.id)}
                 disabled={isMatched}
                 className="flex items-center gap-2 px-3 py-2 md:px-3.5 md:py-2.5 rounded-md transition-all min-w-[122px] md:min-w-[150px]"
@@ -346,7 +348,9 @@ function PuzzleGame({ accent, onSolved }: { accent: string; onSolved: () => void
             return (
               <button
                 key={t.id}
-                ref={(el) => (rightRefs.current[t.id] = el)}
+                ref={(el) => {
+                  rightRefs.current[t.id] = el;
+                }}
                 onClick={() => handleRight(t.id)}
                 disabled={isDone}
                 className="px-3 py-2 md:px-3.5 md:py-2.5 rounded-md transition-all min-w-[122px] md:min-w-[150px]"
