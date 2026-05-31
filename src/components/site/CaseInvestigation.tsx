@@ -192,7 +192,7 @@ function MazePlan({
   accent: string;
 }) {
   const COLS = 2;
-  const ROWS = 4;
+  const ROWS = 5;
   const CELL = 22;
   const PAD = 8;
   const W = COLS * CELL + PAD * 2;
