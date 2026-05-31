@@ -194,10 +194,10 @@ export function Stack() {
                 })}
               </div>
             ) : (
-            <div className="relative w-full" style={{ aspectRatio: "1000 / 860" }}>
+            <div className="relative w-full" style={{ aspectRatio: "1000 / 560" }}>
             {/* Red thread */}
             <svg
-              viewBox="0 0 1000 860"
+              viewBox="0 0 1000 560"
               className="absolute inset-0 w-full h-full pointer-events-none"
               preserveAspectRatio="none"
             >
@@ -248,14 +248,14 @@ export function Stack() {
                   onFocus={() => setActive(n.id)}
                   onBlur={() => setActive(null)}
                   onClick={() => setActive((p) => (p === n.id ? null : n.id))}
-                  className={`pin absolute paper-bg paper-shadow px-2 py-1.5 pt-3 text-left transition-all duration-300 ${
+                    className={`pin absolute paper-bg paper-shadow px-1.5 py-1 pt-2.5 text-left transition-all duration-300 ${
                     dim ? "opacity-40" : "opacity-100"
                   } ${lit ? "scale-110 z-20 ring-2 ring-evidence" : "z-10 hover:-translate-y-0.5"}`}
                   style={{
                     left: `${(n.x / 1000) * 100}%`,
-                    top: `${(n.y / 860) * 100}%`,
+                    top: `${(n.y / 560) * 100}%`,
                     transform: `translate(-50%, -50%) rotate(${rot}deg)`,
-                    minWidth: 78,
+                    minWidth: 66,
                   }}
                 >
                   {/* Red push pin */}
@@ -269,10 +269,10 @@ export function Stack() {
                         "0 1px 2px rgba(0,0,0,0.5), inset -1px -1px 2px rgba(0,0,0,0.4), inset 1px 1px 1.5px rgba(255,255,255,0.55)",
                     }}
                   />
-                  <div className="font-serif-display text-[13px] md:text-sm leading-none text-paper-foreground">
+                  <div className="font-serif-display text-[11px] md:text-xs leading-none text-paper-foreground">
                     {n.name}
                   </div>
-                  <div className="font-stamp text-[8px] tracking-[0.18em] text-evidence uppercase mt-0.5">
+                  <div className="font-stamp text-[7px] tracking-[0.14em] text-evidence uppercase mt-0.5">
                     {n.cat}
                   </div>
                 </button>
