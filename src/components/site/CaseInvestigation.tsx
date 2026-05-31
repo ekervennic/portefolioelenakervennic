@@ -380,11 +380,11 @@ function MemoryGame({ accent, onSolved }: { accent: string; onSolved: () => void
             ELENA · SOURCING IA
           </div>
           <p className="font-serif-display leading-snug text-[13px] md:text-[16px]" style={{ color: "oklch(0.22 0.04 30)" }}>
-            Sur le balcon parisien, reconstitue la{" "}
+            Sur le balcon parisien, reconstitue les{" "}
             <span className="font-bold" style={{ color: "oklch(0.42 0.16 25)" }}>
-              shortlist des talents
-            </span>{" "}
-            en retournant toutes les paires. Mémoire et observation — comme un bon recruteur.
+              paires de monuments emblématiques
+            </span>
+            . Observation et mémoire seront tes meilleurs alliés.
           </p>
         </div>
       </div>
