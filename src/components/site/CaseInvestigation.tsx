@@ -157,11 +157,11 @@ type AqRoom = {
 };
 
 const AQ_ROOMS: AqRoom[] = [
-  { id: "snake",  name: "Titanoboa",     bg: aquariumSnake,  correct: "up",    options: ["up", "right"] },
-  { id: "fish",   name: "Dunkleosteus",  bg: aquariumFish,   correct: "right", options: ["up", "right"] },
-  { id: "shark",  name: "Mégalodon",     bg: aquariumShark,  correct: "up",    options: ["left", "up"] },
-  { id: "plesio", name: "Plésiosaure",   bg: aquariumPlesio, correct: "left",  options: ["left", "right"] },
-  { id: "mosa",   name: "Mosasaure",     bg: aquariumMosa,   correct: "up",    options: ["up", "left", "right"] },
+  { id: "titanoboa", name: "Titanoboa",       bg: aquariumSnake,  correct: "up",    options: ["up", "right"] },
+  { id: "cobra",     name: "Cobra Royal",     bg: aquariumFish,   correct: "right", options: ["up", "right"] },
+  { id: "python",    name: "Python Réticulé", bg: aquariumShark,  correct: "up",    options: ["left", "up"] },
+  { id: "serpent",   name: "Serpent de Mer",  bg: aquariumPlesio, correct: "left",  options: ["left", "right"] },
+  { id: "mamba",     name: "Mamba Noir",      bg: aquariumMosa,   correct: "up",    options: ["up", "left", "right"] },
 ];
 
 function PuzzleGame({ accent, onSolved }: { accent: string; onSolved: () => void }) {
