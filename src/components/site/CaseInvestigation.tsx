@@ -135,12 +135,320 @@ export function CaseInvestigation({ caseId, caseTitle, onSolved, onClose }: Prop
 }
 
 /* ============================================================
- * MINI-JEU SLIDING PUZZLE — Cas "Mood Film Finder"
- * Reconstitue la scène cinéma en glissant les tuiles.
- * Grille 3x3 — case vide en bas à droite.
+ * MINI-JEU ANALYSE DE CRÉATURES — Cas "Mood Film Finder"
+ * Relie chaque créature mystérieuse à son attribut caché
+ * à l'aide de fils lumineux. Décor : aquarium classifié.
  * ============================================================ */
 
+type Creature = { id: string; icon: string; name: string; trait: string };
+
+const CREATURES: Creature[] = [
+  { id: "shark",   icon: "🦈", name: "Requin",            trait: "Dents acérées" },
+  { id: "kraken",  icon: "🦑", name: "Kraken",            trait: "Tentacules" },
+  { id: "eel",     icon: "⚡", name: "Anguille électrique", trait: "Décharge" },
+];
+
 function PuzzleGame({ accent, onSolved }: { accent: string; onSolved: () => void }) {
+  // Ordre stable créatures à gauche ; traits mélangés à droite.
+  const traits = useMemo(() => {
+    const arr = CREATURES.map((c) => ({ id: c.id, label: c.trait }));
+    // mélange déterministe pour ne pas re-render
+    return [arr[2], arr[0], arr[1]];
+  }, []);
+
+  const [selected, setSelected] = useState<string | null>(null);
+  const [matched, setMatched] = useState<Record<string, boolean>>({});
+  const [wrong, setWrong] = useState<{ from: string; to: string } | null>(null);
+
+  const leftRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const rightRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const boardRef = useRef<HTMLDivElement | null>(null);
+  const [, setTick] = useState(0);
+
+  useEffect(() => {
+    const ro = new ResizeObserver(() => setTick((t) => t + 1));
+    if (boardRef.current) ro.observe(boardRef.current);
+    return () => ro.disconnect();
+  }, []);
+
+  const total = CREATURES.length;
+  const doneCount = Object.values(matched).filter(Boolean).length;
+  const won = doneCount === total;
+
+  useEffect(() => {
+    if (won) {
+      const t = setTimeout(onSolved, 1100);
+      return () => clearTimeout(t);
+    }
+  }, [won, onSolved]);
+
+  const handleLeft = (id: string) => {
+    if (matched[id] || won) return;
+    setSelected(id);
+  };
+
+  const handleRight = (traitId: string) => {
+    if (!selected || won) return;
+    if (matched[selected]) return;
+    if (selected === traitId) {
+      setMatched((m) => ({ ...m, [selected]: true }));
+      setSelected(null);
+    } else {
+      const pair = { from: selected, to: traitId };
+      setWrong(pair);
+      setSelected(null);
+      setTimeout(() => setWrong((w) => (w && w.from === pair.from && w.to === pair.to ? null : w)), 380);
+    }
+  };
+
+  const getCenter = (el: HTMLElement | null, container: HTMLElement | null) => {
+    if (!el || !container) return null;
+    const e = el.getBoundingClientRect();
+    const c = container.getBoundingClientRect();
+    return { x: e.left - c.left + e.width / 2, y: e.top - c.top + e.height / 2 };
+  };
+
+  const lines: Array<{ key: string; from: string; to: string; state: "ok" | "wrong" }> = [];
+  for (const id of Object.keys(matched)) {
+    if (matched[id]) lines.push({ key: `ok-${id}`, from: id, to: id, state: "ok" });
+  }
+  if (wrong) lines.push({ key: `w-${wrong.from}-${wrong.to}`, from: wrong.from, to: wrong.to, state: "wrong" });
+
+  return (
+    <div>
+      <div
+        ref={boardRef}
+        className="relative w-full aspect-[16/10] overflow-hidden rounded-sm select-none"
+        style={{
+          backgroundImage: `url(${sceneAquarium})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          boxShadow:
+            "inset 0 0 140px rgba(0,8,20,0.85), 0 0 0 3px oklch(0.55 0.14 70 / 0.6), 0 14px 50px rgba(0,0,0,0.7)",
+        }}
+      >
+        {/* Voile sombre + reflets aqueux */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(0,10,25,0.55) 0%, rgba(0,5,15,0.75) 100%)",
+          }}
+        />
+        <div
+          className="absolute inset-0 pointer-events-none mix-blend-screen opacity-40"
+          style={{
+            background:
+              "radial-gradient(ellipse at 30% 20%, rgba(120,200,255,0.25), transparent 55%), radial-gradient(ellipse at 80% 80%, rgba(80,160,255,0.18), transparent 60%)",
+          }}
+        />
+
+        {/* HUD haut */}
+        <div
+          className="absolute top-2 left-2 z-30 font-stamp text-[10px] tracking-[0.25em] text-white px-2.5 py-1 rounded-sm"
+          style={{
+            background: "rgba(0,0,0,0.65)",
+            border: `1px solid ${accent}`,
+            boxShadow: `0 0 8px ${accent.replace(")", " / 0.5)")}`,
+          }}
+        >
+          ANALYSE · {doneCount}/{total}
+        </div>
+        <div className="absolute top-2 right-2 z-30 font-stamp text-[9px] md:text-[10px] tracking-[0.25em] text-white/90 bg-black/65 border border-white/20 px-2.5 py-1 rounded-sm">
+          LABO OCÉANOGRAPHIQUE · CLASSIFIÉ
+        </div>
+
+        {/* SVG fils lumineux */}
+        <svg
+          className="absolute inset-0 w-full h-full pointer-events-none z-20"
+          style={{ overflow: "visible" }}
+        >
+          <defs>
+            <filter id="wireGlow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="3" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </defs>
+          {lines.map((ln) => {
+            const a = getCenter(leftRefs.current[ln.from], boardRef.current);
+            const b = getCenter(rightRefs.current[ln.to], boardRef.current);
+            if (!a || !b) return null;
+            const stroke = ln.state === "ok" ? "rgba(120,230,255,1)" : "rgba(255,80,80,1)";
+            const dx = b.x - a.x;
+            const cx1 = a.x + dx * 0.5;
+            const cx2 = b.x - dx * 0.5;
+            const path = `M ${a.x} ${a.y} C ${cx1} ${a.y}, ${cx2} ${b.y}, ${b.x} ${b.y}`;
+            return (
+              <g key={ln.key} filter="url(#wireGlow)">
+                <path d={path} stroke={stroke} strokeOpacity="0.35" strokeWidth={8} fill="none" strokeLinecap="round" />
+                <path
+                  d={path}
+                  stroke={stroke}
+                  strokeWidth={2.2}
+                  fill="none"
+                  strokeLinecap="round"
+                  style={ln.state === "wrong" ? { animation: "wireFade 380ms ease forwards" } : undefined}
+                />
+              </g>
+            );
+          })}
+        </svg>
+
+        {/* Colonne gauche : créatures */}
+        <div className="absolute inset-y-0 left-0 z-30 flex flex-col justify-center gap-3 md:gap-4 p-3 md:p-4">
+          {CREATURES.map((c) => {
+            const isMatched = matched[c.id];
+            const isSelected = selected === c.id;
+            return (
+              <button
+                key={c.id}
+                ref={(el) => (leftRefs.current[c.id] = el)}
+                onClick={() => handleLeft(c.id)}
+                disabled={isMatched}
+                className="flex items-center gap-2 px-3 py-2 md:px-3.5 md:py-2.5 rounded-md transition-all min-w-[122px] md:min-w-[150px]"
+                style={{
+                  background: isMatched
+                    ? "rgba(20,40,60,0.75)"
+                    : isSelected
+                    ? "rgba(40,80,120,0.92)"
+                    : "rgba(10,20,35,0.78)",
+                  border: `1px solid ${
+                    isMatched ? "rgba(120,230,255,0.9)" : isSelected ? accent : "rgba(160,200,240,0.35)"
+                  }`,
+                  boxShadow: isSelected
+                    ? `0 0 18px ${accent.replace(")", " / 0.55)")}`
+                    : isMatched
+                    ? "0 0 18px rgba(120,230,255,0.55)"
+                    : "0 4px 10px rgba(0,0,0,0.5)",
+                  color: "white",
+                  textAlign: "left",
+                }}
+              >
+                <span className="text-lg md:text-xl" aria-hidden>
+                  {c.icon}
+                </span>
+                <span className="font-stamp text-[10px] md:text-[11px] tracking-[0.18em] uppercase">
+                  {c.name}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Colonne droite : attributs */}
+        <div className="absolute inset-y-0 right-0 z-30 flex flex-col justify-center gap-3 md:gap-4 p-3 md:p-4 items-end">
+          {traits.map((t) => {
+            const isDone = !!matched[t.id];
+            const canTap = !!selected && !isDone;
+            return (
+              <button
+                key={t.id}
+                ref={(el) => (rightRefs.current[t.id] = el)}
+                onClick={() => handleRight(t.id)}
+                disabled={isDone}
+                className="px-3 py-2 md:px-3.5 md:py-2.5 rounded-md transition-all min-w-[122px] md:min-w-[150px]"
+                style={{
+                  background: isDone
+                    ? "rgba(20,40,60,0.75)"
+                    : canTap
+                    ? "rgba(10,20,35,0.92)"
+                    : "rgba(10,20,35,0.65)",
+                  border: `1px solid ${
+                    isDone ? "rgba(120,230,255,0.9)" : canTap ? accent : "rgba(160,200,240,0.3)"
+                  }`,
+                  boxShadow: isDone
+                    ? "0 0 18px rgba(120,230,255,0.55)"
+                    : canTap
+                    ? `0 0 14px ${accent.replace(")", " / 0.4)")}`
+                    : "0 4px 10px rgba(0,0,0,0.5)",
+                  color: "white",
+                  textAlign: "right",
+                }}
+              >
+                <span className="font-stamp text-[10px] md:text-[11px] tracking-[0.18em] uppercase">
+                  {t.label}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Bandeau bas */}
+        <div className="absolute inset-x-0 bottom-3 z-30 flex justify-center pointer-events-none">
+          <div
+            className="font-stamp text-[10px] md:text-xs tracking-[0.35em] px-4 py-1.5 -rotate-[2deg]"
+            style={{
+              background: "oklch(0.78 0.16 75)",
+              color: "oklch(0.18 0.04 30)",
+              boxShadow: "0 6px 16px rgba(0,0,0,0.55), inset 0 -2px 0 rgba(0,0,0,0.2)",
+              border: "2px solid oklch(0.25 0.05 30)",
+            }}
+          >
+            {won ? "✔ DOSSIER DÉVERROUILLÉ" : "RELIE CHAQUE CRÉATURE À SON ATTRIBUT"}
+          </div>
+        </div>
+
+        {won && (
+          <div
+            className="absolute inset-0 pointer-events-none animate-fade-in z-20"
+            style={{
+              background: `radial-gradient(circle at center, rgba(120,230,255,0.35) 0%, transparent 65%)`,
+            }}
+          />
+        )}
+      </div>
+
+      <style>{`@keyframes wireFade { 0% { opacity: 1 } 100% { opacity: 0 } }`}</style>
+
+      {/* CONSIGNE */}
+      <div
+        className="relative mt-4 w-full flex items-center gap-4 md:gap-5 p-4 border border-[oklch(0.45_0.08_50)]"
+        style={{
+          backgroundImage: `url(${paper})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          boxShadow: "inset 0 0 40px rgba(80,40,10,0.25), 0 8px 24px rgba(0,0,0,0.4)",
+        }}
+      >
+        <div
+          className="shrink-0 relative w-14 h-[72px] md:w-16 md:h-[84px]"
+          style={{
+            borderRadius: "50% / 50%",
+            background:
+              "linear-gradient(135deg, oklch(0.72 0.14 75) 0%, oklch(0.45 0.10 55) 50%, oklch(0.72 0.14 75) 100%)",
+            padding: "4px",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.55), inset 0 0 2px rgba(255,220,160,0.8)",
+          }}
+        >
+          <div
+            className="w-full h-full overflow-hidden"
+            style={{ borderRadius: "50% / 50%", boxShadow: "inset 0 0 8px rgba(0,0,0,0.6)" }}
+          >
+            <img src={avatar} alt="Elena" className="w-full h-full object-cover" style={{ objectPosition: "center 22%", filter: "sepia(0.25) contrast(1.05)" }} />
+          </div>
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="font-stamp text-[10px] md:text-xs tracking-[0.3em] mb-1.5" style={{ color: "oklch(0.35 0.10 30)" }}>
+            ELENA · ANALYSTE BIO
+          </div>
+          <p className="font-serif-display leading-snug text-[13px] md:text-[16px]" style={{ color: "oklch(0.22 0.04 30)" }}>
+            Trois spécimens inconnus dans le bassin. Touche une{" "}
+            <span className="font-bold" style={{ color: "oklch(0.42 0.16 25)" }}>créature</span>{" "}
+            puis son{" "}
+            <span className="font-bold" style={{ color: "oklch(0.42 0.16 25)" }}>attribut</span>{" "}
+            pour tirer un fil lumineux. Trois bonnes connexions et le dossier s'ouvre.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Fonction conservée pour compat éventuelle — non utilisée.
+function _PuzzleGameLegacy({ accent, onSolved }: { accent: string; onSolved: () => void }) {
   return (
     <div>
       <div
