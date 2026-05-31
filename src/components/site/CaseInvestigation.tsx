@@ -316,26 +316,77 @@ function PuzzleGame({ accent, onSolved }: { accent: string; onSolved: () => void
  * croiser tes propres tracés. Décor : temple égyptien.
  * ============================================================ */
 
-type WirePoint = { id: string; color: string; label: string; x: number; y: number };
+type WireSide = "L" | "R";
+type WirePoint = {
+  id: string;
+  match: string;
+  side: WireSide;
+  label: string;
+  glyph: string;
+  color: string;
+  x: number;
+  y: number;
+};
+
+// Énigme logique : chaque symbole égyptien du temple correspond à un module
+// de la plateforme scolaire. Le joueur doit retrouver la bonne association.
+const WIRE_PAIRS: Array<{ match: string; color: string; left: { label: string; glyph: string }; right: { label: string; glyph: string } }> = [
+  { match: "cours",  color: "#ffd166", left: { label: "Papyrus",       glyph: "𓏛" }, right: { label: "Cours",      glyph: "📚" } },
+  { match: "quiz",   color: "#ef476f", left: { label: "Sphinx",        glyph: "𓁢" }, right: { label: "Quiz",       glyph: "❓" } },
+  { match: "suivi",  color: "#6bcfff", left: { label: "Œil d'Horus",   glyph: "𓂀" }, right: { label: "Suivi",      glyph: "📊" } },
+  { match: "acces",  color: "#a78bfa", left: { label: "Ankh",          glyph: "☥" }, right: { label: "Accès",      glyph: "🔑" } },
+];
+
+// Positions L = symboles ancrés dans le décor du temple ; R = tablettes
+// modernes alignées à droite, mais mélangées pour forcer la réflexion.
+const LEFT_POSITIONS = [
+  { x: 16, y: 28 },
+  { x: 22, y: 70 },
+  { x: 38, y: 18 },
+  { x: 32, y: 88 },
+];
+const RIGHT_ORDER_SEED = [2, 0, 3, 1]; // permutation fixe (logique, pas couleur)
+const RIGHT_POSITIONS = [
+  { x: 78, y: 22 },
+  { x: 84, y: 44 },
+  { x: 80, y: 66 },
+  { x: 74, y: 88 },
+];
 
 const WIRE_POINTS: WirePoint[] = [
-  { id: "a1", color: "#ff6b6b", label: "Cours", x: 12, y: 22 },
-  { id: "a2", color: "#ff6b6b", label: "Cours", x: 86, y: 30 },
-  { id: "b1", color: "#ffd93d", label: "Agenda", x: 18, y: 78 },
-  { id: "b2", color: "#ffd93d", label: "Agenda", x: 82, y: 72 },
-  { id: "c1", color: "#6bcfff", label: "Chat", x: 50, y: 14 },
-  { id: "c2", color: "#6bcfff", label: "Chat", x: 52, y: 86 },
-  { id: "d1", color: "#a78bfa", label: "Quiz", x: 30, y: 50 },
-  { id: "d2", color: "#a78bfa", label: "Quiz", x: 72, y: 52 },
+  ...WIRE_PAIRS.map((p, i) => ({
+    id: `L-${p.match}`,
+    match: p.match,
+    side: "L" as const,
+    label: p.left.label,
+    glyph: p.left.glyph,
+    color: p.color,
+    x: LEFT_POSITIONS[i].x,
+    y: LEFT_POSITIONS[i].y,
+  })),
+  ...RIGHT_ORDER_SEED.map((srcIdx, i) => {
+    const p = WIRE_PAIRS[srcIdx];
+    return {
+      id: `R-${p.match}`,
+      match: p.match,
+      side: "R" as const,
+      label: p.right.label,
+      glyph: p.right.glyph,
+      color: p.color,
+      x: RIGHT_POSITIONS[i].x,
+      y: RIGHT_POSITIONS[i].y,
+    };
+  }),
 ];
 
 function WireGame({ accent, onSolved }: { accent: string; onSolved: () => void }) {
-  const [connections, setConnections] = useState<Array<{ from: string; to: string; color: string }>>([]);
+  const [connections, setConnections] = useState<Array<{ from: string; to: string; color: string; ok: boolean }>>([]);
   const [pending, setPending] = useState<WirePoint | null>(null);
-  const allColors = useMemo(() => Array.from(new Set(WIRE_POINTS.map((p) => p.color))), []);
+  const [wrongFlash, setWrongFlash] = useState(0);
+  const totalPairs = WIRE_PAIRS.length;
   const won = useMemo(
-    () => allColors.every((c) => connections.some((cn) => cn.color === c)),
-    [connections, allColors],
+    () => connections.length === totalPairs && connections.every((c) => c.ok),
+    [connections, totalPairs],
   );
 
   useEffect(() => {
@@ -364,14 +415,29 @@ function WireGame({ accent, onSolved }: { accent: string; onSolved: () => void }
       setPending(null);
       return;
     }
-    if (pending.color !== p.color) {
-      // mauvaise paire — feedback rapide
+    // On exige une connexion gauche↔droite
+    if (pending.side === p.side) {
+      setPending(p);
+      return;
+    }
+    const ok = pending.match === p.match;
+    if (!ok) {
+      // Feedback rouge éphémère
+      const stamp = Date.now();
+      setWrongFlash(stamp);
+      setConnections((cs) => [
+        ...cs,
+        { from: pending.id, to: p.id, color: "#ff3b3b", ok: false },
+      ]);
       setPending(null);
+      setTimeout(() => {
+        setConnections((cs) => cs.filter((c) => !(c.from === pending.id && c.to === p.id && !c.ok)));
+      }, 650);
       return;
     }
     setConnections((cs) => [
-      ...cs.filter((c) => c.color !== p.color),
-      { from: pending.id, to: p.id, color: p.color },
+      ...cs.filter((c) => c.from !== pending.id && c.to !== pending.id),
+      { from: pending.id, to: p.id, color: pending.color, ok: true },
     ]);
     setPending(null);
   };
@@ -405,10 +471,10 @@ function WireGame({ accent, onSolved }: { accent: string; onSolved: () => void }
             boxShadow: `0 0 8px ${accent.replace(")", " / 0.5)")}`,
           }}
         >
-          RUNES · {connections.length}/{allColors.length}
+          GLYPHES · {connections.filter((c) => c.ok).length}/{totalPairs}
         </div>
         <div className="absolute top-2 right-2 z-20 font-stamp text-[10px] tracking-[0.25em] text-white/90 bg-black/65 border border-white/20 px-2.5 py-1 rounded-sm">
-          RELIE LES PAIRES
+          RELIE CHAQUE GLYPHE À SON MODULE
         </div>
 
         {/* Tracés lumineux */}
@@ -438,11 +504,12 @@ function WireGame({ accent, onSolved }: { accent: string; onSolved: () => void }
                 key={i}
                 d={`M ${a.x} ${a.y} Q ${mx} ${my} ${b.x} ${b.y}`}
                 stroke={c.color}
-                strokeWidth={1.1}
+                strokeWidth={c.ok ? 1.2 : 1}
                 fill="none"
                 strokeLinecap="round"
                 filter={`url(#glow-${c.color.replace("#", "")})`}
-                opacity={0.95}
+                opacity={c.ok ? 0.95 : 0.85}
+                strokeDasharray={c.ok ? undefined : "2 1.5"}
               />
             );
           })}
@@ -456,25 +523,51 @@ function WireGame({ accent, onSolved }: { accent: string; onSolved: () => void }
             <button
               key={p.id}
               onClick={() => onPointClick(p)}
-              className="absolute z-20 flex items-center justify-center rounded-full transition-transform active:scale-90"
+              className="absolute z-20 flex flex-col items-center justify-center rounded-full transition-transform active:scale-90"
               style={{
                 left: `${p.x}%`,
                 top: `${p.y}%`,
-                width: 44,
-                height: 44,
+                width: 54,
+                height: 54,
                 transform: "translate(-50%, -50%)",
-                background: `radial-gradient(circle at 30% 30%, ${p.color}, ${p.color}cc 60%, ${p.color}55 100%)`,
+                background:
+                  p.side === "L"
+                    ? `radial-gradient(circle at 30% 30%, #f5e6c8, #c9a86a 55%, #6b4a1a 100%)`
+                    : `radial-gradient(circle at 30% 30%, rgba(20,40,60,0.9), rgba(10,20,30,0.95) 60%, rgba(0,0,0,0.95) 100%)`,
                 border: `2px solid ${isPending ? "#fff" : "rgba(255,255,255,0.5)"}`,
-                boxShadow: `0 0 ${used ? 24 : isPending ? 28 : 12}px ${p.color}, inset 0 0 6px rgba(0,0,0,0.4)`,
+                boxShadow: `0 0 ${used ? 22 : isPending ? 28 : 10}px ${p.color}, inset 0 0 8px rgba(0,0,0,0.55)`,
               }}
-              aria-label={`${p.label} ${p.color}`}
+              aria-label={`${p.label}`}
             >
-              <span className="font-stamp text-[8px] tracking-[0.2em] text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">
+              <span
+                className="leading-none drop-shadow-[0_1px_2px_rgba(0,0,0,0.95)]"
+                style={{
+                  fontSize: 22,
+                  color: p.side === "L" ? "#3a1f08" : "#ffe7a8",
+                }}
+              >
+                {p.glyph}
+              </span>
+              <span
+                className="font-stamp text-[7px] tracking-[0.18em] mt-0.5 drop-shadow-[0_1px_2px_rgba(0,0,0,0.95)]"
+                style={{ color: p.side === "L" ? "#2a1505" : "#ffe7a8" }}
+              >
                 {p.label}
               </span>
             </button>
           );
         })}
+
+        {wrongFlash > 0 && (
+          <div
+            key={wrongFlash}
+            className="absolute inset-0 pointer-events-none z-10 animate-fade-in"
+            style={{
+              background:
+                "radial-gradient(circle at center, rgba(255,40,40,0.25) 0%, transparent 70%)",
+            }}
+          />
+        )}
 
         {won && (
           <div
@@ -518,11 +611,11 @@ function WireGame({ accent, onSolved }: { accent: string; onSolved: () => void }
             ELENA · EXPLORATRICE
           </div>
           <p className="font-serif-display leading-snug text-[13px] md:text-[16px]" style={{ color: "oklch(0.22 0.04 30)" }}>
-            Dans le temple oublié, chaque rune cherche sa jumelle. Relie les{" "}
+            Le temple cache les ancêtres de la plateforme. Relie chaque{" "}
             <span className="font-bold" style={{ color: "oklch(0.42 0.16 25)" }}>
-              paires de couleur
+              glyphe égyptien
             </span>{" "}
-            pour réveiller les piliers et déverrouiller le dossier.
+            au module moderne qu'il a inspiré pour ouvrir le dossier.
           </p>
         </div>
       </div>
