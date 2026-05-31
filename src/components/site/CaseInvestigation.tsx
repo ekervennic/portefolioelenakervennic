@@ -140,57 +140,10 @@ export function CaseInvestigation({ caseId, caseTitle, onSolved, onClose }: Prop
  * ============================================================ */
 
 function PuzzleGame({ accent, onSolved }: { accent: string; onSolved: () => void }) {
-  const SIZE = 3;
-  const TOTAL = SIZE * SIZE;
-  const EMPTY = TOTAL - 1;
-
-  const [tiles, setTiles] = useState<number[]>(() => {
-    // Mélange via mouvements valides (toujours solvable)
-    const arr = Array.from({ length: TOTAL }, (_, i) => i);
-    let empty = EMPTY;
-    let last = -1;
-    for (let k = 0; k < 60; k++) {
-      const r = Math.floor(empty / SIZE);
-      const c = empty % SIZE;
-      const opts: number[] = [];
-      if (r > 0) opts.push(empty - SIZE);
-      if (r < SIZE - 1) opts.push(empty + SIZE);
-      if (c > 0) opts.push(empty - 1);
-      if (c < SIZE - 1) opts.push(empty + 1);
-      const choices = opts.filter((x) => x !== last);
-      const pick = choices[Math.floor(Math.random() * choices.length)];
-      [arr[empty], arr[pick]] = [arr[pick], arr[empty]];
-      last = empty;
-      empty = pick;
-    }
-    return arr;
-  });
-  const [moves, setMoves] = useState(0);
-  const won = useMemo(() => tiles.every((v, i) => v === i), [tiles]);
-
-  useEffect(() => {
-    if (won) {
-      const t = setTimeout(onSolved, 900);
-      return () => clearTimeout(t);
-    }
-  }, [won, onSolved]);
-
-  const tryMove = (idx: number) => {
-    if (won) return;
-    const emptyIdx = tiles.indexOf(EMPTY);
-    const r1 = Math.floor(idx / SIZE), c1 = idx % SIZE;
-    const r2 = Math.floor(emptyIdx / SIZE), c2 = emptyIdx % SIZE;
-    if (Math.abs(r1 - r2) + Math.abs(c1 - c2) !== 1) return;
-    const next = tiles.slice();
-    [next[idx], next[emptyIdx]] = [next[emptyIdx], next[idx]];
-    setTiles(next);
-    setMoves((m) => m + 1);
-  };
-
   return (
     <div>
       <div
-        className="relative w-full aspect-square sm:aspect-[16/12] overflow-hidden rounded-sm select-none"
+        className="relative w-full aspect-[16/10] overflow-hidden rounded-sm select-none"
         style={{
           backgroundImage: `url(${sceneCinema})`,
           backgroundSize: "cover",
@@ -201,69 +154,26 @@ function PuzzleGame({ accent, onSolved }: { accent: string; onSolved: () => void
       >
         <div
           className="absolute inset-0 pointer-events-none"
-          style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.7))" }}
+          style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.55))" }}
         />
 
-        {/* HUD */}
-        <div
-          className="absolute top-2 left-2 z-10 font-stamp text-[10px] tracking-[0.25em] text-white px-2.5 py-1 rounded-sm"
-          style={{
-            background: "rgba(0,0,0,0.65)",
-            border: `1px solid ${accent}`,
-            boxShadow: `0 0 8px ${accent.replace(")", " / 0.5)")}`,
-          }}
-        >
-          MOUVEMENTS · {moves}
-        </div>
         <div className="absolute top-2 right-2 z-10 font-stamp text-[10px] tracking-[0.25em] text-white/90 bg-black/65 border border-white/20 px-2.5 py-1 rounded-sm">
-          BOBINE · {SIZE}×{SIZE}
+          SCÈNE · IMAX
         </div>
 
-        {/* Grille du puzzle */}
-        <div className="absolute inset-0 flex items-center justify-center p-3 md:p-6">
-          <div
-            className="relative grid gap-1 sm:gap-1.5"
+        <div className="absolute inset-x-0 bottom-0 z-10 p-4 md:p-5 flex items-center justify-center">
+          <button
+            onClick={onSolved}
+            className="font-stamp text-[11px] md:text-xs tracking-[0.3em] px-5 py-2.5 rounded-sm transition-transform hover:scale-[1.03]"
             style={{
-              gridTemplateColumns: `repeat(${SIZE}, minmax(0, 1fr))`,
-              gridTemplateRows: `repeat(${SIZE}, minmax(0, 1fr))`,
-              width: "min(92%, 460px)",
-              aspectRatio: "1 / 1",
-              boxShadow: `0 0 0 2px ${accent}, 0 0 30px ${accent.replace(")", " / 0.4)")}`,
+              color: "oklch(0.15 0.02 30)",
+              background: accent,
+              boxShadow: `0 0 24px ${accent.replace(")", " / 0.6)")}, 0 6px 18px rgba(0,0,0,0.5)`,
             }}
           >
-            {tiles.map((v, idx) => {
-              if (v === EMPTY) {
-                return <div key={idx} className="bg-black/55 rounded-sm" />;
-              }
-              const tr = Math.floor(v / SIZE);
-              const tc = v % SIZE;
-              return (
-                <button
-                  key={idx}
-                  onClick={() => tryMove(idx)}
-                  className="relative rounded-sm overflow-hidden transition-transform active:scale-95"
-                  style={{
-                    backgroundImage: `url(${sceneCinema})`,
-                    backgroundSize: `${SIZE * 100}% ${SIZE * 100}%`,
-                    backgroundPosition: `${(tc / (SIZE - 1)) * 100}% ${(tr / (SIZE - 1)) * 100}%`,
-                    boxShadow:
-                      "inset 0 0 0 1px rgba(255,255,255,0.18), 0 4px 10px rgba(0,0,0,0.6)",
-                  }}
-                  aria-label={`Tuile ${v + 1}`}
-                />
-              );
-            })}
-          </div>
+            ▶ OUVRIR LE DOSSIER
+          </button>
         </div>
-
-        {won && (
-          <div
-            className="absolute inset-0 pointer-events-none animate-fade-in"
-            style={{
-              background: `radial-gradient(circle at center, ${accent.replace(")", " / 0.45)")} 0%, transparent 60%)`,
-            }}
-          />
-        )}
       </div>
 
       {/* CONSIGNE */}
@@ -298,11 +208,11 @@ function PuzzleGame({ accent, onSolved }: { accent: string; onSolved: () => void
             ELENA · CINÉPHILE
           </div>
           <p className="font-serif-display leading-snug text-[13px] md:text-[16px]" style={{ color: "oklch(0.22 0.04 30)" }}>
-            La bobine s'est emmêlée dans la salle de projection. Glisse les tuiles pour{" "}
+            La scène est projetée sur grand écran. Appuie sur{" "}
             <span className="font-bold" style={{ color: "oklch(0.42 0.16 25)" }}>
-              reconstituer la scène
+              Ouvrir le dossier
             </span>{" "}
-            et accéder au dossier.
+            pour découvrir l'enquête.
           </p>
         </div>
       </div>
