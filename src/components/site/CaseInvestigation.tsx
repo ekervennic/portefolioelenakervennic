@@ -616,9 +616,9 @@ function _PuzzleGameLegacy({ accent, onSolved }: { accent: string; onSolved: () 
 
 // Indices à trouver autour du corps. Zones resserrées sur les objets visibles.
 const CRIME_CLUES: Array<{ id: string; x: number; y: number; w: number; h: number; rotate?: number; icon: string; label: string }> = [
-  { id: "knife",     x: 38.4, y: 54.2, w: 11.5, h: 5.2, rotate: -16, icon: "🗡️", label: "Poignard sanglant" },
-  { id: "papyrus",   x: 87.4, y: 15.2, w: 5.2,  h: 16.5, rotate: 8, icon: "📜", label: "Papyrus déchiré" },
-  { id: "footprint", x: 71.1, y: 69.8, w: 8.6,  h: 11.2, rotate: 10, icon: "👣", label: "Empreinte de sable" },
+  { id: "knife",     x: 31.0, y: 41.5, w: 13.0, h: 9.0, rotate: -18, icon: "🗡️", label: "Poignard ensanglanté" },
+  { id: "wound",     x: 52.5, y: 37.5, w: 5.0,  h: 5.0, icon: "🩸", label: "Plaie sanglante" },
+  { id: "footprint", x: 75.0, y: 63.5, w: 5.0,  h: 7.0, rotate: 8, icon: "👞", label: "Empreinte de chaussure" },
 ];
 
 function WireGame({ accent, onSolved }: { accent: string; onSolved: () => void }) {
