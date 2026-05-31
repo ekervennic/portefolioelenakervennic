@@ -680,8 +680,8 @@ function WireGame({ accent, onSolved }: { accent: string; onSolved: () => void }
               style={{
                 left: `${c.x}%`,
                 top: `${c.y}%`,
-                width: 60,
-                height: 60,
+                width: 110,
+                height: 110,
                 transform: "translate(-50%, -50%)",
                 background: "transparent",
                 border: "none",
