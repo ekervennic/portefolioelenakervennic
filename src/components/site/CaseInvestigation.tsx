@@ -343,31 +343,25 @@ function PuzzleGame({ accent, onSolved }: { accent: string; onSolved: () => void
     }
   };
 
-  const ArrowBtn = ({
-    dir,
-    style,
-  }: {
-    dir: "up" | "left" | "right";
-    style: React.CSSProperties;
-  }) => {
+  const ArrowBtn = ({ dir }: { dir: "up" | "left" | "right" }) => {
     const isWrong = wrong === dir;
     const glyph = dir === "up" ? "↑" : dir === "left" ? "←" : "→";
+    const label = dir === "up" ? "AVANCER" : dir === "left" ? "GAUCHE" : "DROITE";
     return (
       <button
         onClick={() => choose(dir)}
         disabled={!!wrong || won}
         aria-label={`Aller ${dir}`}
-        className="absolute z-30 flex items-center justify-center transition-transform active:scale-90 hover:scale-110"
+        className="flex flex-col items-center justify-center gap-0.5 transition-transform active:scale-90 hover:scale-105"
         style={{
-          ...style,
-          width: 76,
-          height: 76,
+          width: 84,
+          height: 72,
           borderRadius: 14,
           background: isWrong
             ? "rgba(220,40,40,0.85)"
             : "linear-gradient(180deg, rgba(80,180,255,0.95), rgba(20,80,160,0.95))",
           color: "white",
-          fontSize: 38,
+          fontSize: 34,
           fontWeight: 700,
           lineHeight: 1,
           border: `2px solid ${isWrong ? "rgba(255,200,200,0.95)" : "rgba(180,230,255,0.95)"}`,
@@ -378,16 +372,10 @@ function PuzzleGame({ accent, onSolved }: { accent: string; onSolved: () => void
           animation: isWrong ? "shake 0.35s ease-in-out 2" : undefined,
         }}
       >
-        {glyph}
+        <span>{glyph}</span>
+        <span className="font-stamp text-[8px] tracking-[0.2em] opacity-90">{label}</span>
       </button>
     );
-  };
-
-  // Positions des flèches (centré pour up, sur les bords pour left/right)
-  const pos: Record<"up" | "left" | "right", React.CSSProperties> = {
-    up:    { left: "50%", top: "38%", transform: "translate(-50%, -50%)" },
-    left:  { left: "8%",  top: "55%", transform: "translateY(-50%)" },
-    right: { right: "8%", top: "55%", transform: "translateY(-50%)" },
   };
 
   return (
