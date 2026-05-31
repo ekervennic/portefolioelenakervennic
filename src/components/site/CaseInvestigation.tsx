@@ -53,7 +53,7 @@ export function CaseInvestigation({ caseId, caseTitle, onSolved, onClose }: Prop
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-5xl bg-[oklch(0.16_0.02_260)] text-[oklch(0.95_0.01_80)] noir-shadow p-3 sm:p-5 md:p-8 animate-scale-in border border-white/10 max-h-[95vh] overflow-y-auto"
+        className="relative w-full max-w-5xl bg-[oklch(0.16_0.02_260)] text-[oklch(0.95_0.01_80)] noir-shadow p-3 sm:p-5 md:p-5 animate-scale-in border border-white/10 max-h-[95vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
         style={{
           backgroundImage:
@@ -78,7 +78,7 @@ export function CaseInvestigation({ caseId, caseTitle, onSolved, onClose }: Prop
           />
           ACCÈS CLASSIFIÉ · FOUILLE DE LA SCÈNE
         </div>
-        <h3 className="font-serif-display text-xl md:text-2xl leading-tight mb-4">
+        <h3 className="font-serif-display text-xl md:text-2xl leading-tight mb-2 md:mb-3">
           {caseTitle}
         </h3>
 
@@ -381,7 +381,7 @@ function PuzzleGame({ accent, onSolved }: { accent: string; onSolved: () => void
   return (
     <div>
       <div
-        className="relative w-full aspect-[16/10] overflow-hidden rounded-sm select-none"
+        className="relative w-full aspect-[16/10] md:max-h-[48vh] overflow-hidden rounded-sm select-none"
         style={{
           backgroundImage: `url(${room.bg})`,
           backgroundSize: "cover",
@@ -461,7 +461,7 @@ function PuzzleGame({ accent, onSolved }: { accent: string; onSolved: () => void
       {/* Barre de navigation — flèches sous l'aquarium pour ne rien cacher */}
       {!won && (
         <div
-          className="mt-3 flex items-center justify-center gap-3 p-3 rounded-sm"
+          className="mt-2 flex items-center justify-center gap-2 p-2 rounded-sm"
           style={{
             background:
               "linear-gradient(180deg, rgba(8,16,32,0.92), rgba(4,10,22,0.92))",
@@ -474,7 +474,7 @@ function PuzzleGame({ accent, onSolved }: { accent: string; onSolved: () => void
             room.options.includes(dir) ? (
               <ArrowBtn key={dir} dir={dir} />
             ) : (
-              <div key={dir} style={{ width: 84, height: 72, opacity: 0.15 }} className="rounded-[14px] border border-white/10" />
+              <div key={dir} style={{ width: 60, height: 52, opacity: 0.15 }} className="rounded-[10px] border border-white/10" />
             )
           )}
         </div>
@@ -484,7 +484,7 @@ function PuzzleGame({ accent, onSolved }: { accent: string; onSolved: () => void
 
       {/* CONSIGNE */}
       <div
-        className="relative mt-4 w-full flex items-center gap-4 md:gap-5 p-4 border border-[oklch(0.45_0.08_50)]"
+        className="relative mt-2 w-full flex items-center gap-4 md:gap-4 p-3 border border-[oklch(0.45_0.08_50)]"
         style={{
           backgroundImage: `url(${paper})`,
           backgroundSize: "cover",
@@ -648,7 +648,7 @@ function WireGame({ accent, onSolved }: { accent: string; onSolved: () => void }
   return (
     <div>
       <div
-        className="relative w-full aspect-[16/10] overflow-hidden rounded-sm select-none"
+        className="relative w-full aspect-[16/10] md:max-h-[48vh] overflow-hidden rounded-sm select-none"
         style={{
           backgroundImage: `url(${sceneTemple})`,
           backgroundSize: "cover",
@@ -749,7 +749,7 @@ function WireGame({ accent, onSolved }: { accent: string; onSolved: () => void }
 
       {/* CONSIGNE */}
       <div
-        className="relative mt-4 w-full flex items-center gap-4 md:gap-5 p-4 border border-[oklch(0.45_0.08_50)]"
+        className="relative mt-2 w-full flex items-center gap-4 md:gap-4 p-3 border border-[oklch(0.45_0.08_50)]"
         style={{
           backgroundImage: `url(${paper})`,
           backgroundSize: "cover",
@@ -866,7 +866,7 @@ function MemoryGame({ accent, onSolved }: { accent: string; onSolved: () => void
   return (
     <div>
       <div
-        className="relative w-full aspect-square sm:aspect-[16/10] overflow-hidden rounded-sm select-none"
+        className="relative w-full aspect-square sm:aspect-[16/10] md:max-h-[48vh] overflow-hidden rounded-sm select-none"
         style={{
           backgroundImage: `url(${sceneBalcony})`,
           backgroundSize: "cover",
@@ -1003,7 +1003,7 @@ function MemoryGame({ accent, onSolved }: { accent: string; onSolved: () => void
 
       {/* CONSIGNE — fond papier, portrait ovale */}
       <div
-        className="relative mt-4 w-full flex items-center gap-4 md:gap-5 p-4 border border-[oklch(0.45_0.08_50)]"
+        className="relative mt-2 w-full flex items-center gap-4 md:gap-4 p-3 border border-[oklch(0.45_0.08_50)]"
         style={{
           backgroundImage: `url(${paper})`,
           backgroundSize: "cover",
@@ -1088,7 +1088,7 @@ function HiddenObjectGame({ accent, onSolved }: { accent: string; onSolved: () =
       {/* SCÈNE — décor cabine, format paysage */}
       <div
         onClick={handleClick}
-        className={`relative w-full aspect-[16/9] overflow-hidden border border-white/15 rounded-sm cursor-crosshair select-none ${shake ? "animate-pulse" : ""}`}
+        className={`relative w-full aspect-[16/9] md:max-h-[48vh] overflow-hidden border border-white/15 rounded-sm cursor-crosshair select-none ${shake ? "animate-pulse" : ""}`}
         style={{
           backgroundImage: `url(${sceneCabin})`,
           backgroundSize: "cover",
@@ -1178,7 +1178,7 @@ function HiddenObjectGame({ accent, onSolved }: { accent: string; onSolved: () =
 
       {/* CONSIGNE — fond papier sombre avec portrait ovale façon tableau ancien */}
       <div
-        className="relative mt-4 w-full flex items-center gap-4 md:gap-5 p-4 border border-[oklch(0.45_0.08_50)]"
+        className="relative mt-2 w-full flex items-center gap-4 md:gap-4 p-3 border border-[oklch(0.45_0.08_50)]"
         style={{
           backgroundImage: `url(${paper})`,
           backgroundSize: "cover",
@@ -1345,7 +1345,7 @@ function MazeGame({ accent, onSolved }: { accent: string; onSolved: () => void }
   return (
     <div>
       <div
-        className="relative w-full aspect-[21/11] overflow-hidden rounded-sm select-none"
+        className="relative w-full aspect-[21/11] md:max-h-[48vh] overflow-hidden rounded-sm select-none"
         style={{
           backgroundImage: `url(${mazeFloor})`,
           backgroundSize: "cover",
@@ -1589,7 +1589,7 @@ function MazeGame({ accent, onSolved }: { accent: string; onSolved: () => void }
 
       {/* CONSIGNE — fond papier, portrait ovale */}
       <div
-        className="relative mt-4 w-full flex items-center gap-4 md:gap-5 p-4 border border-[oklch(0.45_0.08_50)]"
+        className="relative mt-2 w-full flex items-center gap-4 md:gap-4 p-3 border border-[oklch(0.45_0.08_50)]"
         style={{
           backgroundImage: `url(${paper})`,
           backgroundSize: "cover",
