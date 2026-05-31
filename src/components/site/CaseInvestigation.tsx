@@ -541,11 +541,11 @@ function _PuzzleGameLegacy({ accent, onSolved }: { accent: string; onSolved: () 
 
 // Indices à trouver autour du corps. Positions en % du décor.
 const CRIME_CLUES: Array<{ id: string; x: number; y: number; icon: string; label: string }> = [
-  { id: "knife",     x: 45, y: 41, icon: "🗡️", label: "Poignard sanglant" },
-  { id: "amulet",    x: 22, y: 53, icon: "☥", label: "Ankh brisé" },
-  { id: "papyrus",   x: 78, y: 67, icon: "📜", label: "Papyrus déchiré" },
-  { id: "footprint", x: 17, y: 88, icon: "👣", label: "Empreinte boueuse" },
-  { id: "scarab",    x: 80, y: 92, icon: "🪲", label: "Scarabée maudit" },
+  { id: "knife",     x: 48, y: 44, icon: "🗡️", label: "Poignard sanglant" },
+  { id: "amulet",    x: 27, y: 58, icon: "☥", label: "Ankh brisé" },
+  { id: "papyrus",   x: 74, y: 62, icon: "📜", label: "Papyrus déchiré" },
+  { id: "footprint", x: 35, y: 78, icon: "👣", label: "Empreinte boueuse" },
+  { id: "scarab",    x: 66, y: 80, icon: "🪲", label: "Scarabée maudit" },
 ];
 
 function WireGame({ accent, onSolved }: { accent: string; onSolved: () => void }) {
