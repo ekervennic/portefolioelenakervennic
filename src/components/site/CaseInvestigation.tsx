@@ -45,7 +45,7 @@ export function CaseInvestigation({ caseId, caseTitle, onSolved, onClose }: Prop
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-5xl bg-[oklch(0.16_0.02_260)] text-[oklch(0.95_0.01_80)] noir-shadow p-5 md:p-8 animate-scale-in border border-white/10"
+        className="relative w-full max-w-5xl bg-[oklch(0.16_0.02_260)] text-[oklch(0.95_0.01_80)] noir-shadow p-3 sm:p-5 md:p-8 animate-scale-in border border-white/10 max-h-[95vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
         style={{
           backgroundImage:
