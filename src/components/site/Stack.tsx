@@ -4,28 +4,28 @@ import { useIsMobile } from "@/hooks/use-mobile";
 
 type Node = { id: string; name: string; cat: string; x: number; y: number; mx: number; my: number };
 
-// Coordinates are in a 1000x620 viewBox — we scale the cards to match.
+// Desktop coordinates are in a 1000x560 viewBox — mobile keeps its own taller layout.
 const nodes: Node[] = [
-  { id: "python",   name: "Python",          cat: "Langage",        x: 200, y: 150, mx: 180, my:  90 },
-  { id: "js",       name: "JavaScript",      cat: "Langage",        x:  90, y: 360, mx:  90, my: 230 },
-  { id: "ts",       name: "TypeScript",      cat: "Langage",        x: 920, y: 200, mx: 470, my: 140 },
-  { id: "scraping", name: "Scraping",        cat: "Collecte",       x: 360, y:  90, mx: 420, my:  60 },
-  { id: "rag",      name: "RAG",             cat: "IA",             x: 260, y: 520, mx: 130, my: 540 },
-  { id: "dataiku",  name: "Dataiku",         cat: "Plateforme",     x: 460, y: 300, mx: 300, my: 380 },
-  { id: "openai",   name: "OpenAI",          cat: "IA",             x: 620, y: 150, mx: 320, my: 210 },
-  { id: "dust",     name: "Dust",            cat: "Agents",         x: 820, y: 320, mx: 480, my: 320 },
-  { id: "n8n",      name: "n8n",             cat: "Automatisation", x: 900, y: 520, mx: 490, my: 480 },
-  { id: "agents",   name: "Agents LLM",      cat: "IA",             x: 700, y: 460, mx: 330, my: 460 },
-  { id: "make",     name: "Make",            cat: "Automatisation", x: 540, y: 620, mx: 200, my: 660 },
-  { id: "tableau",  name: "Tableau",         cat: "BI",             x: 120, y: 620, mx: 100, my: 760 },
-  { id: "powerbi",  name: "Power BI",        cat: "BI",             x: 740, y:  80, mx: 470, my:  60 },
-  { id: "dataviz",  name: "DataViz",         cat: "Analyse",        x: 380, y: 720, mx: 320, my: 780 },
-  { id: "piano",    name: "Piano Analytics", cat: "Analytics",      x: 880, y: 660, mx: 490, my: 880 },
-  { id: "tagco",    name: "Tag Commander",   cat: "Tracking",       x: 600, y: 760, mx: 470, my: 1020 },
-  { id: "sql",      name: "SQL",             cat: "Données",        x: 160, y: 760, mx: 110, my: 920 },
-  { id: "next",     name: "Next.js",         cat: "Web",            x: 500, y: 440, mx: 310, my: 580 },
-  { id: "supa",     name: "Supabase",        cat: "Backend",        x: 820, y: 760, mx: 310, my: 1050 },
-  { id: "html",     name: "HTML / CSS",      cat: "Web",            x: 340, y: 220, mx: 230, my: 150 },
+  { id: "python",   name: "Python",          cat: "Langage",        x: 200, y: 120, mx: 180, my:  90 },
+  { id: "js",       name: "JavaScript",      cat: "Langage",        x:  90, y: 260, mx:  90, my: 230 },
+  { id: "ts",       name: "TypeScript",      cat: "Langage",        x: 920, y: 130, mx: 470, my: 140 },
+  { id: "scraping", name: "Scraping",        cat: "Collecte",       x: 360, y:  70, mx: 420, my:  60 },
+  { id: "rag",      name: "RAG",             cat: "IA",             x: 260, y: 370, mx: 130, my: 540 },
+  { id: "dataiku",  name: "Dataiku",         cat: "Plateforme",     x: 460, y: 235, mx: 300, my: 380 },
+  { id: "openai",   name: "OpenAI",          cat: "IA",             x: 620, y: 125, mx: 320, my: 210 },
+  { id: "dust",     name: "Dust",            cat: "Agents",         x: 820, y: 245, mx: 480, my: 320 },
+  { id: "n8n",      name: "n8n",             cat: "Automatisation", x: 900, y: 365, mx: 490, my: 480 },
+  { id: "agents",   name: "Agents LLM",      cat: "IA",             x: 700, y: 335, mx: 330, my: 460 },
+  { id: "make",     name: "Make",            cat: "Automatisation", x: 540, y: 435, mx: 200, my: 660 },
+  { id: "tableau",  name: "Tableau",         cat: "BI",             x: 120, y: 430, mx: 100, my: 760 },
+  { id: "powerbi",  name: "Power BI",        cat: "BI",             x: 740, y:  70, mx: 470, my:  60 },
+  { id: "dataviz",  name: "DataViz",         cat: "Analyse",        x: 380, y: 495, mx: 320, my: 780 },
+  { id: "piano",    name: "Piano Analytics", cat: "Analytics",      x: 880, y: 465, mx: 490, my: 880 },
+  { id: "tagco",    name: "Tag Commander",   cat: "Tracking",       x: 600, y: 510, mx: 470, my: 1020 },
+  { id: "sql",      name: "SQL",             cat: "Données",        x: 160, y: 515, mx: 110, my: 920 },
+  { id: "next",     name: "Next.js",         cat: "Web",            x: 500, y: 335, mx: 310, my: 580 },
+  { id: "supa",     name: "Supabase",        cat: "Backend",        x: 820, y: 515, mx: 310, my: 1050 },
+  { id: "html",     name: "HTML / CSS",      cat: "Web",            x: 340, y: 180, mx: 230, my: 150 },
 ];
 
 const links: [string, string][] = [
@@ -50,13 +50,13 @@ export function Stack() {
     active === id || (active != null && links.some(([a, b]) => (a === active && b === id) || (b === active && a === id)));
 
   return (
-    <section id="stack" className="relative py-12 md:py-16 px-4">
-      <div className="max-w-[1500px] mx-auto">
+    <section id="stack" className="relative py-10 md:py-8 px-4">
+      <div className="max-w-[1180px] mx-auto">
         <SectionHeader number="01" title="Tableau d'investigation" subtitle="Arsenal · Compétences reliées" />
 
         {/* Wooden frame */}
         <div
-          className="relative mt-10 p-4 md:p-7 rounded-lg overflow-hidden"
+          className="relative mt-6 p-4 md:p-4 rounded-lg overflow-hidden"
           style={{
             background:
               "linear-gradient(135deg, oklch(0.32 0.07 40) 0%, oklch(0.22 0.06 35) 45%, oklch(0.36 0.08 45) 100%)",
