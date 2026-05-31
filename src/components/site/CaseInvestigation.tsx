@@ -715,8 +715,8 @@ function WireGame({ accent, onSolved }: { accent: string; onSolved: () => void }
 
         <style>{`
           @keyframes cluePulse {
-            0%, 100% { opacity: 0.55; transform: translate(-50%, -50%) rotate(var(--r, 0deg)) scale(1); }
-            50% { opacity: 1; transform: translate(-50%, -50%) rotate(var(--r, 0deg)) scale(1.08); }
+            0%, 100% { opacity: 0.5; filter: brightness(1); }
+            50% { opacity: 1; filter: brightness(1.4); }
           }
         `}</style>
 
