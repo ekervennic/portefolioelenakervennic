@@ -228,11 +228,11 @@ function PuzzleGame({ accent, onSolved }: { accent: string; onSolved: () => void
 
 // Indices à trouver autour du corps. Positions en % du décor.
 const CRIME_CLUES: Array<{ id: string; x: number; y: number; icon: string; label: string }> = [
-  { id: "knife",     x: 49, y: 38, icon: "🗡️", label: "Poignard sanglant" },
-  { id: "amulet",    x: 17, y: 49, icon: "☥", label: "Ankh brisé" },
-  { id: "papyrus",   x: 80, y: 49, icon: "📜", label: "Papyrus déchiré" },
-  { id: "footprint", x: 25, y: 83, icon: "👣", label: "Empreinte boueuse" },
-  { id: "scarab",    x: 85, y: 86, icon: "🪲", label: "Scarabée maudit" },
+  { id: "knife",     x: 52, y: 40, icon: "🗡️", label: "Poignard sanglant" },
+  { id: "amulet",    x: 28, y: 55, icon: "☥", label: "Ankh brisé" },
+  { id: "papyrus",   x: 82, y: 58, icon: "📜", label: "Papyrus déchiré" },
+  { id: "footprint", x: 22, y: 80, icon: "👣", label: "Empreinte boueuse" },
+  { id: "scarab",    x: 82, y: 90, icon: "🪲", label: "Scarabée maudit" },
 ];
 
 function WireGame({ accent, onSolved }: { accent: string; onSolved: () => void }) {
@@ -304,26 +304,20 @@ function WireGame({ accent, onSolved }: { accent: string; onSolved: () => void }
               style={{
                 left: `${c.x}%`,
                 top: `${c.y}%`,
-                width: 56,
-                height: 56,
+                width: 60,
+                height: 60,
                 transform: "translate(-50%, -50%)",
-                background: isFound ? "rgba(20,200,120,0.25)" : "transparent",
-                border: isFound ? "2px solid #26d07c" : "2px solid transparent",
+                background: "transparent",
+                border: "none",
                 boxShadow: isFound
-                  ? "0 0 22px rgba(38,208,124,0.85), inset 0 0 8px rgba(0,0,0,0.4)"
+                  ? "0 0 28px 4px rgba(38,208,124,0.6), inset 0 0 18px rgba(38,208,124,0.35)"
                   : "none",
+                borderRadius: "9999px",
                 cursor: isFound ? "default" : "crosshair",
               }}
               aria-label={c.label}
               title={c.label}
-            >
-              <span
-                className="leading-none drop-shadow-[0_1px_2px_rgba(0,0,0,0.95)]"
-                style={{ fontSize: 24, opacity: isFound ? 1 : 0, transition: "opacity 220ms" }}
-              >
-                ✓
-              </span>
-            </button>
+            />
           );
         })}
 
