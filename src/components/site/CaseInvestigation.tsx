@@ -693,14 +693,12 @@ function WireGame({ accent, onSolved }: { accent: string; onSolved: () => void }
                 width: `${c.w}%`,
                 height: `${c.h}%`,
                 transform: `translate(-50%, -50%) rotate(${c.rotate ?? 0}deg)`,
-                background: isFound
-                  ? "transparent"
-                  : "radial-gradient(ellipse at center, rgba(255,210,120,0.35) 0%, rgba(255,180,80,0.18) 45%, rgba(255,180,80,0) 70%)",
-                border: isFound ? "none" : "1px dashed rgba(255,220,150,0.65)",
-                animation: isFound ? "none" : "cluePulse 1.8s ease-in-out infinite",
+                background: "transparent",
+                border: "none",
+                animation: "none",
                 boxShadow: isFound
                   ? "0 0 28px 4px rgba(38,208,124,0.6), inset 0 0 18px rgba(38,208,124,0.35)"
-                  : "0 0 14px 2px rgba(255,190,90,0.45)",
+                  : "none",
                 borderRadius: "9999px",
                 clipPath: "ellipse(50% 48% at 50% 50%)",
                 cursor: isFound ? "default" : "crosshair",
