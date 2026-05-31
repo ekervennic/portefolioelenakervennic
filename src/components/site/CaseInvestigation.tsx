@@ -7,6 +7,8 @@ import mazeWall from "@/assets/maze-wall.jpg";
 import paper from "@/assets/paper-texture.jpg";
 import sceneCabin from "@/assets/scene-cabin.jpg";
 import sceneBalcony from "@/assets/scene-balcony.jpg";
+import sceneTemple from "@/assets/scene-temple.jpg";
+import sceneCinema from "@/assets/scene-cinema.jpg";
 import paris1 from "@/assets/paris-1.jpg";
 import paris2 from "@/assets/paris-2.jpg";
 import paris3 from "@/assets/paris-3.jpg";
