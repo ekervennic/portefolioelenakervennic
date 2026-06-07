@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev",
-    "build": "vite build",
+    "build": "BASE_PATH=/Portefolioelena/ vite build --config vite.config.gh.mts && cp dist/index.html dist/404.html",
+    "build:lovable": "vite build",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "lint": "eslint .",
