@@ -28,12 +28,14 @@ jobs:
 
       - name: Build (SPA for GitHub Pages)
         env:
-          # Set to "/<repo-name>/" for a project site, "/" for a user/org site.
           BASE_PATH: /${{ github.event.repository.name }}/
         run: bunx vite build --config vite.config.gh.mts
 
       - name: SPA 404 fallback
         run: cp dist/index.html dist/404.html
+
+      - name: Disable Jekyll
+        run: touch dist/.nojekyll
 
       - uses: actions/configure-pages@v5
 
